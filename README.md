@@ -3,7 +3,7 @@
 > [!WARNING]
 > Work in progress and not ready for usage.
 
-Interfaced Dear ImGui bindings and hooks for injection into games, primarly intended for use with Reloaded-II.
+Interfaced Dear ImGui bindings and hooks for injection into games.
 
 Currently supports DirectX12 exclusively.
 
