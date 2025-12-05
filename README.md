@@ -10,7 +10,7 @@ Currently supports DirectX12 exclusively.
 ## Features
 
 * Interfaced bindings created using [Dear Bindings](https://github.com/dearimgui/dear_bindings) **enabling support for comments**
-* Closely mapped certain value types to C# types (`ImVec2` -> `Vector2`, etc)
+* Closely mapped certain value types to C# types (`ImVec2` -> `Vector2`, etc), enums supported
 * `ImVector` types wrapped to `IEnumerable` types that can be safely iterated
 * No unsafe code (for the most part)
 * Game injection support
