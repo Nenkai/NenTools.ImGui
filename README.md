@@ -55,8 +55,15 @@ public Mod(ModContext context)
 
 1. Grab `IImGui` **and** `IImGuiShell`:
 ```csharp
+_imGui = _modLoader.GetController<IImGui>();
+if (!_imGui.TryGetTarget(out IImGui imGui))
+{
+    _logger.WriteLine($"[{_modConfig.ModId}] Could not get IImGui.");
+    return;
+}
+
 _imGuiShell = _modLoader.GetController<IImGuiShell>();
-if (!_imGuiShell.TryGetTarget(out IImGuiSupport imGuiShell))
+if (!_imGuiShell.TryGetTarget(out IImGuiShell imGuiShell))
 {
     _logger.WriteLine($"[{_modConfig.ModId}] Could not get IImGuiShell.");
     return;
