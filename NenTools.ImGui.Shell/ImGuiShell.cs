@@ -235,7 +235,7 @@ public class ImGuiShell : IImGuiShell
         {
 
         }
-        RangeStructAccessor<IImGuiKeyData> keys = io.KeysData;
+        IRangeStructAccessor<IImGuiKeyData> keys = io.KeysData;
         IImGuiKeyData key0 = keys[0];
         IImGuiKeyData key1 = keys[1];
 
