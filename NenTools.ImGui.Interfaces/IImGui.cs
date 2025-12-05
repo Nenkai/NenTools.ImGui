@@ -10,10 +10,6 @@ namespace NenTools.ImGui.Interfaces;
 public unsafe partial interface IImGui
 {
     ///<summary>
-    /// == (_TexData ? _TexData-&gt;TexID : _TexID)  Implemented below in the file.<br/>
-    ///</summary>
-    ulong ImTextureRef_GetTexID(IImTextureRef self);
-    ///<summary>
     /// Context creation and access<br/>
     /// - Each context create its own ImFontAtlas by default. You may instance one yourself and pass it to CreateContext() to share a font atlas between contexts.<br/>
     /// - DLL users: heaps and globals are not shared across DLL boundaries! You will need to call SetCurrentContext() + SetAllocatorFunctions()<br/>
@@ -2824,21 +2820,21 @@ public unsafe partial interface IImGui
 ///<summary>
 /// Data shared among multiple draw lists (typically owned by parent ImGui context, but you may create one yourself)<br/>
 ///</summary>
-public unsafe interface IImDrawListSharedData : INativeStruct
+public unsafe partial interface IImDrawListSharedData : INativeStruct
 {
 }
 
 ///<summary>
 /// Opaque storage for building a ImFontAtlas<br/>
 ///</summary>
-public unsafe interface IImFontAtlasBuilder : INativeStruct
+public unsafe partial interface IImFontAtlasBuilder : INativeStruct
 {
 }
 
 ///<summary>
 /// Opaque interface to a font loading backend (stb_truetype, FreeType etc.).<br/>
 ///</summary>
-public unsafe interface IImFontLoader : INativeStruct
+public unsafe partial interface IImFontLoader : INativeStruct
 {
 }
 
@@ -2847,7 +2843,7 @@ public unsafe interface IImFontLoader : INativeStruct
 ///<br/>
 /// Forward declarations: ImGui layer<br/>
 ///</summary>
-public unsafe interface IImGuiContext : INativeStruct
+public unsafe partial interface IImGuiContext : INativeStruct
 {
 }
 
@@ -5001,7 +4997,7 @@ public enum ImGuiTableBgTarget
 /// When 'SpecsDirty == true' you can sort your data. It will be true with sorting specs have changed since last call, or the first time.<br/>
 /// Make sure to set 'SpecsDirty = false' after sorting, else you may wastefully sort your data every frame!<br/>
 ///</summary>
-public unsafe interface IImGuiTableSortSpecs : INativeStruct
+public unsafe partial interface IImGuiTableSortSpecs : INativeStruct
 {
     ///<summary>
     /// Pointer to sort spec array.<br/>
@@ -5022,7 +5018,7 @@ public unsafe interface IImGuiTableSortSpecs : INativeStruct
 ///<summary>
 /// Sorting specification for one column of a table (sizeof == 12 bytes)<br/>
 ///</summary>
-public unsafe interface IImGuiTableColumnSortSpecs : INativeStruct
+public unsafe partial interface IImGuiTableColumnSortSpecs : INativeStruct
 {
     ///<summary>
     /// User id of the column (if specified by a TableSetupColumn() call)<br/>
@@ -5045,7 +5041,7 @@ public unsafe interface IImGuiTableColumnSortSpecs : INativeStruct
     ref byte SortDirection { get; }
 }
 
-public unsafe interface IImGuiStyle : INativeStruct
+public unsafe partial interface IImGuiStyle : INativeStruct
 {
     ///<summary>
     /// Current base font size before external global factors are applied. Use PushFont(NULL, size) to modify. Use ImGui::GetFontSize() to obtain scaled value.<br/>
@@ -5373,7 +5369,7 @@ public unsafe interface IImGuiStyle : INativeStruct
     ///<summary>
     /// Colors<br/>
     ///</summary>
-    RangeAccessor<Vector4> Colors { get; }
+    IRangeAccessor<Vector4> Colors { get; }
 
     ///<summary>
     /// Delay for IsItemHovered(ImGuiHoveredFlags_Stationary). Time required to consider mouse stationary.<br/>
@@ -5420,7 +5416,7 @@ public unsafe interface IImGuiStyle : INativeStruct
 /// [Internal] Storage used by IsKeyDown(), IsKeyPressed() etc functions.<br/>
 /// If prior to 1.87 you used io.KeysDownDuration[] (which was marked as internal), you should use GetKeyData(key)-&gt;DownDuration and *NOT* io.KeysData[key]-&gt;DownDuration.<br/>
 ///</summary>
-public unsafe interface IImGuiKeyData : INativeStruct
+public unsafe partial interface IImGuiKeyData : INativeStruct
 {
     ///<summary>
     /// True for if key is down<br/>
@@ -5443,7 +5439,7 @@ public unsafe interface IImGuiKeyData : INativeStruct
     ref float AnalogValue { get; }
 }
 
-public unsafe interface IImGuiIO : INativeStruct
+public unsafe partial interface IImGuiIO : INativeStruct
 {
     ///<summary>
     /// = 0               See ImGuiConfigFlags_ enum. Set by user/application. Keyboard/Gamepad navigation options, etc.<br/>
@@ -5898,7 +5894,7 @@ public unsafe interface IImGuiIO : INativeStruct
     ///<summary>
     /// Mouse buttons: 0=left, 1=right, 2=middle + extras (ImGuiMouseButton_COUNT == 5). Dear ImGui mostly uses left and right buttons. Other buttons allow us to track if the mouse is being used by your application + available to user as a convenience via IsMouse** API.<br/>
     ///</summary>
-    RangeAccessor<bool> MouseDown { get; }
+    IRangeAccessor<bool> MouseDown { get; }
 
     ///<summary>
     /// Mouse wheel Vertical: 1 unit scrolls about 5 lines text. &gt;0 scrolls Up, &lt;0 scrolls Down. Hold Shift to turn vertical scroll into horizontal scroll.<br/>
@@ -5950,7 +5946,7 @@ public unsafe interface IImGuiIO : INativeStruct
     ///<summary>
     /// Key state for all known keys. MUST use 'key - ImGuiKey_NamedKey_BEGIN' as index. Use IsKeyXXX() functions to access this.<br/>
     ///</summary>
-    RangeStructAccessor<IImGuiKeyData> KeysData { get; }
+    IRangeStructAccessor<IImGuiKeyData> KeysData { get; }
 
     ///<summary>
     /// Alternative to WantCaptureMouse: (WantCaptureMouse == true &amp;&amp; WantCaptureMouseUnlessPopupClose == false) when a click over void is expected to close a popup.<br/>
@@ -5965,52 +5961,52 @@ public unsafe interface IImGuiIO : INativeStruct
     ///<summary>
     /// Position at time of clicking<br/>
     ///</summary>
-    RangeAccessor<Vector2> MouseClickedPos { get; }
+    IRangeAccessor<Vector2> MouseClickedPos { get; }
 
     ///<summary>
     /// Time of last click (used to figure out double-click)<br/>
     ///</summary>
-    RangeAccessor<double> MouseClickedTime { get; }
+    IRangeAccessor<double> MouseClickedTime { get; }
 
     ///<summary>
     /// Mouse button went from !Down to Down (same as MouseClickedCount[x] != 0)<br/>
     ///</summary>
-    RangeAccessor<bool> MouseClicked { get; }
+    IRangeAccessor<bool> MouseClicked { get; }
 
     ///<summary>
     /// Has mouse button been double-clicked? (same as MouseClickedCount[x] == 2)<br/>
     ///</summary>
-    RangeAccessor<bool> MouseDoubleClicked { get; }
+    IRangeAccessor<bool> MouseDoubleClicked { get; }
 
     ///<summary>
     /// == 0 (not clicked), == 1 (same as MouseClicked[]), == 2 (double-clicked), == 3 (triple-clicked) etc. when going from !Down to Down<br/>
     ///</summary>
-    RangeAccessor<ushort> MouseClickedCount { get; }
+    IRangeAccessor<ushort> MouseClickedCount { get; }
 
     ///<summary>
     /// Count successive number of clicks. Stays valid after mouse release. Reset after another click is done.<br/>
     ///</summary>
-    RangeAccessor<ushort> MouseClickedLastCount { get; }
+    IRangeAccessor<ushort> MouseClickedLastCount { get; }
 
     ///<summary>
     /// Mouse button went from Down to !Down<br/>
     ///</summary>
-    RangeAccessor<bool> MouseReleased { get; }
+    IRangeAccessor<bool> MouseReleased { get; }
 
     ///<summary>
     /// Time of last released (rarely used! but useful to handle delayed single-click when trying to disambiguate them from double-click).<br/>
     ///</summary>
-    RangeAccessor<double> MouseReleasedTime { get; }
+    IRangeAccessor<double> MouseReleasedTime { get; }
 
     ///<summary>
     /// Track if button was clicked inside a dear imgui window or over void blocked by a popup. We don't request mouse capture from the application if click started outside ImGui bounds.<br/>
     ///</summary>
-    RangeAccessor<bool> MouseDownOwned { get; }
+    IRangeAccessor<bool> MouseDownOwned { get; }
 
     ///<summary>
     /// Track if button was clicked inside a dear imgui window.<br/>
     ///</summary>
-    RangeAccessor<bool> MouseDownOwnedUnlessPopupClose { get; }
+    IRangeAccessor<bool> MouseDownOwnedUnlessPopupClose { get; }
 
     ///<summary>
     /// On a non-Mac system, holding Shift requests WheelY to perform the equivalent of a WheelX event. On a Mac system this is already enforced by the system.<br/>
@@ -6025,22 +6021,22 @@ public unsafe interface IImGuiIO : INativeStruct
     ///<summary>
     /// Duration the mouse button has been down (0.0f == just clicked)<br/>
     ///</summary>
-    RangeAccessor<float> MouseDownDuration { get; }
+    IRangeAccessor<float> MouseDownDuration { get; }
 
     ///<summary>
     /// Previous time the mouse button has been down<br/>
     ///</summary>
-    RangeAccessor<float> MouseDownDurationPrev { get; }
+    IRangeAccessor<float> MouseDownDurationPrev { get; }
 
     ///<summary>
     /// Maximum distance, absolute, on each axis, of how much mouse has traveled from the clicking point<br/>
     ///</summary>
-    RangeAccessor<Vector2> MouseDragMaxDistanceAbs { get; }
+    IRangeAccessor<Vector2> MouseDragMaxDistanceAbs { get; }
 
     ///<summary>
     /// Squared maximum distance of how much mouse has traveled from the clicking point (used for moving thresholds)<br/>
     ///</summary>
-    RangeAccessor<float> MouseDragMaxDistanceSqr { get; }
+    IRangeAccessor<float> MouseDragMaxDistanceSqr { get; }
 
     ///<summary>
     /// Touch/Pen pressure (0.0f to 1.0f, should be &gt;0.0f only when MouseDown[0] == true). Helper storage currently unused by Dear ImGui.<br/>
@@ -6094,7 +6090,7 @@ public unsafe interface IImGuiIO : INativeStruct
 /// - ImGuiInputTextFlags_CallbackCharFilter:  Callback on character inputs to replace or discard them. Modify 'EventChar' to replace or discard, or return 1 in callback to discard.<br/>
 /// - ImGuiInputTextFlags_CallbackResize:      Callback on buffer capacity changes request (beyond 'buf_size' parameter value), allowing the string to grow.<br/>
 ///</summary>
-public unsafe interface IImGuiInputTextCallbackData : INativeStruct
+public unsafe partial interface IImGuiInputTextCallbackData : INativeStruct
 {
     ///<summary>
     /// Parent UI context<br/>
@@ -6172,7 +6168,7 @@ public unsafe interface IImGuiInputTextCallbackData : INativeStruct
 /// Resizing callback data to apply custom constraint. As enabled by SetNextWindowSizeConstraints(). Callback is called during the next Begin().<br/>
 /// NB: For basic min/max size constraint on each axis you don't need to use the callback! The SetNextWindowSizeConstraints() parameters are enough.<br/>
 ///</summary>
-public unsafe interface IImGuiSizeCallbackData : INativeStruct
+public unsafe partial interface IImGuiSizeCallbackData : INativeStruct
 {
     ///<summary>
     /// Read-only.   What user passed to SetNextWindowSizeConstraints(). Generally store an integer or float in here (need reinterpret_cast&lt;&gt;).<br/>
@@ -6204,7 +6200,7 @@ public unsafe interface IImGuiSizeCallbackData : INativeStruct
 /// - To the platform backend for OS level parent/child relationships of viewport.<br/>
 /// - To the docking system for various options and filtering.<br/>
 ///</summary>
-public unsafe interface IImGuiWindowClass : INativeStruct
+public unsafe partial interface IImGuiWindowClass : INativeStruct
 {
     ///<summary>
     /// User data. 0 = Default class (unclassed). Windows of different classes cannot be docked with each others.<br/>
@@ -6255,7 +6251,7 @@ public unsafe interface IImGuiWindowClass : INativeStruct
 ///<summary>
 /// Data payload for Drag and Drop operations: AcceptDragDropPayload(), GetDragDropPayload()<br/>
 ///</summary>
-public unsafe interface IImGuiPayload : INativeStruct
+public unsafe partial interface IImGuiPayload : INativeStruct
 {
     ///<summary>
     /// Data (copied and owned by dear imgui)<br/>
@@ -6289,7 +6285,7 @@ public unsafe interface IImGuiPayload : INativeStruct
     ///<summary>
     /// Data type tag (short user-supplied string, 32 characters max)<br/>
     ///</summary>
-    RangeAccessor<byte> DataType { get; }
+    IRangeAccessor<byte> DataType { get; }
 
     ///<summary>
     /// Set when AcceptDragDropPayload() was called and mouse has been hovering the target item (nb: handle overlapping drag targets)<br/>
@@ -6305,7 +6301,7 @@ public unsafe interface IImGuiPayload : INativeStruct
 ///<summary>
 /// [Internal]<br/>
 ///</summary>
-public unsafe interface IImGuiTextFilter_ImGuiTextRange : INativeStruct
+public unsafe partial interface IImGuiTextFilter_ImGuiTextRange : INativeStruct
 {
     sbyte* b { get; set; }
 
@@ -6315,9 +6311,9 @@ public unsafe interface IImGuiTextFilter_ImGuiTextRange : INativeStruct
 ///<summary>
 /// Helper: Parse and apply text filters. In format "aaaaa[,bbbb][,ccccc]"<br/>
 ///</summary>
-public unsafe interface IImGuiTextFilter : INativeStruct
+public unsafe partial interface IImGuiTextFilter : INativeStruct
 {
-    RangeAccessor<byte> InputBuf { get; }
+    IRangeAccessor<byte> InputBuf { get; }
 
     IImVectorWrapper<IImGuiTextFilter_ImGuiTextRange> Filters { get; }
 
@@ -6328,7 +6324,7 @@ public unsafe interface IImGuiTextFilter : INativeStruct
 /// Helper: Growable text buffer for logging/accumulating text<br/>
 /// (this could be called 'ImGuiTextBuilder' / 'ImGuiStringBuilder')<br/>
 ///</summary>
-public unsafe interface IImGuiTextBuffer : INativeStruct
+public unsafe partial interface IImGuiTextBuffer : INativeStruct
 {
     IImVectorWrapper<byte> Buf { get; }
 }
@@ -6343,7 +6339,7 @@ public unsafe interface IImGuiTextBuffer : INativeStruct
 /// - You want to store custom debug data easily without adding or editing structures in your code (probably not efficient, but convenient)<br/>
 /// Types are NOT stored, so it is up to you to make sure your Key don't collide with different types.<br/>
 ///</summary>
-public unsafe interface IImGuiStorage : INativeStruct
+public unsafe partial interface IImGuiStorage : INativeStruct
 {
     ///<summary>
     /// [Internal]<br/>
@@ -6385,7 +6381,7 @@ public enum ImGuiListClipperFlags
 /// - User code submit visible elements.<br/>
 /// - The clipper also handles various subtleties related to keyboard/gamepad navigation, wrapping etc.<br/>
 ///</summary>
-public unsafe interface IImGuiListClipper : INativeStruct
+public unsafe partial interface IImGuiListClipper : INativeStruct
 {
     ///<summary>
     /// Parent UI context<br/>
@@ -6518,7 +6514,7 @@ public enum ImGuiMultiSelectFlags
 /// - Some fields are only useful if your list is dynamic and allows deletion (getting post-deletion focus/state right is shown in the demo)<br/>
 /// - Below: who reads/writes each fields? 'r'=read, 'w'=write, 'ms'=multi-select code, 'app'=application/user code.<br/>
 ///</summary>
-public unsafe interface IImGuiMultiSelectIO : INativeStruct
+public unsafe partial interface IImGuiMultiSelectIO : INativeStruct
 {
     ///<summary>
     ///  ms:w, app:r     /  ms:w  app:r    Requests to apply to your selection data.<br/>
@@ -6572,7 +6568,7 @@ public enum ImGuiSelectionRequestType
 ///<summary>
 /// Selection request item<br/>
 ///</summary>
-public unsafe interface IImGuiSelectionRequest : INativeStruct
+public unsafe partial interface IImGuiSelectionRequest : INativeStruct
 {
     ///<summary>
     ///  ms:w, app:r     /  ms:w, app:r    Request type. You'll most often receive 1 Clear + 1 SetRange with a single-item range.<br/>
@@ -6620,7 +6616,7 @@ public unsafe interface IImGuiSelectionRequest : INativeStruct
 /// Large applications are likely to eventually want to get rid of this indirection layer and do their own thing.<br/>
 /// See https:github.com/ocornut/imgui/wiki/Multi-Select for details and pseudo-code using this helper.<br/>
 ///</summary>
-public unsafe interface IImGuiSelectionBasicStorage : INativeStruct
+public unsafe partial interface IImGuiSelectionBasicStorage : INativeStruct
 {
     ///<summary>
     ///           Number of selected items, maintained by this helper.<br/>
@@ -6659,7 +6655,7 @@ public unsafe interface IImGuiSelectionBasicStorage : INativeStruct
 /// Optional helper to apply multi-selection requests to existing randomly accessible storage.<br/>
 /// Convenient if you want to quickly wire multi-select API on e.g. an array of bool or items storing their own selection state.<br/>
 ///</summary>
-public unsafe interface IImGuiSelectionExternalStorage : INativeStruct
+public unsafe partial interface IImGuiSelectionExternalStorage : INativeStruct
 {
     ///<summary>
     /// User data for use by adapter function                                 e.g. selection.UserData = (void*)my_items;<br/>
@@ -6681,7 +6677,7 @@ public unsafe interface IImGuiSelectionExternalStorage : INativeStruct
 ///   Backends made for &lt;1.71. will typically ignore the VtxOffset fields.<br/>
 /// - The ClipRect/TexRef/VtxOffset fields must be contiguous as we memcmp() them together (this is asserted for).<br/>
 ///</summary>
-public unsafe interface IImDrawCmd : INativeStruct
+public unsafe partial interface IImDrawCmd : INativeStruct
 {
     ///<summary>
     /// 4*4   Clipping rectangle (x1, y1, x2, y2). Subtract ImDrawData-&gt;DisplayPos to get clipping rectangle in "viewport" coordinates<br/>
@@ -6729,7 +6725,7 @@ public unsafe interface IImDrawCmd : INativeStruct
     ref int UserCallbackDataOffset { get; }
 }
 
-public unsafe interface IImDrawVert : INativeStruct
+public unsafe partial interface IImDrawVert : INativeStruct
 {
     ref Vector2 pos { get; }
 
@@ -6741,7 +6737,7 @@ public unsafe interface IImDrawVert : INativeStruct
 ///<summary>
 /// [Internal] For use by ImDrawList<br/>
 ///</summary>
-public unsafe interface IImDrawCmdHeader : INativeStruct
+public unsafe partial interface IImDrawCmdHeader : INativeStruct
 {
     ref Vector4 ClipRect { get; }
 
@@ -6753,7 +6749,7 @@ public unsafe interface IImDrawCmdHeader : INativeStruct
 ///<summary>
 /// [Internal] For use by ImDrawListSplitter<br/>
 ///</summary>
-public unsafe interface IImDrawChannel : INativeStruct
+public unsafe partial interface IImDrawChannel : INativeStruct
 {
     IImVectorWrapper<IImDrawCmd> _CmdBuffer { get; }
 
@@ -6764,7 +6760,7 @@ public unsafe interface IImDrawChannel : INativeStruct
 /// Split/Merge functions are used to split the draw list into different layers which can be drawn into out of order.<br/>
 /// This is used by the Columns/Tables API, so items of each column can be batched together in a same draw call.<br/>
 ///</summary>
-public unsafe interface IImDrawListSplitter : INativeStruct
+public unsafe partial interface IImDrawListSplitter : INativeStruct
 {
     ///<summary>
     /// Current channel number (0)<br/>
@@ -6861,7 +6857,7 @@ public enum ImDrawListFlags
 /// You are totally free to apply whatever transformation matrix you want to the data (depending on the use of the transformation you may want to apply it to ClipRect as well!)<br/>
 /// Important: Primitives are always added to the list and not culled (culling is done at higher-level by ImGui:: functions), if you use this API a lot consider coarse culling your drawn objects.<br/>
 ///</summary>
-public unsafe interface IImDrawList : INativeStruct
+public unsafe partial interface IImDrawList : INativeStruct
 {
     ///<summary>
     /// Draw commands. Typically 1 command = 1 GPU draw call, unless the command is a callback.<br/>
@@ -6953,7 +6949,7 @@ public unsafe interface IImDrawList : INativeStruct
 /// (NB: the style and the naming convention here is a little inconsistent, we currently preserve them for backward compatibility purpose,<br/>
 /// as this is one of the oldest structure exposed by the library! Basically, ImDrawList == CmdList)<br/>
 ///</summary>
-public unsafe interface IImDrawData : INativeStruct
+public unsafe partial interface IImDrawData : INativeStruct
 {
     ///<summary>
     /// Only valid after Render() is called and before the next NewFrame() is called.<br/>
@@ -7050,7 +7046,7 @@ public enum ImTextureStatus
 /// When a texture is in ImTextureStatus_WantUpdates state, we provide a list of individual rectangles to copy to the graphics system.<br/>
 /// You may use ImTextureData::Updates[] for the list, or ImTextureData::UpdateBox for a single bounding box.<br/>
 ///</summary>
-public unsafe interface IImTextureRect : INativeStruct
+public unsafe partial interface IImTextureRect : INativeStruct
 {
     ///<summary>
     /// Upper-left coordinates of rectangle to update<br/>
@@ -7082,7 +7078,7 @@ public unsafe interface IImTextureRect : INativeStruct
 /// - void*          BackendUserData = higher-level opaque storage for backend own book-keeping. Some backends may have enough with TexID and not need both.<br/>
 /// In columns below: who reads/writes each fields? 'r'=read, 'w'=write, 'core'=main library, 'backend'=renderer backend<br/>
 ///</summary>
-public unsafe interface IImTextureData : INativeStruct
+public unsafe partial interface IImTextureData : INativeStruct
 {
     ///<summary>
     /// w    -    [DEBUG] Sequential index to facilitate identifying a texture when debugging/printing. Unique per atlas.<br/>
@@ -7170,14 +7166,14 @@ public unsafe interface IImTextureData : INativeStruct
 ///<summary>
 /// A font input/source (we may rename this to ImFontSource in the future)<br/>
 ///</summary>
-public unsafe interface IImFontConfig : INativeStruct
+public unsafe partial interface IImFontConfig : INativeStruct
 {
     ///<summary>
     /// &lt;auto&gt;    Name (strictly to ease debugging, hence limited size buffer)<br/>
     ///<br/>
     /// Data Source<br/>
     ///</summary>
-    RangeAccessor<byte> Name { get; }
+    IRangeAccessor<byte> Name { get; }
 
     ///<summary>
     ///           TTF/OTF data<br/>
@@ -7312,7 +7308,7 @@ public unsafe interface IImFontConfig : INativeStruct
 /// Hold rendering data for one glyph.<br/>
 /// (Note: some language parsers may fail to convert the bitfield members, in this case maybe drop store a single u32 or we can rework this)<br/>
 ///</summary>
-public unsafe interface IImFontGlyph : INativeStruct
+public unsafe partial interface IImFontGlyph : INativeStruct
 {
     ref uint _bitfield { get; }
 
@@ -7391,7 +7387,7 @@ public unsafe interface IImFontGlyph : INativeStruct
 /// Helper to build glyph ranges from text/string data. Feed your application strings/characters to it then call BuildRanges().<br/>
 /// This is essentially a tightly packed of vector of 64k booleans = 8KB storage.<br/>
 ///</summary>
-public unsafe interface IImFontGlyphRangesBuilder : INativeStruct
+public unsafe partial interface IImFontGlyphRangesBuilder : INativeStruct
 {
     ///<summary>
     /// Store 1-bit per Unicode code point (0=unused, 1=used)<br/>
@@ -7404,7 +7400,7 @@ public unsafe interface IImFontGlyphRangesBuilder : INativeStruct
 /// Those values may not be cached/stored as they are only valid for the current value of atlas-&gt;TexRef<br/>
 /// (this is in theory derived from ImTextureRect but we use separate structures for reasons)<br/>
 ///</summary>
-public unsafe interface IImFontAtlasRect : INativeStruct
+public unsafe partial interface IImFontAtlasRect : INativeStruct
 {
     ///<summary>
     /// Position (in current texture)<br/>
@@ -7478,7 +7474,7 @@ public enum ImFontAtlasFlags
 /// - Even though many functions are suffixed with "TTF", OTF data is supported just as well.<br/>
 /// - This is an old API and it is currently awkward for those and various other reasons! We will address them in the future!<br/>
 ///</summary>
-public unsafe interface IImFontAtlas : INativeStruct
+public unsafe partial interface IImFontAtlas : INativeStruct
 {
     ///<summary>
     /// Build flags (see ImFontAtlasFlags_)<br/>
@@ -7577,7 +7573,7 @@ public unsafe interface IImFontAtlas : INativeStruct
     ///<summary>
     /// UVs for baked anti-aliased lines<br/>
     ///</summary>
-    RangeAccessor<Vector4> TexUvLines { get; }
+    IRangeAccessor<Vector4> TexUvLines { get; }
 
     ///<summary>
     /// Next value to be stored in TexData-&gt;UniqueID<br/>
@@ -7635,13 +7631,20 @@ public unsafe interface IImFontAtlas : INativeStruct
     /// Legacy: You can request your rectangles to be mapped as font glyph (given a font + Unicode point), so you can render e.g. custom colorful icons and use them as regular glyphs. --&gt; Prefer using a custom ImFontLoader.<br/>
     ///</summary>
     IImFontAtlasRect TempRect { get; }
+
+    ///<summary>
+    /// Latest texture identifier == TexData-&gt;GetTexRef().<br/>
+    ///</summary>
+    IImTextureRef TexRef { get; }
+
+    IImTextureRef TexID { get; }
 }
 
 ///<summary>
 /// Font runtime data for a given size<br/>
 /// Important: pointers to ImFontBaked are only valid for the current frame.<br/>
 ///</summary>
-public unsafe interface IImFontBaked : INativeStruct
+public unsafe partial interface IImFontBaked : INativeStruct
 {
     ///<summary>
     /// 12-16  out  Sparse. Glyphs-&gt;AdvanceX in a directly indexable way (cache-friendly for CalcTextSize functions which only this info, and are often bottleneck in large UI).<br/>
@@ -7767,7 +7770,7 @@ public enum ImFontFlags
 /// - Use 'font-&gt;GetFontBaked(size)' to retrieve the ImFontBaked* corresponding to a given size.<br/>
 /// - If you used g.Font + g.FontSize (which is frequent from the ImGui layer), you can use g.FontBaked as a shortcut, as g.FontBaked == g.Font-&gt;GetFontBaked(g.FontSize).<br/>
 ///</summary>
-public unsafe interface IImFont : INativeStruct
+public unsafe partial interface IImFont : INativeStruct
 {
     ///<summary>
     /// 4-8    Cache last bound baked. NEVER USE DIRECTLY. Use GetFontBaked().<br/>
@@ -7822,7 +7825,7 @@ public unsafe interface IImFont : INativeStruct
     ///<summary>
     /// 1 bytes if ImWchar=ImWchar16, 16 bytes if ImWchar==ImWchar32. Store 1-bit for each block of 4K codepoints that has one active glyph. This is mainly used to facilitate iterations across all used codepoints.<br/>
     ///</summary>
-    RangeAccessor<byte> Used8kPagesMap { get; }
+    IRangeAccessor<byte> Used8kPagesMap { get; }
 
     ///<summary>
     /// 1           Mark when the "..." glyph needs to be generated.<br/>
@@ -7915,7 +7918,7 @@ public enum ImGuiViewportFlags
 ///   - Work Area = entire viewport minus sections used by main menu bars (for platform windows), or by task bar (for platform monitor).<br/>
 ///   - Windows are generally trying to stay within the Work Area of their host viewport.<br/>
 ///</summary>
-public unsafe interface IImGuiViewport : INativeStruct
+public unsafe partial interface IImGuiViewport : INativeStruct
 {
     ///<summary>
     /// Unique identifier for the viewport<br/>
@@ -8022,7 +8025,7 @@ public unsafe interface IImGuiViewport : INativeStruct
 ///<summary>
 /// Access via ImGui::GetPlatformIO()<br/>
 ///</summary>
-public unsafe interface IImGuiPlatformIO : INativeStruct
+public unsafe partial interface IImGuiPlatformIO : INativeStruct
 {
     ///<summary>
     /// Optional: Access OS clipboard<br/>
@@ -8227,7 +8230,7 @@ public unsafe interface IImGuiPlatformIO : INativeStruct
 /// (Optional) This is required when enabling multi-viewport. Represent the bounds of each connected monitor/display and their DPI.<br/>
 /// We use this information for multiple DPI support + clamping the position of popups and tooltips so they don't straddle multiple monitors.<br/>
 ///</summary>
-public unsafe interface IImGuiPlatformMonitor : INativeStruct
+public unsafe partial interface IImGuiPlatformMonitor : INativeStruct
 {
     ///<summary>
     /// Coordinates of the area displayed on this monitor (Min = upper left, Max = bottom right)<br/>
@@ -8263,7 +8266,7 @@ public unsafe interface IImGuiPlatformMonitor : INativeStruct
 ///<summary>
 /// (Optional) Support for IME (Input Method Editor) via the platform_io.Platform_SetImeDataFn() function. Handler is called during EndFrame().<br/>
 ///</summary>
-public unsafe interface IImGuiPlatformImeData : INativeStruct
+public unsafe partial interface IImGuiPlatformImeData : INativeStruct
 {
     ///<summary>
     /// A widget wants the IME to be visible.<br/>
@@ -8350,6 +8353,6 @@ public enum ImGuiFreeTypeLoaderFlags
 /// If you need to dynamically select between multiple builders:<br/>
 /// - you can manually assign this builder with 'atlas-&gt;SetFontLoader(ImGuiFreeType::GetFontLoader())'<br/>
 ///</summary>
-public unsafe interface IImGuiFreeTypeImDrawData : INativeStruct
+public unsafe partial interface IImGuiFreeTypeImDrawData : INativeStruct
 {
 }

@@ -10,6 +10,7 @@ namespace NenTools.ImGui.Interfaces;
 ///</summary>
 public unsafe partial interface IImGui
 {
+    public ulong ImTextureRef_GetTexID(IImTextureRef self);
     public IImTextureRef CreateTextureRef(ulong texId);
 
     /// <summary>

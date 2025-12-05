@@ -15,55 +15,52 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Binaries\brotlicommon.dll">
+    <None Update="ImGui\Binaries\brotlicommon.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\brotlidec.dll">
+    <None Update="ImGui\Binaries\brotlidec.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\bz2.dll">
+    <None Update="ImGui\Binaries\bz2.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\freetype.dll">
+    <None Update="ImGui\Binaries\freetype.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\ImGuiLib.dll">
+    <None Update="ImGui\Binaries\ImGuiLib.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\ImGuiLib.pdb">
+    <None Update="ImGui\Binaries\libpng16.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\libpng16.dll">
+    <None Update="ImGui\Binaries\Licenses\brotli.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\Licenses\brotli.txt">
+    <None Update="ImGui\Binaries\Licenses\bz2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\Licenses\bz2.txt">
+    <None Update="ImGui\Binaries\Licenses\FTL.TXT">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\Licenses\FTL.TXT">
+    <None Update="ImGui\Binaries\Licenses\ImGui.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\Licenses\ImGui.txt">
+    <None Update="ImGui\Binaries\Licenses\libpng.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\Licenses\libpng.txt">
+    <None Update="ImGui\Binaries\Licenses\plutosvg.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\Licenses\plutosvg.txt">
+    <None Update="ImGui\Binaries\Licenses\zlib.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\Licenses\zlib.txt">
+    <None Update="ImGui\Binaries\plutosvg.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\plutosvg.dll">
+    <None Update="ImGui\Binaries\plutovg.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Binaries\plutovg.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Binaries\zlib1.dll">
+    <None Update="ImGui\Binaries\zlib1.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

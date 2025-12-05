@@ -8,7 +8,6 @@ using NenTools.ImGui.Native;
 namespace NenTools.ImGui.Implementation;
 public unsafe partial class ImGui : IImGui
 {
-    //public ulong ImTextureRef_GetTexID(IImTextureRef self) => ImGuiMethods.ImTextureRef_GetTexID(self is not null ? (ImTextureRefStruct*)self.NativePointer : null);
     public IImGuiContext CreateContext(IImFontAtlas shared_font_atlas)
     {
         var ret = ImGuiMethods.CreateContext(shared_font_atlas is not null ? (ImFontAtlasStruct*)shared_font_atlas.NativePointer : null);
@@ -1125,35 +1124,35 @@ public unsafe partial class ImGui : IImGui
     public bool ComboObsoleteEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int popup_max_height_in_items) => ImGuiMethods.ComboObsoleteEx(label, ref current_item, old_callback, user_data, items_count, popup_max_height_in_items);
     public bool ListBoxObsolete(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count) => ImGuiMethods.ListBoxObsolete(label, ref current_item, old_callback, user_data, items_count);
     public bool ListBoxObsoleteEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int height_in_items) => ImGuiMethods.ListBoxObsoleteEx(label, ref current_item, old_callback, user_data, items_count, height_in_items);
-    public unsafe struct ImDrawListSharedData : IImDrawListSharedData
+    public unsafe partial struct ImDrawListSharedData : IImDrawListSharedData
     {
         public nint NativePointer { get; set; }
 
         public ImDrawListSharedData(ImDrawListSharedDataStruct* nativePtr) => NativePointer = (nint)nativePtr;
     }
 
-    public unsafe struct ImFontAtlasBuilder : IImFontAtlasBuilder
+    public unsafe partial struct ImFontAtlasBuilder : IImFontAtlasBuilder
     {
         public nint NativePointer { get; set; }
 
         public ImFontAtlasBuilder(ImFontAtlasBuilderStruct* nativePtr) => NativePointer = (nint)nativePtr;
     }
 
-    public unsafe struct ImFontLoader : IImFontLoader
+    public unsafe partial struct ImFontLoader : IImFontLoader
     {
         public nint NativePointer { get; set; }
 
         public ImFontLoader(ImFontLoaderStruct* nativePtr) => NativePointer = (nint)nativePtr;
     }
 
-    public unsafe struct ImGuiContext : IImGuiContext
+    public unsafe partial struct ImGuiContext : IImGuiContext
     {
         public nint NativePointer { get; set; }
 
         public ImGuiContext(ImGuiContextStruct* nativePtr) => NativePointer = (nint)nativePtr;
     }
 
-    public unsafe struct ImGuiTableSortSpecs : IImGuiTableSortSpecs
+    public unsafe partial struct ImGuiTableSortSpecs : IImGuiTableSortSpecs
     {
         public nint NativePointer { get; set; }
 
@@ -1163,7 +1162,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref bool SpecsDirty => ref Unsafe.AsRef<bool>(&((ImGuiTableSortSpecsStruct*)NativePointer)->SpecsDirty);
     }
 
-    public unsafe struct ImGuiTableColumnSortSpecs : IImGuiTableColumnSortSpecs
+    public unsafe partial struct ImGuiTableColumnSortSpecs : IImGuiTableColumnSortSpecs
     {
         public nint NativePointer { get; set; }
 
@@ -1174,7 +1173,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref byte SortDirection => ref Unsafe.AsRef<byte>(&((ImGuiTableColumnSortSpecsStruct*)NativePointer)->SortDirection);
     }
 
-    public unsafe struct ImGuiStyle : IImGuiStyle
+    public unsafe partial struct ImGuiStyle : IImGuiStyle
     {
         public nint NativePointer { get; set; }
 
@@ -1243,7 +1242,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref bool AntiAliasedFill => ref Unsafe.AsRef<bool>(&((ImGuiStyleStruct*)NativePointer)->AntiAliasedFill);
         public readonly ref float CurveTessellationTol => ref Unsafe.AsRef<float>(&((ImGuiStyleStruct*)NativePointer)->CurveTessellationTol);
         public readonly ref float CircleTessellationMaxError => ref Unsafe.AsRef<float>(&((ImGuiStyleStruct*)NativePointer)->CircleTessellationMaxError);
-        public readonly RangeAccessor<Vector4> Colors => new RangeAccessor<Vector4>(&((ImGuiStyleStruct*)NativePointer)->Colors, 62);
+        public readonly IRangeAccessor<Vector4> Colors => new RangeAccessor<Vector4>(&((ImGuiStyleStruct*)NativePointer)->Colors, 62);
         public readonly ref float HoverStationaryDelay => ref Unsafe.AsRef<float>(&((ImGuiStyleStruct*)NativePointer)->HoverStationaryDelay);
         public readonly ref float HoverDelayShort => ref Unsafe.AsRef<float>(&((ImGuiStyleStruct*)NativePointer)->HoverDelayShort);
         public readonly ref float HoverDelayNormal => ref Unsafe.AsRef<float>(&((ImGuiStyleStruct*)NativePointer)->HoverDelayNormal);
@@ -1253,7 +1252,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref float _NextFrameFontSizeBase => ref Unsafe.AsRef<float>(&((ImGuiStyleStruct*)NativePointer)->_NextFrameFontSizeBase);
     }
 
-    public unsafe struct ImGuiKeyData : IImGuiKeyData
+    public unsafe partial struct ImGuiKeyData : IImGuiKeyData
     {
         public nint NativePointer { get; set; }
 
@@ -1264,7 +1263,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref float AnalogValue => ref Unsafe.AsRef<float>(&((ImGuiKeyDataStruct*)NativePointer)->AnalogValue);
     }
 
-    public unsafe struct ImGuiIO : IImGuiIO
+    public unsafe partial struct ImGuiIO : IImGuiIO
     {
         public nint NativePointer { get; set; }
 
@@ -1347,7 +1346,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref Vector2 MouseDelta => ref Unsafe.AsRef<Vector2>(&((ImGuiIOStruct*)NativePointer)->MouseDelta);
         public readonly IImGuiContext Ctx => new ImGuiContext(((ImGuiIOStruct*)NativePointer)->Ctx);
         public readonly ref Vector2 MousePos => ref Unsafe.AsRef<Vector2>(&((ImGuiIOStruct*)NativePointer)->MousePos);
-        public readonly RangeAccessor<bool> MouseDown => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDown, 5);
+        public readonly IRangeAccessor<bool> MouseDown => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDown, 5);
         public readonly ref float MouseWheel => ref Unsafe.AsRef<float>(&((ImGuiIOStruct*)NativePointer)->MouseWheel);
         public readonly ref float MouseWheelH => ref Unsafe.AsRef<float>(&((ImGuiIOStruct*)NativePointer)->MouseWheelH);
         public readonly ref int MouseSource => ref Unsafe.AsRef<int>(&((ImGuiIOStruct*)NativePointer)->MouseSource);
@@ -1357,25 +1356,25 @@ public unsafe partial class ImGui : IImGui
         public readonly ref bool KeyAlt => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->KeyAlt);
         public readonly ref bool KeySuper => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->KeySuper);
         public readonly ref int KeyMods => ref Unsafe.AsRef<int>(&((ImGuiIOStruct*)NativePointer)->KeyMods);
-        public readonly RangeStructAccessor<IImGuiKeyData> KeysData => new RangeStructAccessor<IImGuiKeyData>(&((ImGuiIOStruct*)NativePointer)->KeysData, 155, Unsafe.SizeOf<ImGuiKeyDataStruct>(), (addr) => new ImGuiKeyData((ImGuiKeyDataStruct*)addr));
+        public readonly IRangeStructAccessor<IImGuiKeyData> KeysData => new RangeStructAccessor<IImGuiKeyData>(&((ImGuiIOStruct*)NativePointer)->KeysData, 155, Unsafe.SizeOf<ImGuiKeyDataStruct>(), (addr) => new ImGuiKeyData((ImGuiKeyDataStruct*)addr));
         public readonly ref bool WantCaptureMouseUnlessPopupClose => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->WantCaptureMouseUnlessPopupClose);
         public readonly ref Vector2 MousePosPrev => ref Unsafe.AsRef<Vector2>(&((ImGuiIOStruct*)NativePointer)->MousePosPrev);
-        public readonly RangeAccessor<Vector2> MouseClickedPos => new RangeAccessor<Vector2>(&((ImGuiIOStruct*)NativePointer)->MouseClickedPos, 5);
-        public readonly RangeAccessor<double> MouseClickedTime => new RangeAccessor<double>(&((ImGuiIOStruct*)NativePointer)->MouseClickedTime, 5);
-        public readonly RangeAccessor<bool> MouseClicked => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseClicked, 5);
-        public readonly RangeAccessor<bool> MouseDoubleClicked => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDoubleClicked, 5);
-        public readonly RangeAccessor<ushort> MouseClickedCount => new RangeAccessor<ushort>(&((ImGuiIOStruct*)NativePointer)->MouseClickedCount, 5);
-        public readonly RangeAccessor<ushort> MouseClickedLastCount => new RangeAccessor<ushort>(&((ImGuiIOStruct*)NativePointer)->MouseClickedLastCount, 5);
-        public readonly RangeAccessor<bool> MouseReleased => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseReleased, 5);
-        public readonly RangeAccessor<double> MouseReleasedTime => new RangeAccessor<double>(&((ImGuiIOStruct*)NativePointer)->MouseReleasedTime, 5);
-        public readonly RangeAccessor<bool> MouseDownOwned => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDownOwned, 5);
-        public readonly RangeAccessor<bool> MouseDownOwnedUnlessPopupClose => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDownOwnedUnlessPopupClose, 5);
+        public readonly IRangeAccessor<Vector2> MouseClickedPos => new RangeAccessor<Vector2>(&((ImGuiIOStruct*)NativePointer)->MouseClickedPos, 5);
+        public readonly IRangeAccessor<double> MouseClickedTime => new RangeAccessor<double>(&((ImGuiIOStruct*)NativePointer)->MouseClickedTime, 5);
+        public readonly IRangeAccessor<bool> MouseClicked => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseClicked, 5);
+        public readonly IRangeAccessor<bool> MouseDoubleClicked => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDoubleClicked, 5);
+        public readonly IRangeAccessor<ushort> MouseClickedCount => new RangeAccessor<ushort>(&((ImGuiIOStruct*)NativePointer)->MouseClickedCount, 5);
+        public readonly IRangeAccessor<ushort> MouseClickedLastCount => new RangeAccessor<ushort>(&((ImGuiIOStruct*)NativePointer)->MouseClickedLastCount, 5);
+        public readonly IRangeAccessor<bool> MouseReleased => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseReleased, 5);
+        public readonly IRangeAccessor<double> MouseReleasedTime => new RangeAccessor<double>(&((ImGuiIOStruct*)NativePointer)->MouseReleasedTime, 5);
+        public readonly IRangeAccessor<bool> MouseDownOwned => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDownOwned, 5);
+        public readonly IRangeAccessor<bool> MouseDownOwnedUnlessPopupClose => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDownOwnedUnlessPopupClose, 5);
         public readonly ref bool MouseWheelRequestAxisSwap => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->MouseWheelRequestAxisSwap);
         public readonly ref bool MouseCtrlLeftAsRightClick => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->MouseCtrlLeftAsRightClick);
-        public readonly RangeAccessor<float> MouseDownDuration => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDownDuration, 5);
-        public readonly RangeAccessor<float> MouseDownDurationPrev => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDownDurationPrev, 5);
-        public readonly RangeAccessor<Vector2> MouseDragMaxDistanceAbs => new RangeAccessor<Vector2>(&((ImGuiIOStruct*)NativePointer)->MouseDragMaxDistanceAbs, 5);
-        public readonly RangeAccessor<float> MouseDragMaxDistanceSqr => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDragMaxDistanceSqr, 5);
+        public readonly IRangeAccessor<float> MouseDownDuration => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDownDuration, 5);
+        public readonly IRangeAccessor<float> MouseDownDurationPrev => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDownDurationPrev, 5);
+        public readonly IRangeAccessor<Vector2> MouseDragMaxDistanceAbs => new RangeAccessor<Vector2>(&((ImGuiIOStruct*)NativePointer)->MouseDragMaxDistanceAbs, 5);
+        public readonly IRangeAccessor<float> MouseDragMaxDistanceSqr => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDragMaxDistanceSqr, 5);
         public readonly ref float PenPressure => ref Unsafe.AsRef<float>(&((ImGuiIOStruct*)NativePointer)->PenPressure);
         public readonly ref bool AppFocusLost => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->AppFocusLost);
         public readonly ref bool AppAcceptingEvents => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->AppAcceptingEvents);
@@ -1387,7 +1386,7 @@ public unsafe partial class ImGui : IImGui
         public readonly void* ClipboardUserData { get => ((ImGuiIOStruct*)NativePointer)->ClipboardUserData; set => ((ImGuiIOStruct*)NativePointer)->ClipboardUserData = value; }
     }
 
-    public unsafe struct ImGuiInputTextCallbackData : IImGuiInputTextCallbackData
+    public unsafe partial struct ImGuiInputTextCallbackData : IImGuiInputTextCallbackData
     {
         public nint NativePointer { get; set; }
 
@@ -1407,7 +1406,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref int SelectionEnd => ref Unsafe.AsRef<int>(&((ImGuiInputTextCallbackDataStruct*)NativePointer)->SelectionEnd);
     }
 
-    public unsafe struct ImGuiSizeCallbackData : IImGuiSizeCallbackData
+    public unsafe partial struct ImGuiSizeCallbackData : IImGuiSizeCallbackData
     {
         public nint NativePointer { get; set; }
 
@@ -1418,7 +1417,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref Vector2 DesiredSize => ref Unsafe.AsRef<Vector2>(&((ImGuiSizeCallbackDataStruct*)NativePointer)->DesiredSize);
     }
 
-    public unsafe struct ImGuiWindowClass : IImGuiWindowClass
+    public unsafe partial struct ImGuiWindowClass : IImGuiWindowClass
     {
         public nint NativePointer { get; set; }
 
@@ -1434,7 +1433,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref bool DockingAllowUnclassed => ref Unsafe.AsRef<bool>(&((ImGuiWindowClassStruct*)NativePointer)->DockingAllowUnclassed);
     }
 
-    public unsafe struct ImGuiPayload : IImGuiPayload
+    public unsafe partial struct ImGuiPayload : IImGuiPayload
     {
         public nint NativePointer { get; set; }
 
@@ -1444,12 +1443,12 @@ public unsafe partial class ImGui : IImGui
         public readonly ref uint SourceId => ref Unsafe.AsRef<uint>(&((ImGuiPayloadStruct*)NativePointer)->SourceId);
         public readonly ref uint SourceParentId => ref Unsafe.AsRef<uint>(&((ImGuiPayloadStruct*)NativePointer)->SourceParentId);
         public readonly ref int DataFrameCount => ref Unsafe.AsRef<int>(&((ImGuiPayloadStruct*)NativePointer)->DataFrameCount);
-        public readonly RangeAccessor<byte> DataType => new RangeAccessor<byte>(&((ImGuiPayloadStruct*)NativePointer)->DataType, 33);
+        public readonly IRangeAccessor<byte> DataType => new RangeAccessor<byte>(&((ImGuiPayloadStruct*)NativePointer)->DataType, 33);
         public readonly ref bool Preview => ref Unsafe.AsRef<bool>(&((ImGuiPayloadStruct*)NativePointer)->Preview);
         public readonly ref bool Delivery => ref Unsafe.AsRef<bool>(&((ImGuiPayloadStruct*)NativePointer)->Delivery);
     }
 
-    public unsafe struct ImGuiTextFilter_ImGuiTextRange : IImGuiTextFilter_ImGuiTextRange
+    public unsafe partial struct ImGuiTextFilter_ImGuiTextRange : IImGuiTextFilter_ImGuiTextRange
     {
         public nint NativePointer { get; set; }
 
@@ -1458,17 +1457,17 @@ public unsafe partial class ImGui : IImGui
         public readonly sbyte* e { get => ((ImGuiTextFilter_ImGuiTextRangeStruct*)NativePointer)->e; set => ((ImGuiTextFilter_ImGuiTextRangeStruct*)NativePointer)->e = value; }
     }
 
-    public unsafe struct ImGuiTextFilter : IImGuiTextFilter
+    public unsafe partial struct ImGuiTextFilter : IImGuiTextFilter
     {
         public nint NativePointer { get; set; }
 
         public ImGuiTextFilter(ImGuiTextFilterStruct* nativePtr) => NativePointer = (nint)nativePtr;
-        public readonly RangeAccessor<byte> InputBuf => new RangeAccessor<byte>(&((ImGuiTextFilterStruct*)NativePointer)->InputBuf, 256);
+        public readonly IRangeAccessor<byte> InputBuf => new RangeAccessor<byte>(&((ImGuiTextFilterStruct*)NativePointer)->InputBuf, 256);
         public readonly IImVectorWrapper<IImGuiTextFilter_ImGuiTextRange> Filters => new ImVectorWrapper<IImGuiTextFilter_ImGuiTextRange>(Unsafe.Read<ImVector>(&((ImGuiTextFilterStruct*)NativePointer)->Filters), Unsafe.SizeOf<ImGuiTextFilter_ImGuiTextRangeStruct>(), (addr) => new ImGuiTextFilter_ImGuiTextRange((ImGuiTextFilter_ImGuiTextRangeStruct*)addr));
         public readonly ref int CountGrep => ref Unsafe.AsRef<int>(&((ImGuiTextFilterStruct*)NativePointer)->CountGrep);
     }
 
-    public unsafe struct ImGuiTextBuffer : IImGuiTextBuffer
+    public unsafe partial struct ImGuiTextBuffer : IImGuiTextBuffer
     {
         public nint NativePointer { get; set; }
 
@@ -1476,7 +1475,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImVectorWrapper<byte> Buf => new ImVectorWrapper<byte>(Unsafe.Read<ImVector>(&((ImGuiTextBufferStruct*)NativePointer)->Buf), Unsafe.SizeOf<byte>(), (addr) => *(byte*)addr);
     }
 
-    public unsafe struct ImGuiStorage : IImGuiStorage
+    public unsafe partial struct ImGuiStorage : IImGuiStorage
     {
         public nint NativePointer { get; set; }
 
@@ -1484,7 +1483,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImVectorWrapper<IImGuiStoragePair> Data => new ImVectorWrapper<IImGuiStoragePair>(Unsafe.Read<ImVector>(&((ImGuiStorageStruct*)NativePointer)->Data), Unsafe.SizeOf<ImGuiStoragePairStruct>(), (addr) => new ImGuiStoragePair((ImGuiStoragePairStruct*)addr));
     }
 
-    public unsafe struct ImGuiListClipper : IImGuiListClipper
+    public unsafe partial struct ImGuiListClipper : IImGuiListClipper
     {
         public nint NativePointer { get; set; }
 
@@ -1500,7 +1499,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref int Flags => ref Unsafe.AsRef<int>(&((ImGuiListClipperStruct*)NativePointer)->Flags);
     }
 
-    public unsafe struct ImGuiMultiSelectIO : IImGuiMultiSelectIO
+    public unsafe partial struct ImGuiMultiSelectIO : IImGuiMultiSelectIO
     {
         public nint NativePointer { get; set; }
 
@@ -1513,7 +1512,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref int ItemsCount => ref Unsafe.AsRef<int>(&((ImGuiMultiSelectIOStruct*)NativePointer)->ItemsCount);
     }
 
-    public unsafe struct ImGuiSelectionRequest : IImGuiSelectionRequest
+    public unsafe partial struct ImGuiSelectionRequest : IImGuiSelectionRequest
     {
         public nint NativePointer { get; set; }
 
@@ -1525,7 +1524,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref long RangeLastItem => ref Unsafe.AsRef<long>(&((ImGuiSelectionRequestStruct*)NativePointer)->RangeLastItem);
     }
 
-    public unsafe struct ImGuiSelectionBasicStorage : IImGuiSelectionBasicStorage
+    public unsafe partial struct ImGuiSelectionBasicStorage : IImGuiSelectionBasicStorage
     {
         public nint NativePointer { get; set; }
 
@@ -1538,7 +1537,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImGuiStorage _Storage => new ImGuiStorage(&((ImGuiSelectionBasicStorageStruct*)NativePointer)->_Storage);
     }
 
-    public unsafe struct ImGuiSelectionExternalStorage : IImGuiSelectionExternalStorage
+    public unsafe partial struct ImGuiSelectionExternalStorage : IImGuiSelectionExternalStorage
     {
         public nint NativePointer { get; set; }
 
@@ -1547,7 +1546,7 @@ public unsafe partial class ImGui : IImGui
         public readonly delegate* unmanaged[Cdecl]<nint, int, byte, void> AdapterSetItemSelected { get => ((ImGuiSelectionExternalStorageStruct*)NativePointer)->AdapterSetItemSelected; set => ((ImGuiSelectionExternalStorageStruct*)NativePointer)->AdapterSetItemSelected = value; }
     }
 
-    public unsafe struct ImDrawCmd : IImDrawCmd
+    public unsafe partial struct ImDrawCmd : IImDrawCmd
     {
         public nint NativePointer { get; set; }
 
@@ -1563,7 +1562,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref int UserCallbackDataOffset => ref Unsafe.AsRef<int>(&((ImDrawCmdStruct*)NativePointer)->UserCallbackDataOffset);
     }
 
-    public unsafe struct ImDrawVert : IImDrawVert
+    public unsafe partial struct ImDrawVert : IImDrawVert
     {
         public nint NativePointer { get; set; }
 
@@ -1573,7 +1572,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref uint col => ref Unsafe.AsRef<uint>(&((ImDrawVertStruct*)NativePointer)->col);
     }
 
-    public unsafe struct ImDrawCmdHeader : IImDrawCmdHeader
+    public unsafe partial struct ImDrawCmdHeader : IImDrawCmdHeader
     {
         public nint NativePointer { get; set; }
 
@@ -1583,7 +1582,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref uint VtxOffset => ref Unsafe.AsRef<uint>(&((ImDrawCmdHeaderStruct*)NativePointer)->VtxOffset);
     }
 
-    public unsafe struct ImDrawChannel : IImDrawChannel
+    public unsafe partial struct ImDrawChannel : IImDrawChannel
     {
         public nint NativePointer { get; set; }
 
@@ -1592,7 +1591,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImVectorWrapper<ushort> _IdxBuffer => new ImVectorWrapper<ushort>(Unsafe.Read<ImVector>(&((ImDrawChannelStruct*)NativePointer)->_IdxBuffer), Unsafe.SizeOf<ushort>(), (addr) => *(ushort*)addr);
     }
 
-    public unsafe struct ImDrawListSplitter : IImDrawListSplitter
+    public unsafe partial struct ImDrawListSplitter : IImDrawListSplitter
     {
         public nint NativePointer { get; set; }
 
@@ -1602,7 +1601,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImVectorWrapper<IImDrawChannel> _Channels => new ImVectorWrapper<IImDrawChannel>(Unsafe.Read<ImVector>(&((ImDrawListSplitterStruct*)NativePointer)->_Channels), Unsafe.SizeOf<ImDrawChannelStruct>(), (addr) => new ImDrawChannel((ImDrawChannelStruct*)addr));
     }
 
-    public unsafe struct ImDrawList : IImDrawList
+    public unsafe partial struct ImDrawList : IImDrawList
     {
         public nint NativePointer { get; set; }
 
@@ -1625,7 +1624,7 @@ public unsafe partial class ImGui : IImGui
         public readonly sbyte* _OwnerName { get => ((ImDrawListStruct*)NativePointer)->_OwnerName; set => ((ImDrawListStruct*)NativePointer)->_OwnerName = value; }
     }
 
-    public unsafe struct ImDrawData : IImDrawData
+    public unsafe partial struct ImDrawData : IImDrawData
     {
         public nint NativePointer { get; set; }
 
@@ -1642,7 +1641,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImStructPtrVectorPtrWrapper<IImTextureData> Textures => new ImStructPtrVectorPtrWrapper<IImTextureData>((nint)(&(((ImDrawDataStruct*)NativePointer)->Textures)), (addr) => new ImTextureData((ImTextureDataStruct*)addr));
     }
 
-    public unsafe struct ImTextureRect : IImTextureRect
+    public unsafe partial struct ImTextureRect : IImTextureRect
     {
         public nint NativePointer { get; set; }
 
@@ -1653,7 +1652,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref ushort h => ref Unsafe.AsRef<ushort>(&((ImTextureRectStruct*)NativePointer)->h);
     }
 
-    public unsafe struct ImTextureData : IImTextureData
+    public unsafe partial struct ImTextureData : IImTextureData
     {
         public nint NativePointer { get; set; }
 
@@ -1676,12 +1675,12 @@ public unsafe partial class ImGui : IImGui
         public readonly ref bool WantDestroyNextFrame => ref Unsafe.AsRef<bool>(&((ImTextureDataStruct*)NativePointer)->WantDestroyNextFrame);
     }
 
-    public unsafe struct ImFontConfig : IImFontConfig
+    public unsafe partial struct ImFontConfig : IImFontConfig
     {
         public nint NativePointer { get; set; }
 
         public ImFontConfig(ImFontConfigStruct* nativePtr) => NativePointer = (nint)nativePtr;
-        public readonly RangeAccessor<byte> Name => new RangeAccessor<byte>(&((ImFontConfigStruct*)NativePointer)->Name, 40);
+        public readonly IRangeAccessor<byte> Name => new RangeAccessor<byte>(&((ImFontConfigStruct*)NativePointer)->Name, 40);
         public readonly void* FontData { get => ((ImFontConfigStruct*)NativePointer)->FontData; set => ((ImFontConfigStruct*)NativePointer)->FontData = value; }
         public readonly ref int FontDataSize => ref Unsafe.AsRef<int>(&((ImFontConfigStruct*)NativePointer)->FontDataSize);
         public readonly ref bool FontDataOwnedByAtlas => ref Unsafe.AsRef<bool>(&((ImFontConfigStruct*)NativePointer)->FontDataOwnedByAtlas);
@@ -1708,7 +1707,7 @@ public unsafe partial class ImGui : IImGui
         public readonly void* FontLoaderData { get => ((ImFontConfigStruct*)NativePointer)->FontLoaderData; set => ((ImFontConfigStruct*)NativePointer)->FontLoaderData = value; }
     }
 
-    public unsafe struct ImFontGlyph : IImFontGlyph
+    public unsafe partial struct ImFontGlyph : IImFontGlyph
     {
         public nint NativePointer { get; set; }
 
@@ -1730,7 +1729,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref int PackId => ref Unsafe.AsRef<int>(&((ImFontGlyphStruct*)NativePointer)->PackId);
     }
 
-    public unsafe struct ImFontGlyphRangesBuilder : IImFontGlyphRangesBuilder
+    public unsafe partial struct ImFontGlyphRangesBuilder : IImFontGlyphRangesBuilder
     {
         public nint NativePointer { get; set; }
 
@@ -1738,7 +1737,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImVectorWrapper<uint> UsedChars => new ImVectorWrapper<uint>(Unsafe.Read<ImVector>(&((ImFontGlyphRangesBuilderStruct*)NativePointer)->UsedChars), Unsafe.SizeOf<uint>(), (addr) => *(uint*)addr);
     }
 
-    public unsafe struct ImFontAtlasRect : IImFontAtlasRect
+    public unsafe partial struct ImFontAtlasRect : IImFontAtlasRect
     {
         public nint NativePointer { get; set; }
 
@@ -1751,7 +1750,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref Vector2 uv1 => ref Unsafe.AsRef<Vector2>(&((ImFontAtlasRectStruct*)NativePointer)->uv1);
     }
 
-    public unsafe struct ImFontAtlas : IImFontAtlas
+    public unsafe partial struct ImFontAtlas : IImFontAtlas
     {
         public nint NativePointer { get; set; }
 
@@ -1774,7 +1773,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref Vector2 TexUvWhitePixel => ref Unsafe.AsRef<Vector2>(&((ImFontAtlasStruct*)NativePointer)->TexUvWhitePixel);
         public readonly IImStructPtrVectorWrapper<IImFont> Fonts => new ImStructPtrVectorWrapper<IImFont>(Unsafe.Read<ImVector>(&((ImFontAtlasStruct*)NativePointer)->Fonts), (addr) => new ImFont((ImFontStruct*)addr));
         public readonly IImVectorWrapper<IImFontConfig> Sources => new ImVectorWrapper<IImFontConfig>(Unsafe.Read<ImVector>(&((ImFontAtlasStruct*)NativePointer)->Sources), Unsafe.SizeOf<ImFontConfigStruct>(), (addr) => new ImFontConfig((ImFontConfigStruct*)addr));
-        public readonly RangeAccessor<Vector4> TexUvLines => new RangeAccessor<Vector4>(&((ImFontAtlasStruct*)NativePointer)->TexUvLines, 33);
+        public readonly IRangeAccessor<Vector4> TexUvLines => new RangeAccessor<Vector4>(&((ImFontAtlasStruct*)NativePointer)->TexUvLines, 33);
         public readonly ref int TexNextUniqueID => ref Unsafe.AsRef<int>(&((ImFontAtlasStruct*)NativePointer)->TexNextUniqueID);
         public readonly ref int FontNextUniqueID => ref Unsafe.AsRef<int>(&((ImFontAtlasStruct*)NativePointer)->FontNextUniqueID);
         public readonly IImStructPtrVectorWrapper<IImDrawListSharedData> DrawListSharedDatas => new ImStructPtrVectorWrapper<IImDrawListSharedData>(Unsafe.Read<ImVector>(&((ImFontAtlasStruct*)NativePointer)->DrawListSharedDatas), (addr) => new ImDrawListSharedData((ImDrawListSharedDataStruct*)addr));
@@ -1786,9 +1785,11 @@ public unsafe partial class ImGui : IImGui
         public readonly ref int RefCount => ref Unsafe.AsRef<int>(&((ImFontAtlasStruct*)NativePointer)->RefCount);
         public readonly IImGuiContext OwnerContext => new ImGuiContext(((ImFontAtlasStruct*)NativePointer)->OwnerContext);
         public readonly IImFontAtlasRect TempRect => new ImFontAtlasRect(&((ImFontAtlasStruct*)NativePointer)->TempRect);
+        public readonly IImTextureRef TexRef { get => new ImTextureRef(((ImFontAtlasStruct*)NativePointer)->TexRef); set => ((ImFontAtlasStruct*)NativePointer)->TexRef = ((ImTextureRef)value).ToStruct(); }
+        public readonly IImTextureRef TexID { get => new ImTextureRef(((ImFontAtlasStruct*)NativePointer)->TexID); set => ((ImFontAtlasStruct*)NativePointer)->TexID = ((ImTextureRef)value).ToStruct(); }
     }
 
-    public unsafe struct ImFontBaked : IImFontBaked
+    public unsafe partial struct ImFontBaked : IImFontBaked
     {
         public nint NativePointer { get; set; }
 
@@ -1813,7 +1814,7 @@ public unsafe partial class ImGui : IImGui
         public readonly void* FontLoaderDatas { get => ((ImFontBakedStruct*)NativePointer)->FontLoaderDatas; set => ((ImFontBakedStruct*)NativePointer)->FontLoaderDatas = value; }
     }
 
-    public unsafe struct ImFont : IImFont
+    public unsafe partial struct ImFont : IImFont
     {
         public nint NativePointer { get; set; }
 
@@ -1827,13 +1828,13 @@ public unsafe partial class ImGui : IImGui
         public readonly IImStructPtrVectorWrapper<IImFontConfig> Sources => new ImStructPtrVectorWrapper<IImFontConfig>(Unsafe.Read<ImVector>(&((ImFontStruct*)NativePointer)->Sources), (addr) => new ImFontConfig((ImFontConfigStruct*)addr));
         public readonly ref uint EllipsisChar => ref Unsafe.AsRef<uint>(&((ImFontStruct*)NativePointer)->EllipsisChar);
         public readonly ref uint FallbackChar => ref Unsafe.AsRef<uint>(&((ImFontStruct*)NativePointer)->FallbackChar);
-        public readonly RangeAccessor<byte> Used8kPagesMap => new RangeAccessor<byte>(&((ImFontStruct*)NativePointer)->Used8kPagesMap, 17);
+        public readonly IRangeAccessor<byte> Used8kPagesMap => new RangeAccessor<byte>(&((ImFontStruct*)NativePointer)->Used8kPagesMap, 17);
         public readonly ref bool EllipsisAutoBake => ref Unsafe.AsRef<bool>(&((ImFontStruct*)NativePointer)->EllipsisAutoBake);
         public readonly IImGuiStorage RemapPairs => new ImGuiStorage(&((ImFontStruct*)NativePointer)->RemapPairs);
         public readonly ref float Scale => ref Unsafe.AsRef<float>(&((ImFontStruct*)NativePointer)->Scale);
     }
 
-    public unsafe struct ImGuiViewport : IImGuiViewport
+    public unsafe partial struct ImGuiViewport : IImGuiViewport
     {
         public nint NativePointer { get; set; }
 
@@ -1859,7 +1860,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref bool PlatformRequestClose => ref Unsafe.AsRef<bool>(&((ImGuiViewportStruct*)NativePointer)->PlatformRequestClose);
     }
 
-    public unsafe struct ImGuiPlatformIO : IImGuiPlatformIO
+    public unsafe partial struct ImGuiPlatformIO : IImGuiPlatformIO
     {
         public nint NativePointer { get; set; }
 
@@ -1905,7 +1906,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImStructPtrVectorWrapper<IImGuiViewport> Viewports => new ImStructPtrVectorWrapper<IImGuiViewport>(Unsafe.Read<ImVector>(&((ImGuiPlatformIOStruct*)NativePointer)->Viewports), (addr) => new ImGuiViewport((ImGuiViewportStruct*)addr));
     }
 
-    public unsafe struct ImGuiPlatformMonitor : IImGuiPlatformMonitor
+    public unsafe partial struct ImGuiPlatformMonitor : IImGuiPlatformMonitor
     {
         public nint NativePointer { get; set; }
 
@@ -1918,7 +1919,7 @@ public unsafe partial class ImGui : IImGui
         public readonly void* PlatformHandle { get => ((ImGuiPlatformMonitorStruct*)NativePointer)->PlatformHandle; set => ((ImGuiPlatformMonitorStruct*)NativePointer)->PlatformHandle = value; }
     }
 
-    public unsafe struct ImGuiPlatformImeData : IImGuiPlatformImeData
+    public unsafe partial struct ImGuiPlatformImeData : IImGuiPlatformImeData
     {
         public nint NativePointer { get; set; }
 
@@ -1941,13 +1942,7 @@ public unsafe partial class ImGui : IImGui
     public void ImGuiFreeTypeSetAllocatorFunctions(delegate* unmanaged[Cdecl]<nuint, nint, nint> alloc_func, delegate* unmanaged[Cdecl]<nint, nint, void> free_func) => ImGuiMethods.ImGuiFreeTypeSetAllocatorFunctions(alloc_func, free_func);
     public void ImGuiFreeTypeSetAllocatorFunctionsEx(delegate* unmanaged[Cdecl]<nuint, nint, nint> alloc_func, delegate* unmanaged[Cdecl]<nint, nint, void> free_func, void* user_data) => ImGuiMethods.ImGuiFreeTypeSetAllocatorFunctionsEx(alloc_func, free_func, user_data);
     public bool ImGuiFreeTypeDebugEditFontLoaderFlags(ref uint p_font_loader_flags) => ImGuiMethods.ImGuiFreeTypeDebugEditFontLoaderFlags(ref p_font_loader_flags);
-
-    public ulong ImTextureRef_GetTexID(IImTextureRef self)
-    {
-        throw new NotImplementedException();
-    }
-
-    public unsafe struct ImGuiFreeTypeImDrawData : IImGuiFreeTypeImDrawData
+    public unsafe partial struct ImGuiFreeTypeImDrawData : IImGuiFreeTypeImDrawData
     {
         public nint NativePointer { get; set; }
 
