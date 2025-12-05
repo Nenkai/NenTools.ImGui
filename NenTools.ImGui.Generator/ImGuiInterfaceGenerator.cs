@@ -34,13 +34,15 @@ public class ImGuiInterfaceGenerator
     private DearBindingsMetadata _metadata;
 
     /// <summary>
-    /// Functions that we declare manually (mainly because they're a chore to implement and interface through code).
+    /// Functions that we declare manually and are therefore skipped interface and impl wise (mainly because they're a chore to implement and interface through code).
     /// </summary>
     private static readonly FrozenSet<string> ManuallyImplementedFunctions =
     [
         // Functions with out parameters that are vectors
         "ImGuiTextFilter_ImGuiTextRange_split",
-        "ImFontGlyphRangesBuilder_BuildRanges"
+        "ImFontGlyphRangesBuilder_BuildRanges",
+
+        "ImTextureRef_GetTexID", // Kind of annoying value type.
     ];
 
 
@@ -243,7 +245,11 @@ public class ImGuiInterfaceGenerator
                         StructMetadata? structMetadata = _metadata.StructsByName![structName];
                         InterfaceDeclarationSyntax newInterface = SF.InterfaceDeclaration($"I{structName}")
                             .WithMembers(SF.List<MemberDeclarationSyntax>(newStructMembers))
-                            .WithModifiers(SF.TokenList(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.UnsafeKeyword)))
+                            .WithModifiers(SF.TokenList([
+                                SF.Token(SyntaxKind.PublicKeyword),
+                                SF.Token(SyntaxKind.UnsafeKeyword),
+                                SF.Token(SyntaxKind.PartialKeyword),
+                            ]))
                             .WithBaseList(SF.BaseList([SF.SimpleBaseType(SF.ParseTypeName("INativeStruct"))]));
 
                         newInterface = DecorateWithComments(newInterface, structMetadata.Comments?.Attached, structMetadata.Comments?.Preceding);
@@ -286,8 +292,8 @@ public class ImGuiInterfaceGenerator
         InterfaceDeclarationSyntax interfaceClass = SF.InterfaceDeclaration("IImGui")
             .WithModifiers(SF.TokenList([
                 SF.Token(SyntaxKind.PublicKeyword),
-                SF.Token(SyntaxKind.UnsafeKeyword), 
-                SF.Token(SyntaxKind.PartialKeyword)
+                SF.Token(SyntaxKind.UnsafeKeyword),
+                SF.Token(SyntaxKind.PartialKeyword),
             ]))
             .WithMembers(new SyntaxList<MemberDeclarationSyntax>(_interfaceMethodList))
             .AddSummary(["Interface to the ImGui library."]);
@@ -603,7 +609,11 @@ public class ImGuiInterfaceGenerator
                             SF.SimpleBaseType(SF.ParseTypeName($"I{structName}")),
                         })))
                         .WithMembers(SF.List<MemberDeclarationSyntax>(newStructMembers))
-                        .WithModifiers(SF.TokenList(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.UnsafeKeyword)));
+                        .WithModifiers(SF.TokenList([
+                            SF.Token(SyntaxKind.PublicKeyword),
+                            SF.Token(SyntaxKind.UnsafeKeyword),
+                            SF.Token(SyntaxKind.PartialKeyword),
+                        ]));
 
                         _implMemberList.Add(newStruct);
                     }
@@ -731,8 +741,20 @@ public class ImGuiInterfaceGenerator
             {
                 newType = FixupParameterType(propertyDeclaration.Type, propertyDeclaration.AttributeLists, ImGuiStructTypeKind.ForImpl, out _);
 
-                var body = SyntaxTreeUtils.CreateRefToPointerConstructorCall(newType.ToString(), nativeStructName, "NativePointer", fieldName);
-                arrowExpression = SF.ArrowExpressionClause(body);
+                // Originally ref value type from possibly an union?
+                string implTypeName = newType.ToString().Substring(1);
+                if (TypeInfo.ManuallyDeclaredValueTypesAsInterfaces.Contains(implTypeName))
+                {
+                    withGetter = true;
+                    withSetter = true;
+                    getterArrowExpression = SF.ParseExpression($"new {implTypeName}((({nativeStructName}*)NativePointer)->{fieldName})");
+                    setterArrowExpression = SF.ParseExpression($"(({nativeStructName}*)NativePointer)->{fieldName} = (({implTypeName})value).ToStruct()");
+                }
+                else
+                {
+                    var body = SyntaxTreeUtils.CreateRefToPointerConstructorCall(newType.ToString(), nativeStructName, "NativePointer", fieldName);
+                    arrowExpression = SF.ArrowExpressionClause(body);
+                }
             }
         }
 
@@ -757,9 +779,9 @@ public class ImGuiInterfaceGenerator
                 SF.SimpleBaseType(SF.ParseTypeName("IImGui")),
             })))
             .WithModifiers(SF.TokenList([
-                SF.Token(SyntaxKind.PublicKeyword), 
-                SF.Token(SyntaxKind.UnsafeKeyword), 
-                SF.Token(SyntaxKind.PartialKeyword)
+                SF.Token(SyntaxKind.PublicKeyword),
+                SF.Token(SyntaxKind.UnsafeKeyword),
+                SF.Token(SyntaxKind.PartialKeyword),
              ]))
             .WithMembers(new SyntaxList<MemberDeclarationSyntax>(_implMemberList));
 
@@ -930,7 +952,11 @@ public class ImGuiInterfaceGenerator
 
                         StructDeclarationSyntax newClass = SF.StructDeclaration($"{structName}Struct")
                         .WithMembers(SF.List<MemberDeclarationSyntax>(newStructMembers))
-                        .WithModifiers(SF.TokenList(SF.Token(SyntaxKind.PublicKeyword), SF.Token(SyntaxKind.UnsafeKeyword)));
+                        .WithModifiers(SF.TokenList([
+                            SF.Token(SyntaxKind.PublicKeyword),
+                            SF.Token(SyntaxKind.UnsafeKeyword),
+                            SF.Token(SyntaxKind.PartialKeyword),
+                        ]));
 
                         _bindingsMemberList.Add(newClass);
                     }
@@ -992,8 +1018,8 @@ public class ImGuiInterfaceGenerator
                         SyntaxTreeUtils.CreateWarningDirectiveTrivia("SYSLIB1054", "// Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time"),
                         SyntaxTreeUtils.CreateWarningDirectiveTrivia("CA2101", "// Specify marshaling for P/Invoke string arguments"),
                 ]), SyntaxKind.PublicKeyword, SF.TriviaList()),
-                SF.Token(SyntaxKind.UnsafeKeyword)
-                //SF.Token(SyntaxKind.PublicKeyword)
+                SF.Token(SyntaxKind.UnsafeKeyword),
+                SF.Token(SyntaxKind.PartialKeyword)
             ))
             .WithMembers(new SyntaxList<MemberDeclarationSyntax>(_bindingsMethodList));
 
@@ -1083,14 +1109,22 @@ public class ImGuiInterfaceGenerator
                     throw new InvalidDataException("Failed to parse native type name array");
 
                 if (TypeInfo.TryGetWellknownType(name, out _) || TypeInfo.BasicRefableTypes.TryGetValue(name, out _))
-                    return SF.ParseTypeName($"RangeAccessor<{GetCorrectedType(name)}>");
+                {
+                    if (typeFixKind == ImGuiStructTypeKind.ForInterface)
+                        return SF.ParseTypeName($"IRangeAccessor<{GetCorrectedType(name)}>");
+                    else
+                        return SF.ParseTypeName($"RangeAccessor<{GetCorrectedType(name)}>");
+                }
                 else
                 {
                     // Structure we don't know about. Put into a range accessor that will wrap the element
                     if (typeFixKind == ImGuiStructTypeKind.ForInterface)
                         name = $"I{name}";
 
-                    return SF.ParseTypeName($"RangeStructAccessor<{GetCorrectedType(name)}>");
+                    if (typeFixKind == ImGuiStructTypeKind.ForInterface)
+                        return SF.ParseTypeName($"IRangeStructAccessor<{GetCorrectedType(name)}>");
+                    else
+                        return SF.ParseTypeName($"RangeStructAccessor<{GetCorrectedType(name)}>");
                 }
             }
             else
@@ -1106,6 +1140,24 @@ public class ImGuiInterfaceGenerator
         // don't really want to wrap these - kind of lazy.
         if (type.IsKind(SyntaxKind.FunctionPointerType))
             return FixupFunctionPointer(type);
+
+        // try fixing union structs that have been turned into a ref i.e union { ImTextureRef }
+        if (type.IsKind(SyntaxKind.RefType))
+        {
+            RefTypeSyntax refType = (RefTypeSyntax)type;
+            string typeName = TrimTypeName(refType.Type.GetText().ToString().TrimEnd());
+
+            // We should have these declared manually
+            if (TypeInfo.ManuallyDeclaredValueTypesAsInterfaces.Contains(typeName))
+            {
+                if (typeFixKind == ImGuiStructTypeKind.ForNativeStruct)
+                    return SF.ParseTypeName($"ref {typeName}Struct");
+                else if (typeFixKind == ImGuiStructTypeKind.ForInterface || typeFixKind == ImGuiStructTypeKind.ForImpl)
+                    return SF.ParseTypeName($"I{typeName}");
+            }
+            else
+                throw new NotSupportedException($"Ref type with unsupported value type {typeName}");
+        }
 
         if (pointersToNint)
         {
