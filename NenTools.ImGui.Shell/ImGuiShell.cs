@@ -75,9 +75,23 @@ public class ImGuiShell : IImGuiShell
     public void DisableOverlay() => IsOverlayEnabled = false;
     public void EnableOverlay() => IsOverlayEnabled = true;
 
-    public void HideMenu() => _menuVisible = false;
-    public void ShowMenu() => _menuVisible = true;
-    public void ToggleMenuState() => _menuVisible = !_menuVisible;
+    public void HideMenu() => SetMenuState(false);
+    public void ShowMenu() => SetMenuState(true);
+    public void ToggleMenuState() => SetMenuState(!_menuVisible);
+
+    private void SetMenuState(bool visible)
+    {
+        _menuVisible = visible;
+        if (ContextCreated)
+        {
+            // Ensure to alert ImGui not to do any cursor changes if the cursor is not visible
+            // Otherwise if the menu is hidden, ImGui may try to apply changes which will may cause cursor flicker.
+            if (_menuVisible)
+                _imGui.GetIO().ConfigFlags &= ~ImGuiConfigFlags.ImGuiConfigFlags_NoMouseCursorChange;
+            else
+                _imGui.GetIO().ConfigFlags |= ImGuiConfigFlags.ImGuiConfigFlags_NoMouseCursorChange;
+        }
+    }
 
     /// <summary>
     /// Sets up all ImGui hooks on startup.
