@@ -50,9 +50,26 @@ public Mod(ModContext context)
 }
 ```
 
-## Consumer Usage
+## Server/Framework Usage
 
-### Quick Guide
+```csharp
+var config = new ImGuiConfig(); // Or parse from a file
+ var imGuiHookDx12 = new ImguiHookDx12();
+_imGuiShell = new ImGuiShell(_hooks!, imGuiHookDx12, _imGui, config);
+_imGuiShell.OnImGuiConfiguration += ConfigureImgui; // Callback that can be used to setup fonts and components for the shell
+_imGuiShell.OnEndMainMenuBarRender += RenderAnimatedTitle; // Can be used to decorate the top menu bar
+_imGuiShell.OnLogMessage += (message, color) => _logger.WriteLine(message, color ?? System.Drawing.Color.White);
+_imGuiShell.OnFirstRender += OnFirstImGuiRender; // Can be used to display a startup message
+_imGuiShell.SetupHooks();
+
+// Share ImGuiShell and IImGui. In Reloaded-II, you can do this using IExports and AddOrUpdateController.
+// You should hook the game's inputs to interact with the shell to be able to handle mouse movement without ImGui interfering with the game.
+
+// Once you have a game frame from the game, start injecting.
+_imGuiShell.Start();
+```
+
+## Consumer Usage
 
 1. Grab `IImGui` **and** `IImGuiShell`:
 ```csharp
