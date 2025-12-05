@@ -88,7 +88,7 @@ public class MyImGuiComponent : IImGuiComponent
     public void RenderMenu()
     {
         // Write code to render menu entries here.
-        // By default, FF16Framework will render a top menu bar which you can add elements to.
+        // By default, the shell will render a top menu bar which you can add elements to.
         if (_imgui.BeginMenu("MyModName"))
         {
             _imgui.MenuItem("Menu Item 1");
@@ -127,7 +127,7 @@ imguiShell.AddComponent(new PhotoModeMenu(_imGui));
 ```
 
 > [!WARNING]
-> The user may choose to not load ImGui based on the framework settings. If you are running logic that needs to run depending on the overlay, ensure to check that `ImGuiSupport.IsOverlayLoaded` is `true`.
+> The user may choose to not load ImGui. If you are running logic that needs to run depending on the overlay, ensure to check that `ImGuiShell.IsOverlayLoaded` is `true`.
 
 That's all you should needed to render something on screen.
 
@@ -150,7 +150,7 @@ The ImGui bindings have been built using a fork of [dear-bindings](https://githu
 
 The bindings have been generated using [NenTools.ImGui.Generator](NenTools.ImGui.Generator), which also takes a different approach.
 
-It functions by massaging the output of [ClangSharpPInvokeGenerator](https://github.com/dotnet/ClangSharp) into an interface (for Reloaded and mods), and the implementation/actual bindings for the framework.
+It functions by massaging the output of [ClangSharpPInvokeGenerator](https://github.com/dotnet/ClangSharp) into an interface (for Reloaded and mods), and the implementation/actual bindings.
 
 ### Building Bindings
 
@@ -190,9 +190,9 @@ CIMGUI_IMPL_API LRESULT cImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPA
 
 ### Step 3: NenTools.ImGui.Generator
 
-The framework has a `NenTools.ImGui.Generator` project. Compile and run it, the first argument to the folder should be the path to the `generated` folder.
+The solution has a `NenTools.ImGui.Generator` project. Compile and run it, the first argument to the folder should be the path to the `generated` folder.
 
-Once you run it, you will have `ImGui.cs`, `IImGui.cs` and `ImGuiMethods.cs` files in that project's `generated` folder. They will be in their distinct folders ready to copy to the actual framework folder.
+Once you run it, you will have `ImGui.cs`, `IImGui.cs` and `ImGuiMethods.cs` files in that project's `generated` folder. They will be in their distinct folders ready to copy to the actual solution folder.
 
 If you are updating bindings you may need to diff changes and provide polyfills if needed.
 
