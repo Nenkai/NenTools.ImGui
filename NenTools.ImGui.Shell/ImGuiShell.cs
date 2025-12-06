@@ -70,7 +70,7 @@ public class ImGuiShell : IImGuiShell
 
         _overlayLogger = new OverlayLogger(_imGui, _imGuiConfig);
         TextureManager = new ImGuiTextureManager(imguiHook, loggerFactory);
-        ShowMenu();
+        HideMenu();
     }
 
     public void DisableOverlay() => IsOverlayEnabled = false;
