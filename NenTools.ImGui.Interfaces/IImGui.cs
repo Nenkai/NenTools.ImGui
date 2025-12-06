@@ -1766,19 +1766,19 @@ public unsafe partial interface IImGui
     /// - (legacy: before v1.87, we used ImGuiKey to carry native/user indices as defined by each backends. This was obsoleted in 1.87 (2022-02) and completely removed in 1.91.5 (2024-11). See https:github.com/ocornut/imgui/issues/4921)<br/>
     /// - (legacy: any use of ImGuiKey will assert when key &lt; 512 to detect passing legacy native/user indices)<br/>
     ///</summary>
-    bool IsKeyDown(int key);
+    bool IsKeyDown(ImGuiKey key);
     ///<summary>
     /// Implied repeat = true<br/>
     ///</summary>
-    bool IsKeyPressed(int key);
+    bool IsKeyPressed(ImGuiKey key);
     ///<summary>
     /// was key pressed (went from !Down to Down)? if repeat=true, uses io.KeyRepeatDelay / KeyRepeatRate<br/>
     ///</summary>
-    bool IsKeyPressedEx(int key, bool repeat);
+    bool IsKeyPressedEx(ImGuiKey key, bool repeat);
     ///<summary>
     /// was key released (went from Down to !Down)?<br/>
     ///</summary>
-    bool IsKeyReleased(int key);
+    bool IsKeyReleased(ImGuiKey key);
     ///<summary>
     /// was key chord (mods + key) pressed, e.g. you can pass 'ImGuiMod_Ctrl | ImGuiKey_S' as a key-chord. This doesn't do any routing or focus check, please consider using Shortcut() function instead.<br/>
     ///</summary>
@@ -1786,11 +1786,11 @@ public unsafe partial interface IImGui
     ///<summary>
     /// uses provided repeat rate/delay. return a count, most often 0 or 1 but might be &gt;1 if RepeatRate is small enough that DeltaTime &gt; RepeatRate<br/>
     ///</summary>
-    int GetKeyPressedAmount(int key, float repeat_delay, float rate);
+    int GetKeyPressedAmount(ImGuiKey key, float repeat_delay, float rate);
     ///<summary>
     /// [DEBUG] returns English name of the key. Those names are provided for debugging purpose and are not meant to be saved persistently nor compared.<br/>
     ///</summary>
-    string GetKeyName(int key);
+    string GetKeyName(ImGuiKey key);
     ///<summary>
     /// Override io.WantCaptureKeyboard flag next frame (said flag is left for your application to handle, typically when true it instructs your app to ignore inputs). e.g. force capture keyboard when your widget is being hovered. This is equivalent to setting "io.WantCaptureKeyboard = want_capture_keyboard"; after the next NewFrame() call.<br/>
     ///</summary>
@@ -1824,7 +1824,7 @@ public unsafe partial interface IImGui
     /// - Reminder ImGuiKey enum include access to mouse buttons and gamepad, so key ownership can apply to them.<br/>
     /// - Many related features are still in imgui_internal.h. For instance, most IsKeyXXX()/IsMouseXXX() functions have an owner-id-aware version.<br/>
     ///</summary>
-    void SetItemKeyOwner(int key);
+    void SetItemKeyOwner(ImGuiKey key);
     ///<summary>
     /// is mouse button held?<br/>
     ///<br/>
@@ -2024,11 +2024,11 @@ public unsafe partial interface IImGui
     ///<br/>
     /// Input Functions<br/>
     ///</summary>
-    void ImGuiIO_AddKeyEvent(IImGuiIO self, int key, bool down);
+    void ImGuiIO_AddKeyEvent(IImGuiIO self, ImGuiKey key, bool down);
     ///<summary>
     /// Queue a new key down/up event for analog values (e.g. ImGuiKey_Gamepad_ values). Dead-zones should be handled by the backend.<br/>
     ///</summary>
-    void ImGuiIO_AddKeyAnalogEvent(IImGuiIO self, int key, bool down, float v);
+    void ImGuiIO_AddKeyAnalogEvent(IImGuiIO self, ImGuiKey key, bool down, float v);
     ///<summary>
     /// Queue a mouse position update. Use -FLT_MAX,-FLT_MAX to signify no mouse (e.g. app not focused and not hovered)<br/>
     ///</summary>
@@ -2044,7 +2044,7 @@ public unsafe partial interface IImGui
     ///<summary>
     /// Queue a mouse source change (Mouse/TouchScreen/Pen)<br/>
     ///</summary>
-    void ImGuiIO_AddMouseSourceEvent(IImGuiIO self, int source);
+    void ImGuiIO_AddMouseSourceEvent(IImGuiIO self, ImGuiMouseSource source);
     ///<summary>
     /// Queue a mouse hovered viewport. Requires backend to set ImGuiBackendFlags_HasMouseHoveredViewport to call this (for multi-viewport support).<br/>
     ///</summary>
@@ -2068,11 +2068,11 @@ public unsafe partial interface IImGui
     ///<summary>
     /// Implied native_legacy_index = -1<br/>
     ///</summary>
-    void ImGuiIO_SetKeyEventNativeData(IImGuiIO self, int key, int native_keycode, int native_scancode);
+    void ImGuiIO_SetKeyEventNativeData(IImGuiIO self, ImGuiKey key, int native_keycode, int native_scancode);
     ///<summary>
     /// [Optional] Specify index for legacy &lt;1.87 IsKeyXXX() functions with native indices + specify native keycode, scancode.<br/>
     ///</summary>
-    void ImGuiIO_SetKeyEventNativeDataEx(IImGuiIO self, int key, int native_keycode, int native_scancode, int native_legacy_index);
+    void ImGuiIO_SetKeyEventNativeDataEx(IImGuiIO self, ImGuiKey key, int native_keycode, int native_scancode, int native_legacy_index);
     ///<summary>
     /// Set master flag for accepting key/mouse/text events (default to true). Useful if you have native dialog boxes that are interrupting your application loop/refresh, and you want to disable events being queued while your app is frozen.<br/>
     ///</summary>
@@ -2265,7 +2265,7 @@ public unsafe partial interface IImGui
     ///<summary>
     /// a: upper-left, b: lower-right (== upper-left + size)<br/>
     ///</summary>
-    void ImDrawList_AddRectEx(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col, float rounding, ImDrawFlags flags, float thickness);
+    void ImDrawList_AddRectEx(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col, float rounding, int flags, float thickness);
     ///<summary>
     /// Implied rounding = 0.0f, flags = 0<br/>
     ///</summary>
@@ -2273,7 +2273,7 @@ public unsafe partial interface IImGui
     ///<summary>
     /// a: upper-left, b: lower-right (== upper-left + size)<br/>
     ///</summary>
-    void ImDrawList_AddRectFilledEx(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col, float rounding, ImDrawFlags flags);
+    void ImDrawList_AddRectFilledEx(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col, float rounding, int flags);
     void ImDrawList_AddRectFilledMultiColor(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col_upr_left, uint col_upr_right, uint col_bot_right, uint col_bot_left);
     ///<summary>
     /// Implied thickness = 1.0f<br/>
@@ -2332,7 +2332,7 @@ public unsafe partial interface IImGui
     /// - Only simple polygons are supported by filling functions (no self-intersections, no holes).<br/>
     /// - Concave polygon fill is more expensive than convex one: it has O(N^2) complexity. Provided as a convenience for the user but not used by the main library.<br/>
     ///</summary>
-    void ImDrawList_AddPolyline(IImDrawList self, Vector2 points, int num_points, uint col, ImDrawFlags flags, float thickness);
+    void ImDrawList_AddPolyline(IImDrawList self, Vector2 points, int num_points, uint col, int flags, float thickness);
     void ImDrawList_AddConvexPolyFilled(IImDrawList self, Vector2 points, int num_points, uint col);
     void ImDrawList_AddConcavePolyFilled(IImDrawList self, Vector2 points, int num_points, uint col);
     ///<summary>
@@ -2350,7 +2350,7 @@ public unsafe partial interface IImGui
     ///</summary>
     void ImDrawList_AddImageQuad(IImDrawList self, IImTextureRef tex_ref, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4);
     void ImDrawList_AddImageQuadEx(IImDrawList self, IImTextureRef tex_ref, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4, uint col);
-    void ImDrawList_AddImageRounded(IImDrawList self, IImTextureRef tex_ref, Vector2 p_min, Vector2 p_max, Vector2 uv_min, Vector2 uv_max, uint col, float rounding, ImDrawFlags flags);
+    void ImDrawList_AddImageRounded(IImDrawList self, IImTextureRef tex_ref, Vector2 p_min, Vector2 p_max, Vector2 uv_min, Vector2 uv_max, uint col, float rounding, int flags);
     ///<summary>
     /// Stateful path API, add points then finish with PathFillConvex() or PathStroke()<br/>
     /// - Important: filled shapes must always use clockwise winding order! The anti-aliasing fringe depends on it. Counter-clockwise shapes will have "inward" anti-aliasing.<br/>
@@ -2361,7 +2361,7 @@ public unsafe partial interface IImGui
     void ImDrawList_PathLineToMergeDuplicate(IImDrawList self, Vector2 pos);
     void ImDrawList_PathFillConvex(IImDrawList self, uint col);
     void ImDrawList_PathFillConcave(IImDrawList self, uint col);
-    void ImDrawList_PathStroke(IImDrawList self, uint col, ImDrawFlags flags, float thickness);
+    void ImDrawList_PathStroke(IImDrawList self, uint col, int flags, float thickness);
     void ImDrawList_PathArcTo(IImDrawList self, Vector2 center, float radius, float a_min, float a_max, int num_segments);
     ///<summary>
     /// Use precomputed angles for a 12 steps circle<br/>
@@ -2383,7 +2383,7 @@ public unsafe partial interface IImGui
     /// Quadratic Bezier (3 control points)<br/>
     ///</summary>
     void ImDrawList_PathBezierQuadraticCurveTo(IImDrawList self, Vector2 p2, Vector2 p3, int num_segments);
-    void ImDrawList_PathRect(IImDrawList self, Vector2 rect_min, Vector2 rect_max, float rounding, ImDrawFlags flags);
+    void ImDrawList_PathRect(IImDrawList self, Vector2 rect_min, Vector2 rect_max, float rounding, int flags);
     ///<summary>
     /// Implied userdata_size = 0<br/>
     ///<br/>
@@ -5038,7 +5038,7 @@ public unsafe partial interface IImGuiTableColumnSortSpecs : INativeStruct
     ///<summary>
     /// ImGuiSortDirection_Ascending or ImGuiSortDirection_Descending<br/>
     ///</summary>
-    ref byte SortDirection { get; }
+    ref ImGuiSortDirection SortDirection { get; }
 }
 
 public unsafe partial interface IImGuiStyle : INativeStruct
@@ -5909,7 +5909,7 @@ public unsafe partial interface IImGuiIO : INativeStruct
     ///<summary>
     /// Mouse actual input peripheral (Mouse/TouchScreen/Pen).<br/>
     ///</summary>
-    ref int MouseSource { get; }
+    ref ImGuiMouseSource MouseSource { get; }
 
     ///<summary>
     /// (Optional) Modify using io.AddMouseViewportEvent(). With multi-viewports: viewport the OS mouse is hovering. If possible _IGNORING_ viewports with the ImGuiViewportFlags_NoInputs flag is much better (few backends can handle that). Set io.BackendFlags |= ImGuiBackendFlags_HasMouseHoveredViewport if you can provide this info. If you don't imgui will infer the value using the rectangles and last focused time of the viewports it knows about (ignoring other OS windows).<br/>
@@ -6126,7 +6126,7 @@ public unsafe partial interface IImGuiInputTextCallbackData : INativeStruct
     ///<summary>
     /// Key pressed (Up/Down/TAB)             Read-only     [Completion,History]<br/>
     ///</summary>
-    ref int EventKey { get; }
+    ref ImGuiKey EventKey { get; }
 
     ///<summary>
     /// Text buffer                           Read-write    [Resize] Can replace pointer / [Completion,History,Always] Only write to pointed data, don't replace the actual pointer!<br/>
@@ -6426,7 +6426,7 @@ public unsafe partial interface IImGuiListClipper : INativeStruct
     ///<summary>
     /// [Internal] Flags, currently not yet well exposed.<br/>
     ///</summary>
-    ref int Flags { get; }
+    ref ImGuiListClipperFlags Flags { get; }
 }
 
 ///<summary>
@@ -7286,7 +7286,7 @@ public unsafe partial interface IImFontConfig : INativeStruct
     ///<br/>
     /// [Internal]<br/>
     ///</summary>
-    ref int Flags { get; }
+    ref ImFontFlags Flags { get; }
 
     ///<summary>
     /// Target font (as we merging fonts, multiple ImFontConfig may target the same font)<br/>
@@ -7787,7 +7787,7 @@ public unsafe partial interface IImFont : INativeStruct
     ///<summary>
     /// 4      Font flags.<br/>
     ///</summary>
-    ref int Flags { get; }
+    ref ImFontFlags Flags { get; }
 
     ///<summary>
     /// Current rasterizer density. This is a varying state of the font.<br/>

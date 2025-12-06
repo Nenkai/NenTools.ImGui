@@ -1645,7 +1645,7 @@ public unsafe partial struct ImGuiTableColumnSortSpecsStruct
     public uint ColumnUserID;
     public short ColumnIndex;
     public short SortOrder;
-    public byte SortDirection;
+    public int SortDirection;
 }
 
 public unsafe partial struct ImGuiStyleStruct

@@ -625,15 +625,15 @@ public unsafe partial class ImGui : IImGui
     public uint ColorConvertFloat4ToU32(Vector4 @in) => ImGuiMethods.ColorConvertFloat4ToU32(@in);
     public void ColorConvertRGBtoHSV(float r, float g, float b, ref float out_h, ref float out_s, ref float out_v) => ImGuiMethods.ColorConvertRGBtoHSV(r, g, b, ref out_h, ref out_s, ref out_v);
     public void ColorConvertHSVtoRGB(float h, float s, float v, ref float out_r, ref float out_g, ref float out_b) => ImGuiMethods.ColorConvertHSVtoRGB(h, s, v, ref out_r, ref out_g, ref out_b);
-    public bool IsKeyDown(int key) => ImGuiMethods.IsKeyDown(key);
-    public bool IsKeyPressed(int key) => ImGuiMethods.IsKeyPressed(key);
-    public bool IsKeyPressedEx(int key, bool repeat) => ImGuiMethods.IsKeyPressedEx(key, repeat);
-    public bool IsKeyReleased(int key) => ImGuiMethods.IsKeyReleased(key);
+    public bool IsKeyDown(ImGuiKey key) => ImGuiMethods.IsKeyDown((int)key);
+    public bool IsKeyPressed(ImGuiKey key) => ImGuiMethods.IsKeyPressed((int)key);
+    public bool IsKeyPressedEx(ImGuiKey key, bool repeat) => ImGuiMethods.IsKeyPressedEx((int)key, repeat);
+    public bool IsKeyReleased(ImGuiKey key) => ImGuiMethods.IsKeyReleased((int)key);
     public bool IsKeyChordPressed(int key_chord) => ImGuiMethods.IsKeyChordPressed(key_chord);
-    public int GetKeyPressedAmount(int key, float repeat_delay, float rate) => ImGuiMethods.GetKeyPressedAmount(key, repeat_delay, rate);
-    public string GetKeyName(int key)
+    public int GetKeyPressedAmount(ImGuiKey key, float repeat_delay, float rate) => ImGuiMethods.GetKeyPressedAmount((int)key, repeat_delay, rate);
+    public string GetKeyName(ImGuiKey key)
     {
-        sbyte* retStrPtr = ImGuiMethods.GetKeyName(key);
+        sbyte* retStrPtr = ImGuiMethods.GetKeyName((int)key);
         if (retStrPtr is null)
         return null !;
         string retStr = Marshal.PtrToStringUTF8((nint)retStrPtr)!;
@@ -643,7 +643,7 @@ public unsafe partial class ImGui : IImGui
     public void SetNextFrameWantCaptureKeyboard(bool want_capture_keyboard) => ImGuiMethods.SetNextFrameWantCaptureKeyboard(want_capture_keyboard);
     public bool Shortcut(int key_chord, ImGuiInputFlags flags) => ImGuiMethods.Shortcut(key_chord, (int)flags);
     public void SetNextItemShortcut(int key_chord, ImGuiInputFlags flags) => ImGuiMethods.SetNextItemShortcut(key_chord, (int)flags);
-    public void SetItemKeyOwner(int key) => ImGuiMethods.SetItemKeyOwner(key);
+    public void SetItemKeyOwner(ImGuiKey key) => ImGuiMethods.SetItemKeyOwner((int)key);
     public bool IsMouseDown(ImGuiMouseButton button) => ImGuiMethods.IsMouseDown((int)button);
     public bool IsMouseClicked(ImGuiMouseButton button) => ImGuiMethods.IsMouseClicked((int)button);
     public bool IsMouseClickedEx(ImGuiMouseButton button, bool repeat) => ImGuiMethods.IsMouseClickedEx((int)button, repeat);
@@ -723,19 +723,19 @@ public unsafe partial class ImGui : IImGui
     public void ImGuiPlatformIO_SetPlatform_GetWindowPos(delegate* unmanaged[Cdecl]<nint, nint, void> getWindowPosFunc) => ImGuiMethods.ImGuiPlatformIO_SetPlatform_GetWindowPos(getWindowPosFunc);
     public void ImGuiPlatformIO_SetPlatform_GetWindowSize(delegate* unmanaged[Cdecl]<nint, nint, void> getWindowSizeFunc) => ImGuiMethods.ImGuiPlatformIO_SetPlatform_GetWindowSize(getWindowSizeFunc);
     public void ImGuiStyle_ScaleAllSizes(IImGuiStyle self, float scale_factor) => ImGuiMethods.ImGuiStyle_ScaleAllSizes(self is not null ? (ImGuiStyleStruct*)self.NativePointer : null, scale_factor);
-    public void ImGuiIO_AddKeyEvent(IImGuiIO self, int key, bool down) => ImGuiMethods.ImGuiIO_AddKeyEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, key, down);
-    public void ImGuiIO_AddKeyAnalogEvent(IImGuiIO self, int key, bool down, float v) => ImGuiMethods.ImGuiIO_AddKeyAnalogEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, key, down, v);
+    public void ImGuiIO_AddKeyEvent(IImGuiIO self, ImGuiKey key, bool down) => ImGuiMethods.ImGuiIO_AddKeyEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, (int)key, down);
+    public void ImGuiIO_AddKeyAnalogEvent(IImGuiIO self, ImGuiKey key, bool down, float v) => ImGuiMethods.ImGuiIO_AddKeyAnalogEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, (int)key, down, v);
     public void ImGuiIO_AddMousePosEvent(IImGuiIO self, float x, float y) => ImGuiMethods.ImGuiIO_AddMousePosEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, x, y);
     public void ImGuiIO_AddMouseButtonEvent(IImGuiIO self, int button, bool down) => ImGuiMethods.ImGuiIO_AddMouseButtonEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, button, down);
     public void ImGuiIO_AddMouseWheelEvent(IImGuiIO self, float wheel_x, float wheel_y) => ImGuiMethods.ImGuiIO_AddMouseWheelEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, wheel_x, wheel_y);
-    public void ImGuiIO_AddMouseSourceEvent(IImGuiIO self, int source) => ImGuiMethods.ImGuiIO_AddMouseSourceEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, source);
+    public void ImGuiIO_AddMouseSourceEvent(IImGuiIO self, ImGuiMouseSource source) => ImGuiMethods.ImGuiIO_AddMouseSourceEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, (int)source);
     public void ImGuiIO_AddMouseViewportEvent(IImGuiIO self, uint id) => ImGuiMethods.ImGuiIO_AddMouseViewportEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, id);
     public void ImGuiIO_AddFocusEvent(IImGuiIO self, bool focused) => ImGuiMethods.ImGuiIO_AddFocusEvent(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, focused);
     public void ImGuiIO_AddInputCharacter(IImGuiIO self, uint c) => ImGuiMethods.ImGuiIO_AddInputCharacter(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, c);
     public void ImGuiIO_AddInputCharacterUTF16(IImGuiIO self, ushort c) => ImGuiMethods.ImGuiIO_AddInputCharacterUTF16(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, c);
     public void ImGuiIO_AddInputCharactersUTF8(IImGuiIO self, string str) => ImGuiMethods.ImGuiIO_AddInputCharactersUTF8(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, str);
-    public void ImGuiIO_SetKeyEventNativeData(IImGuiIO self, int key, int native_keycode, int native_scancode) => ImGuiMethods.ImGuiIO_SetKeyEventNativeData(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, key, native_keycode, native_scancode);
-    public void ImGuiIO_SetKeyEventNativeDataEx(IImGuiIO self, int key, int native_keycode, int native_scancode, int native_legacy_index) => ImGuiMethods.ImGuiIO_SetKeyEventNativeDataEx(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, key, native_keycode, native_scancode, native_legacy_index);
+    public void ImGuiIO_SetKeyEventNativeData(IImGuiIO self, ImGuiKey key, int native_keycode, int native_scancode) => ImGuiMethods.ImGuiIO_SetKeyEventNativeData(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, (int)key, native_keycode, native_scancode);
+    public void ImGuiIO_SetKeyEventNativeDataEx(IImGuiIO self, ImGuiKey key, int native_keycode, int native_scancode, int native_legacy_index) => ImGuiMethods.ImGuiIO_SetKeyEventNativeDataEx(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, (int)key, native_keycode, native_scancode, native_legacy_index);
     public void ImGuiIO_SetAppAcceptingEvents(IImGuiIO self, bool accepting_events) => ImGuiMethods.ImGuiIO_SetAppAcceptingEvents(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, accepting_events);
     public void ImGuiIO_ClearEventsQueue(IImGuiIO self) => ImGuiMethods.ImGuiIO_ClearEventsQueue(self is not null ? (ImGuiIOStruct*)self.NativePointer : null);
     public void ImGuiIO_ClearInputKeys(IImGuiIO self) => ImGuiMethods.ImGuiIO_ClearInputKeys(self is not null ? (ImGuiIOStruct*)self.NativePointer : null);
@@ -837,9 +837,9 @@ public unsafe partial class ImGui : IImGui
     public void ImDrawList_AddLine(IImDrawList self, Vector2 p1, Vector2 p2, uint col) => ImGuiMethods.ImDrawList_AddLine(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p1, p2, col);
     public void ImDrawList_AddLineEx(IImDrawList self, Vector2 p1, Vector2 p2, uint col, float thickness) => ImGuiMethods.ImDrawList_AddLineEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p1, p2, col, thickness);
     public void ImDrawList_AddRect(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col) => ImGuiMethods.ImDrawList_AddRect(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p_min, p_max, col);
-    public void ImDrawList_AddRectEx(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col, float rounding, ImDrawFlags flags, float thickness) => ImGuiMethods.ImDrawList_AddRectEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p_min, p_max, col, rounding, (int)flags, thickness);
+    public void ImDrawList_AddRectEx(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col, float rounding, int flags, float thickness) => ImGuiMethods.ImDrawList_AddRectEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p_min, p_max, col, rounding, flags, thickness);
     public void ImDrawList_AddRectFilled(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col) => ImGuiMethods.ImDrawList_AddRectFilled(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p_min, p_max, col);
-    public void ImDrawList_AddRectFilledEx(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col, float rounding, ImDrawFlags flags) => ImGuiMethods.ImDrawList_AddRectFilledEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p_min, p_max, col, rounding, (int)flags);
+    public void ImDrawList_AddRectFilledEx(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col, float rounding, int flags) => ImGuiMethods.ImDrawList_AddRectFilledEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p_min, p_max, col, rounding, flags);
     public void ImDrawList_AddRectFilledMultiColor(IImDrawList self, Vector2 p_min, Vector2 p_max, uint col_upr_left, uint col_upr_right, uint col_bot_right, uint col_bot_left) => ImGuiMethods.ImDrawList_AddRectFilledMultiColor(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p_min, p_max, col_upr_left, col_upr_right, col_bot_right, col_bot_left);
     public void ImDrawList_AddQuad(IImDrawList self, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, uint col) => ImGuiMethods.ImDrawList_AddQuad(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p1, p2, p3, p4, col);
     public void ImDrawList_AddQuadEx(IImDrawList self, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, uint col, float thickness) => ImGuiMethods.ImDrawList_AddQuadEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p1, p2, p3, p4, col, thickness);
@@ -863,27 +863,27 @@ public unsafe partial class ImGui : IImGui
     public void ImDrawList_AddTextImFontPtrEx(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, string text_begin, string text_end, float wrap_width, Vector4 cpu_fine_clip_rect) => ImGuiMethods.ImDrawList_AddTextImFontPtrEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, font is not null ? (ImFontStruct*)font.NativePointer : null, font_size, pos, col, text_begin, text_end, wrap_width, cpu_fine_clip_rect);
     public void ImDrawList_AddBezierCubic(IImDrawList self, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, uint col, float thickness, int num_segments) => ImGuiMethods.ImDrawList_AddBezierCubic(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p1, p2, p3, p4, col, thickness, num_segments);
     public void ImDrawList_AddBezierQuadratic(IImDrawList self, Vector2 p1, Vector2 p2, Vector2 p3, uint col, float thickness, int num_segments) => ImGuiMethods.ImDrawList_AddBezierQuadratic(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p1, p2, p3, col, thickness, num_segments);
-    public void ImDrawList_AddPolyline(IImDrawList self, Vector2 points, int num_points, uint col, ImDrawFlags flags, float thickness) => ImGuiMethods.ImDrawList_AddPolyline(self is not null ? (ImDrawListStruct*)self.NativePointer : null, points, num_points, col, (int)flags, thickness);
+    public void ImDrawList_AddPolyline(IImDrawList self, Vector2 points, int num_points, uint col, int flags, float thickness) => ImGuiMethods.ImDrawList_AddPolyline(self is not null ? (ImDrawListStruct*)self.NativePointer : null, points, num_points, col, flags, thickness);
     public void ImDrawList_AddConvexPolyFilled(IImDrawList self, Vector2 points, int num_points, uint col) => ImGuiMethods.ImDrawList_AddConvexPolyFilled(self is not null ? (ImDrawListStruct*)self.NativePointer : null, points, num_points, col);
     public void ImDrawList_AddConcavePolyFilled(IImDrawList self, Vector2 points, int num_points, uint col) => ImGuiMethods.ImDrawList_AddConcavePolyFilled(self is not null ? (ImDrawListStruct*)self.NativePointer : null, points, num_points, col);
     public void ImDrawList_AddImage(IImDrawList self, IImTextureRef tex_ref, Vector2 p_min, Vector2 p_max) => ImGuiMethods.ImDrawList_AddImage(self is not null ? (ImDrawListStruct*)self.NativePointer : null, ((ImTextureRef)tex_ref).ToStruct(), p_min, p_max);
     public void ImDrawList_AddImageEx(IImDrawList self, IImTextureRef tex_ref, Vector2 p_min, Vector2 p_max, Vector2 uv_min, Vector2 uv_max, uint col) => ImGuiMethods.ImDrawList_AddImageEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, ((ImTextureRef)tex_ref).ToStruct(), p_min, p_max, uv_min, uv_max, col);
     public void ImDrawList_AddImageQuad(IImDrawList self, IImTextureRef tex_ref, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4) => ImGuiMethods.ImDrawList_AddImageQuad(self is not null ? (ImDrawListStruct*)self.NativePointer : null, ((ImTextureRef)tex_ref).ToStruct(), p1, p2, p3, p4);
     public void ImDrawList_AddImageQuadEx(IImDrawList self, IImTextureRef tex_ref, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, Vector2 uv1, Vector2 uv2, Vector2 uv3, Vector2 uv4, uint col) => ImGuiMethods.ImDrawList_AddImageQuadEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, ((ImTextureRef)tex_ref).ToStruct(), p1, p2, p3, p4, uv1, uv2, uv3, uv4, col);
-    public void ImDrawList_AddImageRounded(IImDrawList self, IImTextureRef tex_ref, Vector2 p_min, Vector2 p_max, Vector2 uv_min, Vector2 uv_max, uint col, float rounding, ImDrawFlags flags) => ImGuiMethods.ImDrawList_AddImageRounded(self is not null ? (ImDrawListStruct*)self.NativePointer : null, ((ImTextureRef)tex_ref).ToStruct(), p_min, p_max, uv_min, uv_max, col, rounding, (int)flags);
+    public void ImDrawList_AddImageRounded(IImDrawList self, IImTextureRef tex_ref, Vector2 p_min, Vector2 p_max, Vector2 uv_min, Vector2 uv_max, uint col, float rounding, int flags) => ImGuiMethods.ImDrawList_AddImageRounded(self is not null ? (ImDrawListStruct*)self.NativePointer : null, ((ImTextureRef)tex_ref).ToStruct(), p_min, p_max, uv_min, uv_max, col, rounding, flags);
     public void ImDrawList_PathClear(IImDrawList self) => ImGuiMethods.ImDrawList_PathClear(self is not null ? (ImDrawListStruct*)self.NativePointer : null);
     public void ImDrawList_PathLineTo(IImDrawList self, Vector2 pos) => ImGuiMethods.ImDrawList_PathLineTo(self is not null ? (ImDrawListStruct*)self.NativePointer : null, pos);
     public void ImDrawList_PathLineToMergeDuplicate(IImDrawList self, Vector2 pos) => ImGuiMethods.ImDrawList_PathLineToMergeDuplicate(self is not null ? (ImDrawListStruct*)self.NativePointer : null, pos);
     public void ImDrawList_PathFillConvex(IImDrawList self, uint col) => ImGuiMethods.ImDrawList_PathFillConvex(self is not null ? (ImDrawListStruct*)self.NativePointer : null, col);
     public void ImDrawList_PathFillConcave(IImDrawList self, uint col) => ImGuiMethods.ImDrawList_PathFillConcave(self is not null ? (ImDrawListStruct*)self.NativePointer : null, col);
-    public void ImDrawList_PathStroke(IImDrawList self, uint col, ImDrawFlags flags, float thickness) => ImGuiMethods.ImDrawList_PathStroke(self is not null ? (ImDrawListStruct*)self.NativePointer : null, col, (int)flags, thickness);
+    public void ImDrawList_PathStroke(IImDrawList self, uint col, int flags, float thickness) => ImGuiMethods.ImDrawList_PathStroke(self is not null ? (ImDrawListStruct*)self.NativePointer : null, col, flags, thickness);
     public void ImDrawList_PathArcTo(IImDrawList self, Vector2 center, float radius, float a_min, float a_max, int num_segments) => ImGuiMethods.ImDrawList_PathArcTo(self is not null ? (ImDrawListStruct*)self.NativePointer : null, center, radius, a_min, a_max, num_segments);
     public void ImDrawList_PathArcToFast(IImDrawList self, Vector2 center, float radius, int a_min_of_12, int a_max_of_12) => ImGuiMethods.ImDrawList_PathArcToFast(self is not null ? (ImDrawListStruct*)self.NativePointer : null, center, radius, a_min_of_12, a_max_of_12);
     public void ImDrawList_PathEllipticalArcTo(IImDrawList self, Vector2 center, Vector2 radius, float rot, float a_min, float a_max) => ImGuiMethods.ImDrawList_PathEllipticalArcTo(self is not null ? (ImDrawListStruct*)self.NativePointer : null, center, radius, rot, a_min, a_max);
     public void ImDrawList_PathEllipticalArcToEx(IImDrawList self, Vector2 center, Vector2 radius, float rot, float a_min, float a_max, int num_segments) => ImGuiMethods.ImDrawList_PathEllipticalArcToEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, center, radius, rot, a_min, a_max, num_segments);
     public void ImDrawList_PathBezierCubicCurveTo(IImDrawList self, Vector2 p2, Vector2 p3, Vector2 p4, int num_segments) => ImGuiMethods.ImDrawList_PathBezierCubicCurveTo(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p2, p3, p4, num_segments);
     public void ImDrawList_PathBezierQuadraticCurveTo(IImDrawList self, Vector2 p2, Vector2 p3, int num_segments) => ImGuiMethods.ImDrawList_PathBezierQuadraticCurveTo(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p2, p3, num_segments);
-    public void ImDrawList_PathRect(IImDrawList self, Vector2 rect_min, Vector2 rect_max, float rounding, ImDrawFlags flags) => ImGuiMethods.ImDrawList_PathRect(self is not null ? (ImDrawListStruct*)self.NativePointer : null, rect_min, rect_max, rounding, (int)flags);
+    public void ImDrawList_PathRect(IImDrawList self, Vector2 rect_min, Vector2 rect_max, float rounding, int flags) => ImGuiMethods.ImDrawList_PathRect(self is not null ? (ImDrawListStruct*)self.NativePointer : null, rect_min, rect_max, rounding, flags);
     public void ImDrawList_AddCallback(IImDrawList self, delegate* unmanaged[Cdecl]<nint, nint, void> callback, void* userdata) => ImGuiMethods.ImDrawList_AddCallback(self is not null ? (ImDrawListStruct*)self.NativePointer : null, callback, userdata);
     public void ImDrawList_AddCallbackEx(IImDrawList self, delegate* unmanaged[Cdecl]<nint, nint, void> callback, void* userdata, nuint userdata_size) => ImGuiMethods.ImDrawList_AddCallbackEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, callback, userdata, userdata_size);
     public void ImDrawList_AddDrawCmd(IImDrawList self) => ImGuiMethods.ImDrawList_AddDrawCmd(self is not null ? (ImDrawListStruct*)self.NativePointer : null);
@@ -1170,7 +1170,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref uint ColumnUserID => ref Unsafe.AsRef<uint>(&((ImGuiTableColumnSortSpecsStruct*)NativePointer)->ColumnUserID);
         public readonly ref short ColumnIndex => ref Unsafe.AsRef<short>(&((ImGuiTableColumnSortSpecsStruct*)NativePointer)->ColumnIndex);
         public readonly ref short SortOrder => ref Unsafe.AsRef<short>(&((ImGuiTableColumnSortSpecsStruct*)NativePointer)->SortOrder);
-        public readonly ref byte SortDirection => ref Unsafe.AsRef<byte>(&((ImGuiTableColumnSortSpecsStruct*)NativePointer)->SortDirection);
+        public readonly ref ImGuiSortDirection SortDirection => ref Unsafe.AsRef<ImGuiSortDirection>(&((ImGuiTableColumnSortSpecsStruct*)NativePointer)->SortDirection);
     }
 
     public unsafe partial struct ImGuiStyle : IImGuiStyle
@@ -1349,7 +1349,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IRangeAccessor<bool> MouseDown => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDown, 5);
         public readonly ref float MouseWheel => ref Unsafe.AsRef<float>(&((ImGuiIOStruct*)NativePointer)->MouseWheel);
         public readonly ref float MouseWheelH => ref Unsafe.AsRef<float>(&((ImGuiIOStruct*)NativePointer)->MouseWheelH);
-        public readonly ref int MouseSource => ref Unsafe.AsRef<int>(&((ImGuiIOStruct*)NativePointer)->MouseSource);
+        public readonly ref ImGuiMouseSource MouseSource => ref Unsafe.AsRef<ImGuiMouseSource>(&((ImGuiIOStruct*)NativePointer)->MouseSource);
         public readonly ref uint MouseHoveredViewport => ref Unsafe.AsRef<uint>(&((ImGuiIOStruct*)NativePointer)->MouseHoveredViewport);
         public readonly ref bool KeyCtrl => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->KeyCtrl);
         public readonly ref bool KeyShift => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->KeyShift);
@@ -1396,7 +1396,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref ImGuiInputTextFlags Flags => ref Unsafe.AsRef<ImGuiInputTextFlags>(&((ImGuiInputTextCallbackDataStruct*)NativePointer)->Flags);
         public readonly void* UserData { get => ((ImGuiInputTextCallbackDataStruct*)NativePointer)->UserData; set => ((ImGuiInputTextCallbackDataStruct*)NativePointer)->UserData = value; }
         public readonly ref uint EventChar => ref Unsafe.AsRef<uint>(&((ImGuiInputTextCallbackDataStruct*)NativePointer)->EventChar);
-        public readonly ref int EventKey => ref Unsafe.AsRef<int>(&((ImGuiInputTextCallbackDataStruct*)NativePointer)->EventKey);
+        public readonly ref ImGuiKey EventKey => ref Unsafe.AsRef<ImGuiKey>(&((ImGuiInputTextCallbackDataStruct*)NativePointer)->EventKey);
         public readonly sbyte* Buf { get => ((ImGuiInputTextCallbackDataStruct*)NativePointer)->Buf; set => ((ImGuiInputTextCallbackDataStruct*)NativePointer)->Buf = value; }
         public readonly ref int BufTextLen => ref Unsafe.AsRef<int>(&((ImGuiInputTextCallbackDataStruct*)NativePointer)->BufTextLen);
         public readonly ref int BufSize => ref Unsafe.AsRef<int>(&((ImGuiInputTextCallbackDataStruct*)NativePointer)->BufSize);
@@ -1496,7 +1496,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref double StartPosY => ref Unsafe.AsRef<double>(&((ImGuiListClipperStruct*)NativePointer)->StartPosY);
         public readonly ref double StartSeekOffsetY => ref Unsafe.AsRef<double>(&((ImGuiListClipperStruct*)NativePointer)->StartSeekOffsetY);
         public readonly void* TempData { get => ((ImGuiListClipperStruct*)NativePointer)->TempData; set => ((ImGuiListClipperStruct*)NativePointer)->TempData = value; }
-        public readonly ref int Flags => ref Unsafe.AsRef<int>(&((ImGuiListClipperStruct*)NativePointer)->Flags);
+        public readonly ref ImGuiListClipperFlags Flags => ref Unsafe.AsRef<ImGuiListClipperFlags>(&((ImGuiListClipperStruct*)NativePointer)->Flags);
     }
 
     public unsafe partial struct ImGuiMultiSelectIO : IImGuiMultiSelectIO
@@ -1701,7 +1701,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref uint FontLoaderFlags => ref Unsafe.AsRef<uint>(&((ImFontConfigStruct*)NativePointer)->FontLoaderFlags);
         public readonly ref float RasterizerMultiply => ref Unsafe.AsRef<float>(&((ImFontConfigStruct*)NativePointer)->RasterizerMultiply);
         public readonly ref float RasterizerDensity => ref Unsafe.AsRef<float>(&((ImFontConfigStruct*)NativePointer)->RasterizerDensity);
-        public readonly ref int Flags => ref Unsafe.AsRef<int>(&((ImFontConfigStruct*)NativePointer)->Flags);
+        public readonly ref ImFontFlags Flags => ref Unsafe.AsRef<ImFontFlags>(&((ImFontConfigStruct*)NativePointer)->Flags);
         public readonly IImFont DstFont => new ImFont(((ImFontConfigStruct*)NativePointer)->DstFont);
         public readonly IImFontLoader FontLoader => new ImFontLoader(((ImFontConfigStruct*)NativePointer)->FontLoader);
         public readonly void* FontLoaderData { get => ((ImFontConfigStruct*)NativePointer)->FontLoaderData; set => ((ImFontConfigStruct*)NativePointer)->FontLoaderData = value; }
@@ -1821,7 +1821,7 @@ public unsafe partial class ImGui : IImGui
         public ImFont(ImFontStruct* nativePtr) => NativePointer = (nint)nativePtr;
         public readonly IImFontBaked LastBaked => new ImFontBaked(((ImFontStruct*)NativePointer)->LastBaked);
         public readonly IImFontAtlas OwnerAtlas => new ImFontAtlas(((ImFontStruct*)NativePointer)->OwnerAtlas);
-        public readonly ref int Flags => ref Unsafe.AsRef<int>(&((ImFontStruct*)NativePointer)->Flags);
+        public readonly ref ImFontFlags Flags => ref Unsafe.AsRef<ImFontFlags>(&((ImFontStruct*)NativePointer)->Flags);
         public readonly ref float CurrentRasterizerDensity => ref Unsafe.AsRef<float>(&((ImFontStruct*)NativePointer)->CurrentRasterizerDensity);
         public readonly ref uint FontId => ref Unsafe.AsRef<uint>(&((ImFontStruct*)NativePointer)->FontId);
         public readonly ref float LegacySize => ref Unsafe.AsRef<float>(&((ImFontStruct*)NativePointer)->LegacySize);
