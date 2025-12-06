@@ -32,7 +32,7 @@ public class ImGuiShell : IImGuiShell
 
     public IImGuiTextureManager TextureManager { get; }
 
-    private bool _menuVisible = true;
+    private bool _menuVisible;
 
     private List<IImGuiComponent> _components = [];
 
@@ -70,6 +70,7 @@ public class ImGuiShell : IImGuiShell
 
         _overlayLogger = new OverlayLogger(_imGui, _imGuiConfig);
         TextureManager = new ImGuiTextureManager(imguiHook, loggerFactory);
+        ShowMenu();
     }
 
     public void DisableOverlay() => IsOverlayEnabled = false;
@@ -82,10 +83,17 @@ public class ImGuiShell : IImGuiShell
     private void SetMenuState(bool visible)
     {
         _menuVisible = visible;
+
+        // This will block WndProc from passing WM_SETCURSOR events to the game
+        // This is useful to avoid having the game override ImGui's cursor sets
+        ImguiHook.BlockSetCursor = visible;
+
         if (ContextCreated)
         {
             // Ensure to alert ImGui not to do any cursor changes if the cursor is not visible
             // Otherwise if the menu is hidden, ImGui may try to apply changes which will may cause cursor flicker.
+            // This is not really needed anymore with WM_SETCURSOR being blocked, but still - at least ImGui won't unnecessarily
+            // trigger events and waste cycles.
             if (_menuVisible)
                 _imGui.GetIO().ConfigFlags &= ~ImGuiConfigFlags.ImGuiConfigFlags_NoMouseCursorChange;
             else

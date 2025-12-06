@@ -53,6 +53,8 @@ namespace NenTools.ImGui.Hooks
 
         public static IImGui imGui;
 
+        public static bool BlockSetCursor { get; set; }
+
         /// <summary>
         /// The options with which this hook has been created with.
         /// </summary>
@@ -204,6 +206,11 @@ namespace NenTools.ImGui.Hooks
                 var message = (WindowMessage)msg;
                 switch (message)
                 {
+                    case WindowMessage.WM_SETCURSOR:
+                        if (BlockSetCursor)
+                            return IntPtr.Zero;
+                        break;
+
                     case WindowMessage.WM_KILLFOCUS:
                         return IntPtr.Zero;
 
