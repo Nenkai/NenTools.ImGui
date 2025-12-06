@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -136,6 +137,46 @@ public class TypeInfo
         "ImGuiWindowFlags",
 
         "ImGuiSelectionRequestType",
+        "ImGuiFreeTypeBuilderFlags",
+    ];
+
+    /// <summary>
+    /// Used to decorate enums with <see cref="FlagsAttribute"/>.
+    /// </summary>
+    public static readonly FrozenSet<string> IsFlagsEnum =
+    [
+        //"ImDrawFlags", Internal.
+        "ImDrawListFlags",
+        //"ImDrawTextFlags", Internal.
+        "ImFontFlags",
+        "ImFontAtlasFlags",
+        "ImGuiBackendFlags",
+        "ImGuiButtonFlags",
+        "ImGuiChildFlags",
+        "ImGuiColorEditFlags",
+        "ImGuiConfigFlags",
+        "ImGuiComboFlags",
+        "ImGuiDockNodeFlags",
+        "ImGuiDragDropFlags",
+        "ImGuiFocusedFlags",
+        "ImGuiHoveredFlags",
+        "ImGuiInputFlags",
+        "ImGuiInputTextFlags",
+        "ImGuiItemFlags",
+        "ImGuiListClipperFlags",
+        "ImGuiPopupFlags",
+        "ImGuiMultiSelectFlags",
+        "ImGuiSelectableFlags",
+        "ImGuiSliderFlags",
+        "ImGuiTabBarFlags",
+        "ImGuiTabItemFlags",
+        "ImGuiTableFlags",
+        "ImGuiTableColumnFlags",
+        "ImGuiTableRowFlags",
+        "ImGuiTreeNodeFlags",
+        "ImGuiViewportFlags",
+        "ImGuiWindowFlags",
+
         "ImGuiFreeTypeBuilderFlags",
     ];
 

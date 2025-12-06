@@ -158,9 +158,19 @@ public class ImGuiInterfaceGenerator
                             newEnumMembers.Add(newEnumMember);
                         }
 
+                        string fixedEnumName = enumDeclaration.Identifier.ValueText.TrimEnd('_');
                         enumDeclaration = enumDeclaration
-                            .WithIdentifier(SF.Identifier(enumDeclaration.Identifier.ValueText.TrimEnd('_')))
+                            .WithIdentifier(SF.Identifier(fixedEnumName))
                             .WithMembers(SF.SeparatedList(newEnumMembers));
+
+                        // Decorate enum with [Flags] if possible
+                        if (TypeInfo.IsFlagsEnum.Contains(fixedEnumName))
+                        {
+                            enumDeclaration = enumDeclaration.WithAttributeLists(
+                                SF.List([SF.AttributeList([
+                                    SF.Attribute(SF.ParseName("Flags"))
+                             ])]));
+                        }
                         enumDeclaration = DecorateWithComments(enumDeclaration, enumMetadata.Comments?.Attached, enumMetadata.Comments?.Preceding, numTabs: 0).NormalizeWhitespace();
                         _interfaceMembers.Add(enumDeclaration);
                     }

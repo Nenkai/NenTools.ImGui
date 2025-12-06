@@ -2851,6 +2851,7 @@ public unsafe partial interface IImGuiContext : INativeStruct
 /// Flags for ImGui::Begin()<br/>
 /// (Those are per-window flags. There are shared flags in ImGuiIO: io.ConfigWindowsResizeFromEdges and io.ConfigWindowsMoveFromTitleBarOnly)<br/>
 ///</summary>
+[Flags]
 public enum ImGuiWindowFlags
 {
     ImGuiWindowFlags_None = 0,
@@ -2976,6 +2977,7 @@ public enum ImGuiWindowFlags
 ///   - You may also use ImGuiChildFlags_AlwaysAutoResize to force an update even when child window is not in view.<br/>
 ///     HOWEVER PLEASE UNDERSTAND THAT DOING SO WILL PREVENT BeginChild() FROM EVER RETURNING FALSE, disabling benefits of coarse clipping.<br/>
 ///</summary>
+[Flags]
 public enum ImGuiChildFlags
 {
     ImGuiChildFlags_None = 0,
@@ -3021,6 +3023,7 @@ public enum ImGuiChildFlags
 /// Flags for ImGui::PushItemFlag()<br/>
 /// (Those are shared by all items)<br/>
 ///</summary>
+[Flags]
 public enum ImGuiItemFlags
 {
     ///<summary>
@@ -3057,6 +3060,7 @@ public enum ImGuiItemFlags
 /// Flags for ImGui::InputText()<br/>
 /// (Those are per-item flags. There are shared flags in ImGuiIO: io.ConfigInputTextCursorBlink and io.ConfigInputTextEnterKeepActive)<br/>
 ///</summary>
+[Flags]
 public enum ImGuiInputTextFlags
 {
     ///<summary>
@@ -3184,6 +3188,7 @@ public enum ImGuiInputTextFlags
 ///<summary>
 /// Flags for ImGui::TreeNodeEx(), ImGui::CollapsingHeader*()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiTreeNodeFlags
 {
     ImGuiTreeNodeFlags_None = 0,
@@ -3293,6 +3298,7 @@ public enum ImGuiTreeNodeFlags
 ///   and want to use another flag, you need to pass in the ImGuiPopupFlags_MouseButtonRight flag explicitly.<br/>
 /// - Multiple buttons currently cannot be combined/or-ed in those functions (we could allow it later).<br/>
 ///</summary>
+[Flags]
 public enum ImGuiPopupFlags
 {
     ImGuiPopupFlags_None = 0,
@@ -3338,6 +3344,7 @@ public enum ImGuiPopupFlags
 ///<summary>
 /// Flags for ImGui::Selectable()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiSelectableFlags
 {
     ImGuiSelectableFlags_None = 0,
@@ -3378,6 +3385,7 @@ public enum ImGuiSelectableFlags
 ///<summary>
 /// Flags for ImGui::BeginCombo()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiComboFlags
 {
     ImGuiComboFlags_None = 0,
@@ -3419,6 +3427,7 @@ public enum ImGuiComboFlags
 ///<summary>
 /// Flags for ImGui::BeginTabBar()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiTabBarFlags
 {
     ImGuiTabBarFlags_None = 0,
@@ -3475,6 +3484,7 @@ public enum ImGuiTabBarFlags
 ///<summary>
 /// Flags for ImGui::BeginTabItem()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiTabItemFlags
 {
     ImGuiTabItemFlags_None = 0,
@@ -3519,6 +3529,7 @@ public enum ImGuiTabItemFlags
 ///<summary>
 /// Flags for ImGui::IsWindowFocused()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiFocusedFlags
 {
     ImGuiFocusedFlags_None = 0,
@@ -3550,6 +3561,7 @@ public enum ImGuiFocusedFlags
 /// Note: if you are trying to check whether your mouse should be dispatched to Dear ImGui or to your app, you should use 'io.WantCaptureMouse' instead! Please read the FAQ!<br/>
 /// Note: windows with the ImGuiWindowFlags_NoInputs flag are ignored by IsWindowHovered() calls.<br/>
 ///</summary>
+[Flags]
 public enum ImGuiHoveredFlags
 {
     ///<summary>
@@ -3647,6 +3659,7 @@ public enum ImGuiHoveredFlags
 /// (Some flags can be applied to individual nodes directly)<br/>
 /// FIXME-DOCK: Also see ImGuiDockNodeFlagsPrivate_ which may involve using the WIP and internal DockBuilder api.<br/>
 ///</summary>
+[Flags]
 public enum ImGuiDockNodeFlags
 {
     ImGuiDockNodeFlags_None = 0,
@@ -3693,6 +3706,7 @@ public enum ImGuiDockNodeFlags
 ///<summary>
 /// Flags for ImGui::BeginDragDropSource(), ImGui::AcceptDragDropPayload()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiDragDropFlags
 {
     ImGuiDragDropFlags_None = 0,
@@ -3819,6 +3833,7 @@ public enum ImGuiDataType
 /// (and for upcoming extended versions of IsKeyPressed(), IsMouseClicked(), Shortcut(), SetKeyOwner(), SetItemKeyOwner() that are still in imgui_internal.h)<br/>
 /// Don't mistake with ImGuiInputTextFlags! (which is for ImGui::InputText() function)<br/>
 ///</summary>
+[Flags]
 public enum ImGuiInputFlags
 {
     ImGuiInputFlags_None = 0,
@@ -3875,6 +3890,7 @@ public enum ImGuiInputFlags
 ///<summary>
 /// Configuration flags stored in io.ConfigFlags. Set by user/application.<br/>
 ///</summary>
+[Flags]
 public enum ImGuiConfigFlags
 {
     ImGuiConfigFlags_None = 0,
@@ -3942,6 +3958,7 @@ public enum ImGuiConfigFlags
 ///<summary>
 /// Backend capabilities flags stored in io.BackendFlags. Set by imgui_impl_xxx or custom backend.<br/>
 ///</summary>
+[Flags]
 public enum ImGuiBackendFlags
 {
     ImGuiBackendFlags_None = 0,
@@ -4356,6 +4373,7 @@ public enum ImGuiStyleVar
 ///<summary>
 /// Flags for InvisibleButton() [extended in imgui_internal.h]<br/>
 ///</summary>
+[Flags]
 public enum ImGuiButtonFlags
 {
     ImGuiButtonFlags_None = 0,
@@ -4384,6 +4402,7 @@ public enum ImGuiButtonFlags
 ///<summary>
 /// Flags for ColorEdit3() / ColorEdit4() / ColorPicker3() / ColorPicker4() / ColorButton()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiColorEditFlags
 {
     ImGuiColorEditFlags_None = 0,
@@ -4514,6 +4533,7 @@ public enum ImGuiColorEditFlags
 /// We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.<br/>
 /// (Those are per-item flags. There is shared behavior flag too: ImGuiIO: io.ConfigDragClickToInputText)<br/>
 ///</summary>
+[Flags]
 public enum ImGuiSliderFlags
 {
     ImGuiSliderFlags_None = 0,
@@ -4668,6 +4688,7 @@ public enum ImGuiCond
 ///      If you specify a value for 'inner_width' then effectively the scrolling space is known and Stretch or mixed Fixed/Stretch columns become meaningful again.<br/>
 /// - Read on documentation at the top of imgui_tables.cpp for details.<br/>
 ///</summary>
+[Flags]
 public enum ImGuiTableFlags
 {
     ///<summary>
@@ -4839,6 +4860,7 @@ public enum ImGuiTableFlags
 ///<summary>
 /// Flags for ImGui::TableSetupColumn()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiTableColumnFlags
 {
     ///<summary>
@@ -4954,6 +4976,7 @@ public enum ImGuiTableColumnFlags
 ///<summary>
 /// Flags for ImGui::TableNextRow()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiTableRowFlags
 {
     ImGuiTableRowFlags_None = 0,
@@ -6350,6 +6373,7 @@ public unsafe partial interface IImGuiStorage : INativeStruct
 ///<summary>
 /// Flags for ImGuiListClipper (currently not fully exposed in function calls: a future refactor will likely add this to ImGuiListClipper::Begin function equivalent)<br/>
 ///</summary>
+[Flags]
 public enum ImGuiListClipperFlags
 {
     ImGuiListClipperFlags_None = 0,
@@ -6432,6 +6456,7 @@ public unsafe partial interface IImGuiListClipper : INativeStruct
 ///<summary>
 /// Flags for BeginMultiSelect()<br/>
 ///</summary>
+[Flags]
 public enum ImGuiMultiSelectFlags
 {
     ImGuiMultiSelectFlags_None = 0,
@@ -6825,6 +6850,7 @@ public enum ImDrawFlags
 /// Flags for ImDrawList instance. Those are set automatically by ImGui:: functions from ImGuiIO settings, and generally not manipulated directly.<br/>
 /// It is however possible to temporarily alter flags between calls to ImDrawList:: functions.<br/>
 ///</summary>
+[Flags]
 public enum ImDrawListFlags
 {
     ImDrawListFlags_None = 0,
@@ -7436,6 +7462,7 @@ public unsafe partial interface IImFontAtlasRect : INativeStruct
 ///<summary>
 /// Flags for ImFontAtlas build<br/>
 ///</summary>
+[Flags]
 public enum ImFontAtlasFlags
 {
     ImFontAtlasFlags_None = 0,
@@ -7746,6 +7773,7 @@ public unsafe partial interface IImFontBaked : INativeStruct
 /// Font flags<br/>
 /// (in future versions as we redesign font loading API, this will become more important and better documented. for now please consider this as internal/advanced use)<br/>
 ///</summary>
+[Flags]
 public enum ImFontFlags
 {
     ImFontFlags_None = 0,
@@ -7846,6 +7874,7 @@ public unsafe partial interface IImFont : INativeStruct
 ///<summary>
 /// Flags stored in ImGuiViewport::Flags, giving indications to the platform backends.<br/>
 ///</summary>
+[Flags]
 public enum ImGuiViewportFlags
 {
     ImGuiViewportFlags_None = 0,
