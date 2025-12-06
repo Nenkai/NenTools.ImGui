@@ -965,12 +965,8 @@ public unsafe partial class ImGuiMethods
     public static extern void SetClipboardText([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LoadIniSettingsFromDisk", ExactSpelling = true)]
     public static extern void LoadIniSettingsFromDisk([MarshalAs(UnmanagedType.LPUTF8Str)] string ini_filename);
-    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LoadIniSettingsFromMemory", ExactSpelling = true)]
-    public static extern void LoadIniSettingsFromMemory([MarshalAs(UnmanagedType.LPUTF8Str)] string ini_data, nuint ini_size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SaveIniSettingsToDisk", ExactSpelling = true)]
     public static extern void SaveIniSettingsToDisk([MarshalAs(UnmanagedType.LPUTF8Str)] string ini_filename);
-    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SaveIniSettingsToMemory", ExactSpelling = true)]
-    public static extern sbyte* SaveIniSettingsToMemory(nuint out_ini_size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugTextEncoding", ExactSpelling = true)]
     public static extern void DebugTextEncoding([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugFlashStyleColor", ExactSpelling = true)]

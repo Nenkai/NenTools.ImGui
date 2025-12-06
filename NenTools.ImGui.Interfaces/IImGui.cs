@@ -1930,17 +1930,9 @@ public unsafe partial interface IImGui
     ///</summary>
     void LoadIniSettingsFromDisk(string ini_filename);
     ///<summary>
-    /// call after CreateContext() and before the first call to NewFrame() to provide .ini data from your own data source.<br/>
-    ///</summary>
-    void LoadIniSettingsFromMemory(string ini_data, nuint ini_size);
-    ///<summary>
     /// this is automatically called (if io.IniFilename is not empty) a few seconds after any modification that should be reflected in the .ini file (and also by DestroyContext).<br/>
     ///</summary>
     void SaveIniSettingsToDisk(string ini_filename);
-    ///<summary>
-    /// return a zero-terminated string with the .ini data which you can save by your own mean. call when io.WantSaveIniSettings is set, then save data by your own mean and clear io.WantSaveIniSettings.<br/>
-    ///</summary>
-    string SaveIniSettingsToMemory(nuint out_ini_size);
     ///<summary>
     /// Debug Utilities<br/>
     /// - Your main debugging friend is the ShowMetricsWindow() function, which is also accessible from Demo-&gt;Tools-&gt;Metrics Debugger<br/>

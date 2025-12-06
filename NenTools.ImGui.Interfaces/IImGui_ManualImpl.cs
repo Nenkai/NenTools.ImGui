@@ -23,6 +23,18 @@ public unsafe partial interface IImGui
     /// Output new ranges (ImVector_Construct()/ImVector_Destruct() can be used to safely construct out_ranges)<br/>
     ///</summary>
     public void ImFontGlyphRangesBuilder_BuildRanges(IImFontGlyphRangesBuilder self, out IImVectorWrapper<uint> out_ranges);
+
+    // Generator may convert this from sbyte to char*, which is wrong.
+    // We use a span here.
+    ///<summary>
+    /// call after CreateContext() and before the first call to NewFrame() to provide .ini data from your own data source.<br/>
+    ///</summary>
+    void LoadIniSettingsFromMemory(ReadOnlySpan<byte> data, nuint ini_size);
+
+    ///<summary>
+    /// this is automatically called (if io.IniFilename is not empty) a few seconds after any modification that should be reflected in the .ini file (and also by DestroyContext).<br/>
+    ///</summary>
+    string SaveIniSettingsToMemory(out nuint? out_ini_size);
 }
 
 #region Forward-declared enums not caught by ClangSharpPInvokeGenerator

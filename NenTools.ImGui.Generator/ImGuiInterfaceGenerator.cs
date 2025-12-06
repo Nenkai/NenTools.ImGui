@@ -45,6 +45,14 @@ public class ImGuiInterfaceGenerator
         "ImFontGlyphRangesBuilder_BuildRanges",
 
         "ImTextureRef_GetTexID", // Kind of annoying value type.
+        "LoadIniSettingsFromMemory", // int_data will be converted to string by the generator otherwise. We remap to ReadOnlySpan<byte>.
+        "SaveIniSettingsToMemory", // Returns a size_t*.
+    ];
+
+    private static readonly FrozenSet<string> SkippedBindingMethods =
+    [
+        "LoadIniSettingsFromMemory",
+        "SaveIniSettingsToMemory",
     ];
 
 
@@ -853,7 +861,9 @@ public class ImGuiInterfaceGenerator
                         continue;
 
                     var method = (MethodDeclarationSyntax)methodClassMember;
- 
+                    if (SkippedBindingMethods.Contains(method.Identifier.Text))
+                        continue;
+
                     var newParamList = new List<ParameterSyntax>();
                     foreach (var param in method.ParameterList.Parameters)
                     {

@@ -679,17 +679,7 @@ public unsafe partial class ImGui : IImGui
 
     public void SetClipboardText(string text) => ImGuiMethods.SetClipboardText(text);
     public void LoadIniSettingsFromDisk(string ini_filename) => ImGuiMethods.LoadIniSettingsFromDisk(ini_filename);
-    public void LoadIniSettingsFromMemory(string ini_data, nuint ini_size) => ImGuiMethods.LoadIniSettingsFromMemory(ini_data, ini_size);
     public void SaveIniSettingsToDisk(string ini_filename) => ImGuiMethods.SaveIniSettingsToDisk(ini_filename);
-    public string SaveIniSettingsToMemory(nuint out_ini_size)
-    {
-        sbyte* retStrPtr = ImGuiMethods.SaveIniSettingsToMemory(out_ini_size);
-        if (retStrPtr is null)
-        return null !;
-        string retStr = Marshal.PtrToStringUTF8((nint)retStrPtr)!;
-        return retStr;
-    }
-
     public void DebugTextEncoding(string text) => ImGuiMethods.DebugTextEncoding(text);
     public void DebugFlashStyleColor(ImGuiCol idx) => ImGuiMethods.DebugFlashStyleColor((int)idx);
     public void DebugStartItemPicker() => ImGuiMethods.DebugStartItemPicker();
