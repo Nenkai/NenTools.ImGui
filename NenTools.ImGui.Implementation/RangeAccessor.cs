@@ -10,6 +10,7 @@ using NenTools.ImGui.Interfaces;
 
 namespace NenTools.ImGui.Implementation;
 
+/// <inheritdoc/>
 public readonly unsafe struct RangeAccessor<T>(void* data, int count) : IRangeAccessor<T> where T : struct
 {
     private static readonly int s_sizeOfT = Unsafe.SizeOf<T>();

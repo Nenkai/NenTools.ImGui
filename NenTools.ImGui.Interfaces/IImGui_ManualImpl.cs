@@ -1,13 +1,10 @@
-// This file was generated with ImGuiInterfaceGenerator
 using System;
 using System.Runtime.InteropServices;
 using System.Numerics;
 
 namespace NenTools.ImGui.Interfaces;
 
-///<summary>
-///Interface to the ImGui library.<br/>
-///</summary>
+// Manually implemented imgui interface members
 public unsafe partial interface IImGui
 {
     public ulong ImTextureRef_GetTexID(IImTextureRef self);

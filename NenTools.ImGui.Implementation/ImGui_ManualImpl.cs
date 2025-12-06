@@ -11,9 +11,7 @@ using System.Threading.Tasks;
 
 namespace NenTools.ImGui.Implementation;
 
-/// <summary>
-/// Manually implemented imgui implementation functions, for the interface.
-/// </summary>
+// Manually implemented imgui implementations, for the interface.
 public unsafe partial class ImGui : IImGui
 {
     public IImTextureRef CreateTextureRef(ulong texId)
