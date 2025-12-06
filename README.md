@@ -90,6 +90,9 @@ if (!_imGuiShell.TryGetTarget(out IImGuiShell imGuiShell))
 
 2. Inherit from `IImGuiComponent`:
 ```csharp
+// category is the top menu entry which this component will render menu items to.
+// name is only used for sorting purposes.
+// If your component needs to render a menu, it should always render a sub-group, for clarity.
 [ImGuiMenu(Category = "Other", Priority = 0, Owner = "MyImGuiMod")]
 public class MyImGuiComponent : IImGuiComponent
 {
@@ -107,7 +110,7 @@ public class MyImGuiComponent : IImGuiComponent
     {
         // Write code to render menu entries here.
         // By default, the shell will render a top menu bar which you can add elements to.
-        if (_imgui.BeginMenu("MyModName"))
+        if (_imgui.BeginMenu("MyModSubMenu"))
         {
             _imgui.MenuItem("Menu Item 1");
             _imgui.MenuItem("Menu Item 2");
@@ -132,16 +135,24 @@ public class MyImGuiComponent : IImGuiComponent
 
 3. Register your component to the ImGui system:
 ```csharp
-// category is the top menu entry which this component will render menu items to.
-// name is only used for sorting purposes.
-// If your component needs to render a menu, it should always render a sub-group, for clarity.
-// Example:
+imguiShell.AddComponent(new MyImGuiComponent(_imGui));
+
+// The render order will look like the following:
+// File
+//   ...
 // Tools
-// -> MyModName <- This is where RenderMenu starts.
-//   -> Menu Item 1
-//   -> Menu Item 2
-//   -> Menu Item 3
-imguiShell.AddComponent(new PhotoModeMenu(_imGui));
+//   ...
+// Other
+//   (MyImGuiComponent - Priority: 0, Owner: "MyImGuiMod")
+//     --> This is where MyImGuiComponent.RenderMenu() is called. <--
+//       -> MyModSubMenu
+//         -> Menu Item 1
+//         -> Menu Item 2
+//         -> Menu Item 3
+//   (some other mod component - Priority: 0, Owner: "OtherModName")
+//     ...
+//   (some component you registered - Priority: 1, Owner: "MyImGuiMod")
+//     ...
 ```
 
 > [!WARNING]
