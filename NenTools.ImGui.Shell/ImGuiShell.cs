@@ -177,7 +177,7 @@ public class ImGuiShell : IImGuiShell
         AddComponent(new ImGuiSeparator(_imGui, displayName), category, priority, orderString);
     }
 
-    private bool _firstRender = false;
+    private bool _firstRendered = false;
     private void Render()
     {
         if (!IsOverlayEnabled)
@@ -186,10 +186,15 @@ public class ImGuiShell : IImGuiShell
         // Test zone
         // TestImGui();
 
-        if (!_firstRender)
+        if (!_firstRendered)
         {
+            if (_menuVisible)
+                _imGui.GetIO().ConfigFlags &= ~ImGuiConfigFlags.ImGuiConfigFlags_NoMouseCursorChange;
+            else
+                _imGui.GetIO().ConfigFlags |= ImGuiConfigFlags.ImGuiConfigFlags_NoMouseCursorChange;
+
             OnFirstRender?.Invoke();
-            _firstRender = true;
+            _firstRendered = true;
         }
 
         foreach (IImGuiComponent component in _components)
