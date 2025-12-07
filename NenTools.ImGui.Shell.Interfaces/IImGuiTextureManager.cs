@@ -26,6 +26,29 @@ public interface IImGuiTextureManager
     IImGuiImage LoadImage(string filePath);
 
     /// <summary>
+    /// Updates an image with data from the specified image file path.
+    /// </summary>
+    /// <param name="image">Image to update.</param>
+    /// <param name="filePath">File path. The file format/extension can be any format supported by <a href="https://docs.sixlabors.com/articles/imagesharp/imageformats.html"> ImageSharp.</a></param>
+    void UpdateImage(IImGuiImage image, string filePath);
+
+    /// <summary>
+    /// Updates an image with data from the specified RGBA buffer. <br/>
+    /// Size of the buffer is expected to match the dimensions of the current image.
+    /// </summary>
+    /// <param name="image">Image to update.</param>
+    /// <param name="imageData">RGBA buffer. Size of the buffer is expected to match the dimensions of the current image.</param>
+    void UpdateImage(IImGuiImage image, Span<byte> imageData);
+
+    /// <summary>
+    /// Queues an image for update with new data from the specified file path.
+    /// </summary>
+    /// <param name="image">Image to update.</param>
+    /// <param name="filePath">File path. The file format/extension can be any format supported by <a href="https://docs.sixlabors.com/articles/imagesharp/imageformats.html"> ImageSharp.</a></param>
+    /// <param name="ct"></param>
+    public void QueueUpdateImage(IImGuiImage image, string filePath, CancellationToken ct = default);
+
+    /// <summary>
     /// Queues an image for loading. This can be used to load images asynchronously.
     /// </summary>
     /// <param name="filePath">File path. The file format/extension can be any format supported by <a href="https://docs.sixlabors.com/articles/imagesharp/imageformats.html"> ImageSharp.</a></param>

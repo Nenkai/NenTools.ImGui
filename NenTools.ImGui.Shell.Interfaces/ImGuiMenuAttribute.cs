@@ -26,7 +26,7 @@ public class ImGuiMenuAttribute : Attribute
 
     /// <summary>
     /// Owner for this component, which should be shared by all components that you add.<br/><br/>
-    /// <b>This is only used for sorting menu entries alphabetically on the framework side per mod, when the priority is the same as another component.</b>
+    /// <b>This is only used for sorting menu entries alphabetically on the shell side per mod, when the priority is the same as another component.</b>
     /// Should normally be your mod id or mod name.<br/>
     /// </summary>
     public string? Owner { get; set; }

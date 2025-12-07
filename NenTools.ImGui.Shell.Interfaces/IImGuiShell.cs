@@ -132,7 +132,7 @@ public interface IImGuiShell
     /// </param>
     /// <param name="overrideOwner">Optional, override for <see cref="ImGuiMenuAttribute.Owner"/>. <br/><br/>
     /// Owner for this component, which should be shared by all components that you add.<br/><br/>
-    /// <b>This is only used for sorting menu entries alphabetically on the framework side per mod, when the priority is the same as another component.</b>
+    /// <b>This is only used for sorting menu entries alphabetically on the shell side per mod, when the priority is the same as another component.</b>
     /// Should normally be your mod id or mod name.<br/></param>
     void AddComponent(IImGuiComponent component, string? overrideCategory = null, int overridePriority = 0, string? overrideOwner = null);
 
@@ -150,7 +150,7 @@ public interface IImGuiShell
     /// <b>Should match the priority assigned by other components!</b>
     /// </param>
     /// <param name="orderString">Order String, which should be your mod name (or anything else). <br/>
-    /// <b>This is only used for sorting menu entries alphabetically on the framework side per mod, when the priority is the same as another component.</b></param>
+    /// <b>This is only used for sorting menu entries alphabetically on the shell side per mod, when the priority is the same as another component.</b></param>
     /// <br/>
     /// <summary/>
     void AddMenuSeparator(string? displayName, string category, int priority, string orderString);

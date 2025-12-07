@@ -38,6 +38,15 @@ public interface IImguiHook : IDisposable
     bool IsTextureLoaded(ulong texId);
 
     /// <summary>
+    /// Updates an image.
+    /// </summary>
+    /// <param name="texId">Texture Id.</param>
+    /// <param name="textureData">Nex texture data.</param>
+    /// <param name="width">Width.</param>
+    /// <param name="height">Height.</param>
+    void UpdateTexture(ulong texId, Span<byte> textureData, uint width, uint height);
+
+    /// <summary>
     /// Frees an image.
     /// </summary>
     void FreeTexture(ulong texId);

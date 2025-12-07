@@ -546,7 +546,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
         if (isReinit)
             DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Cleaning up D3D12 for reinitialization");
         else
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] ShutdownD3D12 called ");
+            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] ShutdownD3D12 called");
 
         if (_imGuiBackendRendererData is not null)
             ImGuiMethods.cImGui_ImplDX12_Shutdown();
@@ -874,6 +874,9 @@ public unsafe class ImguiHookDx12 : IImguiHook
     }
 
     #region Texture Work
+    const int D3D12_TEXTURE_DATA_PITCH_ALIGNMENT = 256;
+    const int BytesPerPixel = 4;
+
     /// <summary>
     /// Loads an image and returns the ImTextureID for it.
     /// </summary>
@@ -881,16 +884,14 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// <param name="imageWidth"></param>
     /// <param name="imageHeight"></param>
     /// <returns></returns>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "Windows-specific code")]
     public ulong LoadTexture(Span<byte> bytes, uint imageWidth, uint imageHeight)
     {
         var heapProperties = new HeapProperties(HeapType.Default);
         var imageDesc = new ResourceDescription(ResourceDimension.Texture2D, 0, imageWidth, (int)imageHeight, 1, 1, Format.R8G8B8A8_UNorm, 1, 0, TextureLayout.Unknown, ResourceFlags.None);
         SharpDX.Direct3D12.Resource pTexture = Device.CreateCommittedResource(heapProperties, HeapFlags.None, imageDesc, ResourceStates.CopyDestination);
 
-        const int D3D12_TEXTURE_DATA_PITCH_ALIGNMENT = 256;
         var uploadBufferHeapDesc = new HeapProperties(HeapType.Upload);
-        uint uploadPitch = (uint)(imageWidth * 4 + D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1u & ~(D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1u));
+        uint uploadPitch = (uint)(imageWidth * BytesPerPixel + D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1u & ~(D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1u));
         uint uploadSize = imageHeight * uploadPitch;
 
         var tempDesc = new ResourceDescription(ResourceDimension.Buffer, 0, uploadSize, 1, 1, 1, Format.Unknown, 1, 0, TextureLayout.RowMajor, ResourceFlags.None);
@@ -975,6 +976,70 @@ public unsafe class ImguiHookDx12 : IImguiHook
         return (ulong)gpuHandle.Ptr;
     }
 
+    public void UpdateTexture(ulong gpuHandle, Span<byte> newBytes, uint width, uint height)
+    {
+        if (!_textureIds.TryGetValue(gpuHandle, out TextureResource? textureResource))
+            throw new KeyNotFoundException("Could not find texture for update.");
+
+        uint rowPitch = (uint)((width * BytesPerPixel + D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1) & ~(D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1));
+        uint uploadSize = height * rowPitch;
+
+        HeapProperties uploadProp = new HeapProperties(HeapType.Upload);
+        ResourceDescription bufDesc = new ResourceDescription(ResourceDimension.Buffer, 0, uploadSize, 1, 1, 1, Format.Unknown, 1, 0, TextureLayout.RowMajor, ResourceFlags.None);
+        SharpDX.Direct3D12.Resource upload = Device.CreateCommittedResource(uploadProp, HeapFlags.None, bufDesc, ResourceStates.GenericRead);
+
+        // Copy
+        nint mapped = upload.Map(0);
+        fixed (byte* src = newBytes)
+        {
+            for (int y = 0; y < height; y++)
+                Buffer.MemoryCopy(
+                    src + y * width * BytesPerPixel,
+                    (void*)(mapped + y * rowPitch),
+                    width * BytesPerPixel,
+                    width * BytesPerPixel);
+        }
+        upload.Unmap(0);
+
+        var srcLoc = new TextureCopyLocation(upload, new PlacedSubResourceFootprint()
+        {
+            Footprint = new SubResourceFootprint()
+            {
+                Format = Format.R8G8B8A8_UNorm,
+                Width = (int)width,
+                Height = (int)height,
+                Depth = 1,
+                RowPitch = (int)rowPitch
+            }
+        });
+        var dstLoc = new TextureCopyLocation(textureResource.Resource, 0);
+
+        // Build command list
+        var allocator = Device.CreateCommandAllocator(CommandListType.Direct);
+        var list = Device.CreateCommandList(0, CommandListType.Direct, allocator, null);
+        list.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.PixelShaderResource, ResourceStates.CopyDestination)));
+        list.CopyTextureRegion(dstLoc, 0, 0, 0, srcLoc, null);
+        list.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.CopyDestination, ResourceStates.PixelShaderResource)));
+        list.Close();
+
+        // Execute
+        var queue = Device.CreateCommandQueue(CommandListType.Direct);
+        var fence = Device.CreateFence(0, FenceFlags.None);
+        long signal = 1;
+
+        queue.ExecuteCommandList(list);
+        queue.Signal(fence, signal);
+
+        fence.SetEventOnCompletion(signal, IntPtr.Zero);
+        //fence.CompletedValue = signal;
+
+        upload.Dispose();
+        list.Dispose();
+        allocator.Dispose();
+        queue.Dispose();
+        fence.Dispose();
+    }
+
     public bool IsTextureLoaded(ulong texId)
     {
         return _textureIds.ContainsKey(texId);
@@ -989,7 +1054,6 @@ public unsafe class ImguiHookDx12 : IImguiHook
         _textureIds.TryRemove(texId, out _);
     }
     #endregion
-
 }
 
 public unsafe class ImguiHookDx12Wrapper
