@@ -65,6 +65,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
     [ThreadStatic]
     private bool _createSwapChainRecursionLock;
 
+    private readonly Lock _lock = new();
     private bool _isHookingD3D12 = false; // Used to ensure CreateSwapChainForHwnd hook does not call recursively
     private bool _isUsingFrameGenerationSwapchain = false; // Used to determine whether we are using Frame Gen (DLSS/FSR)'s swapchain (not really used?)
     private bool _isUsingProtonSwapchain = false; // Used to determine whether we are using Proton's Swapchain
@@ -357,16 +358,19 @@ public unsafe class ImguiHookDx12 : IImguiHook
 
         // TODO: Hook streamline 
 
-        DisableHooks();
+        lock (_lock)
+        {
+            DisableHooks();
 
-        _convertPointerHooksToVtableHookPhase = true;
+            _convertPointerHooksToVtableHookPhase = true;
 
-        // Hook vtable entries, least intrusive
-        nuint presentPointerAddr = (nuint)SwapchainVTable[(int)IDXGISwapChainVTable.Present].EntryAddress;
-        _presentHook = new FunctionPointerHook<PresentDelegate>(presentPointerAddr, PresentImpl).Activate();
+            // Hook vtable entries, least intrusive
+            nuint presentPointerAddr = (nuint)SwapchainVTable[(int)IDXGISwapChainVTable.Present].EntryAddress;
+            _presentHook = new FunctionPointerHook<PresentDelegate>(presentPointerAddr, PresentImpl).Activate();
 
-        nuint createSwapChainForHwndPointerAddr = (nuint)FactoryVTable[(int)IDXGIFactory.CreateSwapChainForHwnd].EntryAddress;
-        _createSwapChainForHwndHook ??= new FunctionPointerHook<CreateSwapChainForHwnd>(createSwapChainForHwndPointerAddr, CreateSwapChainForHwndImpl).Activate();
+            nuint createSwapChainForHwndPointerAddr = (nuint)FactoryVTable[(int)IDXGIFactory.CreateSwapChainForHwnd].EntryAddress;
+            _createSwapChainForHwndHook ??= new FunctionPointerHook<CreateSwapChainForHwnd>(createSwapChainForHwndPointerAddr, CreateSwapChainForHwndImpl).Activate();
+        }
     }
 
     ~ImguiHookDx12()
@@ -376,13 +380,17 @@ public unsafe class ImguiHookDx12 : IImguiHook
 
     public void Dispose()
     {
-        ShutdownD3D12(isReinit: false);
-        DisableHooks();
-        _createSwapChainForHwndHook?.Disable();
+        lock (_lock)
+        {
+            ShutdownD3D12(isReinit: false);
+            DisableHooks();
 
-        // Dispose texture resources
-        _textureHeapAllocator?.Destroy();
-        _shaderResourceViewDescHeap?.Dispose();
+            _createSwapChainForHwndHook?.Disable();
+            _shaderResourceViewDescHeap?.Dispose();
+
+            // Dispose texture resources
+            _textureHeapAllocator?.Destroy();
+        }
 
         GC.SuppressFinalize(this);
     }
@@ -405,12 +413,18 @@ public unsafe class ImguiHookDx12 : IImguiHook
         if (_isHookingD3D12)
             return _createSwapChainForHwndHook.OriginalFunction.Invoke(factory, pDevice, hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
 
-        DisableHooks(); // FSR/DLSS creates a new swapchain. We have hooks on the vtable pointer of the original swapchain, we need to restore it
-        ShutdownD3D12();
+        lock (_lock)
+        {
+            DisableHooks(); // FSR/DLSS creates a new swapchain. We have hooks on the vtable pointer of the original swapchain, we need to restore it
+            ShutdownD3D12();
+        }
 
         var res = _createSwapChainForHwndHook.OriginalFunction.Invoke(factory, pDevice, hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
 
-        InitAndEnableHooks();
+        lock (_lock)
+        {
+            InitAndEnableHooks();
+        }
 
         DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] CreateSwapChainForHwndImpl end");
         return res;
@@ -702,8 +716,10 @@ public unsafe class ImguiHookDx12 : IImguiHook
                 _hasHookedWinProc = true;
             }
 
-            InitD3D12();
-
+            lock (_lock)
+            {
+                InitD3D12();
+            }
         }
 
         ImGuiMethods.cImGui_ImplDX12_NewFrame();
@@ -796,7 +812,10 @@ public unsafe class ImguiHookDx12 : IImguiHook
     private void OnBuffersResized()
     {
         // Deinit everything.
-        ShutdownD3D12();
+        lock (_lock)
+        {
+            ShutdownD3D12();
+        }
     }
     #endregion
 
@@ -837,7 +856,10 @@ public unsafe class ImguiHookDx12 : IImguiHook
     private void OnTargetResized()
     {
         // Deinit everything.
-        ShutdownD3D12();
+        lock (_lock)
+        {
+            ShutdownD3D12();
+        }
     }
     #endregion
 
