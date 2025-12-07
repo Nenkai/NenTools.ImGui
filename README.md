@@ -10,9 +10,11 @@ Currently supports DirectX12 exclusively.
 ## Features
 
 * Interfaced bindings created using [Dear Bindings](https://github.com/dearimgui/dear_bindings) **enabling support for comments**
-* Closely mapped certain value types to C# types (`ImVec2` -> `Vector2`, etc), enums supported
-* `ImVector` types wrapped to `IEnumerable` types that can be safely iterated
-* No unsafe code (for the most part)
+  * Closely mapped certain value types to C# types (`ImVec2` -> `Vector2`, etc), enums supported
+  * `ImVector` types wrapped to `IEnumerable` types that can be safely iterated
+  * No unsafe code (for the most part)
+  * Support for `ReadOnlySpan<byte>` in place of `string` for passing strings around, reducing marshalling.
+    * Should be combined with [UTF-8 literals](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/proposals/csharp-11.0/utf8-string-literals), as they are statically compiled.
 * Game injection support
 * DirectX 12 support (third-party overlays supported)
 * Shell support (main menu & API)
