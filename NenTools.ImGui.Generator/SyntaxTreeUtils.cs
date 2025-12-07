@@ -48,6 +48,11 @@ public class SyntaxTreeUtils
                  .WithTarget(SF.AttributeTargetSpecifier(SF.Token(SyntaxKind.ReturnKeyword)));
     }
 
+    public static ExpressionSyntax CreateReadOnlySpanToStringPointerExpression(string identifier)
+    {
+        return SF.ParseExpression($"(sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>({identifier}))");
+    }
+
     /// <summary>
     /// Creates { get; set; }, with arrow bodies if provided
     /// </summary>

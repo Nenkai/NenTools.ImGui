@@ -73,7 +73,9 @@ public unsafe partial class ImGui : IImGui
     public void ShowAboutWindow(ref bool p_open) => ImGuiMethods.ShowAboutWindow(ref p_open);
     public void ShowStyleEditor(IImGuiStyle @ref) => ImGuiMethods.ShowStyleEditor(@ref is not null ? (ImGuiStyleStruct*)@ref.NativePointer : null);
     public bool ShowStyleSelector(string label) => ImGuiMethods.ShowStyleSelector(label);
+    public bool ShowStyleSelector(ReadOnlySpan<byte> label) => ImGuiMethods.ShowStyleSelector((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public void ShowFontSelector(string label) => ImGuiMethods.ShowFontSelector(label);
+    public void ShowFontSelector(ReadOnlySpan<byte> label) => ImGuiMethods.ShowFontSelector((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public void ShowUserGuide() => ImGuiMethods.ShowUserGuide();
     public string GetVersion()
     {
@@ -88,8 +90,10 @@ public unsafe partial class ImGui : IImGui
     public void StyleColorsLight(IImGuiStyle dst) => ImGuiMethods.StyleColorsLight(dst is not null ? (ImGuiStyleStruct*)dst.NativePointer : null);
     public void StyleColorsClassic(IImGuiStyle dst) => ImGuiMethods.StyleColorsClassic(dst is not null ? (ImGuiStyleStruct*)dst.NativePointer : null);
     public bool Begin(string name, ref bool p_open, ImGuiWindowFlags flags) => ImGuiMethods.Begin(name, ref p_open, (int)flags);
+    public bool Begin(ReadOnlySpan<byte> name, ref bool p_open, ImGuiWindowFlags flags) => ImGuiMethods.Begin((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), ref p_open, (int)flags);
     public void End() => ImGuiMethods.End();
     public bool BeginChild(string str_id, Vector2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags) => ImGuiMethods.BeginChild(str_id, size, (int)child_flags, (int)window_flags);
+    public bool BeginChild(ReadOnlySpan<byte> str_id, Vector2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags) => ImGuiMethods.BeginChild((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), size, (int)child_flags, (int)window_flags);
     public bool BeginChildID(uint id, Vector2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags) => ImGuiMethods.BeginChildID(id, size, (int)child_flags, (int)window_flags);
     public void EndChild() => ImGuiMethods.EndChild();
     public bool IsWindowAppearing() => ImGuiMethods.IsWindowAppearing();
@@ -132,9 +136,13 @@ public unsafe partial class ImGui : IImGui
     public void SetWindowCollapsed(bool collapsed, ImGuiCond cond) => ImGuiMethods.SetWindowCollapsed(collapsed, (int)cond);
     public void SetWindowFocus() => ImGuiMethods.SetWindowFocus();
     public void SetWindowPosStr(string name, Vector2 pos, ImGuiCond cond) => ImGuiMethods.SetWindowPosStr(name, pos, (int)cond);
+    public void SetWindowPosStr(ReadOnlySpan<byte> name, Vector2 pos, ImGuiCond cond) => ImGuiMethods.SetWindowPosStr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), pos, (int)cond);
     public void SetWindowSizeStr(string name, Vector2 size, ImGuiCond cond) => ImGuiMethods.SetWindowSizeStr(name, size, (int)cond);
+    public void SetWindowSizeStr(ReadOnlySpan<byte> name, Vector2 size, ImGuiCond cond) => ImGuiMethods.SetWindowSizeStr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), size, (int)cond);
     public void SetWindowCollapsedStr(string name, bool collapsed, ImGuiCond cond) => ImGuiMethods.SetWindowCollapsedStr(name, collapsed, (int)cond);
+    public void SetWindowCollapsedStr(ReadOnlySpan<byte> name, bool collapsed, ImGuiCond cond) => ImGuiMethods.SetWindowCollapsedStr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), collapsed, (int)cond);
     public void SetWindowFocusStr(string name) => ImGuiMethods.SetWindowFocusStr(name);
+    public void SetWindowFocusStr(ReadOnlySpan<byte> name) => ImGuiMethods.SetWindowFocusStr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)));
     public float GetScrollX() => ImGuiMethods.GetScrollX();
     public float GetScrollY() => ImGuiMethods.GetScrollY();
     public void SetScrollX(float scroll_x) => ImGuiMethods.SetScrollX(scroll_x);
@@ -217,164 +225,306 @@ public unsafe partial class ImGui : IImGui
     public float GetFrameHeight() => ImGuiMethods.GetFrameHeight();
     public float GetFrameHeightWithSpacing() => ImGuiMethods.GetFrameHeightWithSpacing();
     public void PushID(string str_id) => ImGuiMethods.PushID(str_id);
+    public void PushID(ReadOnlySpan<byte> str_id) => ImGuiMethods.PushID((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)));
     public void PushIDStr(string str_id_begin, string str_id_end) => ImGuiMethods.PushIDStr(str_id_begin, str_id_end);
+    public void PushIDStr(ReadOnlySpan<byte> str_id_begin, ReadOnlySpan<byte> str_id_end) => ImGuiMethods.PushIDStr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id_begin)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id_end)));
     public void PushIDPtr(void* ptr_id) => ImGuiMethods.PushIDPtr(ptr_id);
     public void PushIDInt(int int_id) => ImGuiMethods.PushIDInt(int_id);
     public void PopID() => ImGuiMethods.PopID();
     public uint GetID(string str_id) => ImGuiMethods.GetID(str_id);
+    public uint GetID(ReadOnlySpan<byte> str_id) => ImGuiMethods.GetID((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)));
     public uint GetIDStr(string str_id_begin, string str_id_end) => ImGuiMethods.GetIDStr(str_id_begin, str_id_end);
+    public uint GetIDStr(ReadOnlySpan<byte> str_id_begin, ReadOnlySpan<byte> str_id_end) => ImGuiMethods.GetIDStr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id_begin)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id_end)));
     public uint GetIDPtr(void* ptr_id) => ImGuiMethods.GetIDPtr(ptr_id);
     public uint GetIDInt(int int_id) => ImGuiMethods.GetIDInt(int_id);
     public void TextUnformatted(string text) => ImGuiMethods.TextUnformatted(text);
+    public void TextUnformatted(ReadOnlySpan<byte> text) => ImGuiMethods.TextUnformatted((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)));
     public void TextUnformattedEx(string text, string text_end) => ImGuiMethods.TextUnformattedEx(text, text_end);
+    public void TextUnformattedEx(ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end) => ImGuiMethods.TextUnformattedEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)));
     public void Text(string fmt) => ImGuiMethods.Text(fmt);
+    public void Text(ReadOnlySpan<byte> fmt) => ImGuiMethods.Text((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void TextV(string fmt, sbyte* args) => ImGuiMethods.TextV(fmt, args);
+    public void TextV(ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.TextV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void TextColored(Vector4 col, string fmt) => ImGuiMethods.TextColored(col, fmt);
+    public void TextColored(Vector4 col, ReadOnlySpan<byte> fmt) => ImGuiMethods.TextColored(col, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void TextColoredV(Vector4 col, string fmt, sbyte* args) => ImGuiMethods.TextColoredV(col, fmt, args);
+    public void TextColoredV(Vector4 col, ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.TextColoredV(col, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void TextDisabled(string fmt) => ImGuiMethods.TextDisabled(fmt);
+    public void TextDisabled(ReadOnlySpan<byte> fmt) => ImGuiMethods.TextDisabled((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void TextDisabledV(string fmt, sbyte* args) => ImGuiMethods.TextDisabledV(fmt, args);
+    public void TextDisabledV(ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.TextDisabledV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void TextWrapped(string fmt) => ImGuiMethods.TextWrapped(fmt);
+    public void TextWrapped(ReadOnlySpan<byte> fmt) => ImGuiMethods.TextWrapped((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void TextWrappedV(string fmt, sbyte* args) => ImGuiMethods.TextWrappedV(fmt, args);
+    public void TextWrappedV(ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.TextWrappedV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void LabelText(string label, string fmt) => ImGuiMethods.LabelText(label, fmt);
+    public void LabelText(ReadOnlySpan<byte> label, ReadOnlySpan<byte> fmt) => ImGuiMethods.LabelText((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void LabelTextV(string label, string fmt, sbyte* args) => ImGuiMethods.LabelTextV(label, fmt, args);
+    public void LabelTextV(ReadOnlySpan<byte> label, ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.LabelTextV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void BulletText(string fmt) => ImGuiMethods.BulletText(fmt);
+    public void BulletText(ReadOnlySpan<byte> fmt) => ImGuiMethods.BulletText((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void BulletTextV(string fmt, sbyte* args) => ImGuiMethods.BulletTextV(fmt, args);
+    public void BulletTextV(ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.BulletTextV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void SeparatorText(string label) => ImGuiMethods.SeparatorText(label);
+    public void SeparatorText(ReadOnlySpan<byte> label) => ImGuiMethods.SeparatorText((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool Button(string label) => ImGuiMethods.Button(label);
+    public bool Button(ReadOnlySpan<byte> label) => ImGuiMethods.Button((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool ButtonEx(string label, Vector2 size) => ImGuiMethods.ButtonEx(label, size);
+    public bool ButtonEx(ReadOnlySpan<byte> label, Vector2 size) => ImGuiMethods.ButtonEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), size);
     public bool SmallButton(string label) => ImGuiMethods.SmallButton(label);
+    public bool SmallButton(ReadOnlySpan<byte> label) => ImGuiMethods.SmallButton((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool InvisibleButton(string str_id, Vector2 size, ImGuiButtonFlags flags) => ImGuiMethods.InvisibleButton(str_id, size, (int)flags);
+    public bool InvisibleButton(ReadOnlySpan<byte> str_id, Vector2 size, ImGuiButtonFlags flags) => ImGuiMethods.InvisibleButton((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), size, (int)flags);
     public bool ArrowButton(string str_id, int dir) => ImGuiMethods.ArrowButton(str_id, dir);
+    public bool ArrowButton(ReadOnlySpan<byte> str_id, int dir) => ImGuiMethods.ArrowButton((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), dir);
     public bool Checkbox(string label, ref bool v) => ImGuiMethods.Checkbox(label, ref v);
+    public bool Checkbox(ReadOnlySpan<byte> label, ref bool v) => ImGuiMethods.Checkbox((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool CheckboxFlagsIntPtr(string label, ref int flags, int flags_value) => ImGuiMethods.CheckboxFlagsIntPtr(label, ref flags, flags_value);
+    public bool CheckboxFlagsIntPtr(ReadOnlySpan<byte> label, ref int flags, int flags_value) => ImGuiMethods.CheckboxFlagsIntPtr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref flags, flags_value);
     public bool CheckboxFlagsUintPtr(string label, ref uint flags, uint flags_value) => ImGuiMethods.CheckboxFlagsUintPtr(label, ref flags, flags_value);
+    public bool CheckboxFlagsUintPtr(ReadOnlySpan<byte> label, ref uint flags, uint flags_value) => ImGuiMethods.CheckboxFlagsUintPtr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref flags, flags_value);
     public bool RadioButton(string label, bool active) => ImGuiMethods.RadioButton(label, active);
+    public bool RadioButton(ReadOnlySpan<byte> label, bool active) => ImGuiMethods.RadioButton((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), active);
     public bool RadioButtonIntPtr(string label, ref int v, int v_button) => ImGuiMethods.RadioButtonIntPtr(label, ref v, v_button);
+    public bool RadioButtonIntPtr(ReadOnlySpan<byte> label, ref int v, int v_button) => ImGuiMethods.RadioButtonIntPtr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_button);
     public void ProgressBar(float fraction, Vector2 size_arg, string overlay) => ImGuiMethods.ProgressBar(fraction, size_arg, overlay);
+    public void ProgressBar(float fraction, Vector2 size_arg, ReadOnlySpan<byte> overlay) => ImGuiMethods.ProgressBar(fraction, size_arg, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(overlay)));
     public void Bullet() => ImGuiMethods.Bullet();
     public bool TextLink(string label) => ImGuiMethods.TextLink(label);
+    public bool TextLink(ReadOnlySpan<byte> label) => ImGuiMethods.TextLink((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool TextLinkOpenURL(string label) => ImGuiMethods.TextLinkOpenURL(label);
+    public bool TextLinkOpenURL(ReadOnlySpan<byte> label) => ImGuiMethods.TextLinkOpenURL((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool TextLinkOpenURLEx(string label, string url) => ImGuiMethods.TextLinkOpenURLEx(label, url);
+    public bool TextLinkOpenURLEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> url) => ImGuiMethods.TextLinkOpenURLEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(url)));
     public void Image(IImTextureRef tex_ref, Vector2 image_size) => ImGuiMethods.Image(((ImTextureRef)tex_ref).ToStruct(), image_size);
     public void ImageEx(IImTextureRef tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1) => ImGuiMethods.ImageEx(((ImTextureRef)tex_ref).ToStruct(), image_size, uv0, uv1);
     public void ImageWithBg(IImTextureRef tex_ref, Vector2 image_size) => ImGuiMethods.ImageWithBg(((ImTextureRef)tex_ref).ToStruct(), image_size);
     public void ImageWithBgEx(IImTextureRef tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1, Vector4 bg_col, Vector4 tint_col) => ImGuiMethods.ImageWithBgEx(((ImTextureRef)tex_ref).ToStruct(), image_size, uv0, uv1, bg_col, tint_col);
     public bool ImageButton(string str_id, IImTextureRef tex_ref, Vector2 image_size) => ImGuiMethods.ImageButton(str_id, ((ImTextureRef)tex_ref).ToStruct(), image_size);
+    public bool ImageButton(ReadOnlySpan<byte> str_id, IImTextureRef tex_ref, Vector2 image_size) => ImGuiMethods.ImageButton((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), ((ImTextureRef)tex_ref).ToStruct(), image_size);
     public bool ImageButtonEx(string str_id, IImTextureRef tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1, Vector4 bg_col, Vector4 tint_col) => ImGuiMethods.ImageButtonEx(str_id, ((ImTextureRef)tex_ref).ToStruct(), image_size, uv0, uv1, bg_col, tint_col);
+    public bool ImageButtonEx(ReadOnlySpan<byte> str_id, IImTextureRef tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1, Vector4 bg_col, Vector4 tint_col) => ImGuiMethods.ImageButtonEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), ((ImTextureRef)tex_ref).ToStruct(), image_size, uv0, uv1, bg_col, tint_col);
     public bool BeginCombo(string label, string preview_value, ImGuiComboFlags flags) => ImGuiMethods.BeginCombo(label, preview_value, (int)flags);
+    public bool BeginCombo(ReadOnlySpan<byte> label, ReadOnlySpan<byte> preview_value, ImGuiComboFlags flags) => ImGuiMethods.BeginCombo((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(preview_value)), (int)flags);
     public void EndCombo() => ImGuiMethods.EndCombo();
     public bool ComboChar(string label, ref int current_item, sbyte** items, int items_count) => ImGuiMethods.ComboChar(label, ref current_item, items, items_count);
+    public bool ComboChar(ReadOnlySpan<byte> label, ref int current_item, sbyte** items, int items_count) => ImGuiMethods.ComboChar((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, items, items_count);
     public bool ComboCharEx(string label, ref int current_item, sbyte** items, int items_count, int popup_max_height_in_items) => ImGuiMethods.ComboCharEx(label, ref current_item, items, items_count, popup_max_height_in_items);
+    public bool ComboCharEx(ReadOnlySpan<byte> label, ref int current_item, sbyte** items, int items_count, int popup_max_height_in_items) => ImGuiMethods.ComboCharEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, items, items_count, popup_max_height_in_items);
     public bool Combo(string label, ref int current_item, string items_separated_by_zeros) => ImGuiMethods.Combo(label, ref current_item, items_separated_by_zeros);
+    public bool Combo(ReadOnlySpan<byte> label, ref int current_item, ReadOnlySpan<byte> items_separated_by_zeros) => ImGuiMethods.Combo((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(items_separated_by_zeros)));
     public bool ComboEx(string label, ref int current_item, string items_separated_by_zeros, int popup_max_height_in_items) => ImGuiMethods.ComboEx(label, ref current_item, items_separated_by_zeros, popup_max_height_in_items);
+    public bool ComboEx(ReadOnlySpan<byte> label, ref int current_item, ReadOnlySpan<byte> items_separated_by_zeros, int popup_max_height_in_items) => ImGuiMethods.ComboEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(items_separated_by_zeros)), popup_max_height_in_items);
     public bool ComboCallback(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count) => ImGuiMethods.ComboCallback(label, ref current_item, getter, user_data, items_count);
+    public bool ComboCallback(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count) => ImGuiMethods.ComboCallback((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, getter, user_data, items_count);
     public bool ComboCallbackEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int popup_max_height_in_items) => ImGuiMethods.ComboCallbackEx(label, ref current_item, getter, user_data, items_count, popup_max_height_in_items);
+    public bool ComboCallbackEx(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int popup_max_height_in_items) => ImGuiMethods.ComboCallbackEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, getter, user_data, items_count, popup_max_height_in_items);
     public bool DragFloat(string label, ref float v) => ImGuiMethods.DragFloat(label, ref v);
+    public bool DragFloat(ReadOnlySpan<byte> label, ref float v) => ImGuiMethods.DragFloat((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool DragFloatEx(string label, ref float v, float v_speed, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragFloatEx(label, ref v, v_speed, v_min, v_max, format, (int)flags);
+    public bool DragFloatEx(ReadOnlySpan<byte> label, ref float v, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragFloatEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragFloat2(string label, ref float v) => ImGuiMethods.DragFloat2(label, ref v);
+    public bool DragFloat2(ReadOnlySpan<byte> label, ref float v) => ImGuiMethods.DragFloat2((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool DragFloat2Ex(string label, ref float v, float v_speed, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragFloat2Ex(label, ref v, v_speed, v_min, v_max, format, (int)flags);
+    public bool DragFloat2Ex(ReadOnlySpan<byte> label, ref float v, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragFloat2Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragFloat3(string label, ref float v) => ImGuiMethods.DragFloat3(label, ref v);
+    public bool DragFloat3(ReadOnlySpan<byte> label, ref float v) => ImGuiMethods.DragFloat3((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool DragFloat3Ex(string label, ref float v, float v_speed, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragFloat3Ex(label, ref v, v_speed, v_min, v_max, format, (int)flags);
+    public bool DragFloat3Ex(ReadOnlySpan<byte> label, ref float v, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragFloat3Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragFloat4(string label, ref float v) => ImGuiMethods.DragFloat4(label, ref v);
+    public bool DragFloat4(ReadOnlySpan<byte> label, ref float v) => ImGuiMethods.DragFloat4((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool DragFloat4Ex(string label, ref float v, float v_speed, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragFloat4Ex(label, ref v, v_speed, v_min, v_max, format, (int)flags);
+    public bool DragFloat4Ex(ReadOnlySpan<byte> label, ref float v, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragFloat4Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragFloatRange2(string label, ref float v_current_min, ref float v_current_max) => ImGuiMethods.DragFloatRange2(label, ref v_current_min, ref v_current_max);
+    public bool DragFloatRange2(ReadOnlySpan<byte> label, ref float v_current_min, ref float v_current_max) => ImGuiMethods.DragFloatRange2((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v_current_min, ref v_current_max);
     public bool DragFloatRange2Ex(string label, ref float v_current_min, ref float v_current_max, float v_speed, float v_min, float v_max, string format, string format_max, ImGuiSliderFlags flags) => ImGuiMethods.DragFloatRange2Ex(label, ref v_current_min, ref v_current_max, v_speed, v_min, v_max, format, format_max, (int)flags);
+    public bool DragFloatRange2Ex(ReadOnlySpan<byte> label, ref float v_current_min, ref float v_current_max, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ReadOnlySpan<byte> format_max, ImGuiSliderFlags flags) => ImGuiMethods.DragFloatRange2Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v_current_min, ref v_current_max, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format_max)), (int)flags);
     public bool DragInt(string label, ref int v) => ImGuiMethods.DragInt(label, ref v);
+    public bool DragInt(ReadOnlySpan<byte> label, ref int v) => ImGuiMethods.DragInt((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool DragIntEx(string label, ref int v, float v_speed, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragIntEx(label, ref v, v_speed, v_min, v_max, format, (int)flags);
+    public bool DragIntEx(ReadOnlySpan<byte> label, ref int v, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragIntEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragInt2(string label, ref int v) => ImGuiMethods.DragInt2(label, ref v);
+    public bool DragInt2(ReadOnlySpan<byte> label, ref int v) => ImGuiMethods.DragInt2((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool DragInt2Ex(string label, ref int v, float v_speed, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragInt2Ex(label, ref v, v_speed, v_min, v_max, format, (int)flags);
+    public bool DragInt2Ex(ReadOnlySpan<byte> label, ref int v, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragInt2Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragInt3(string label, ref int v) => ImGuiMethods.DragInt3(label, ref v);
+    public bool DragInt3(ReadOnlySpan<byte> label, ref int v) => ImGuiMethods.DragInt3((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool DragInt3Ex(string label, ref int v, float v_speed, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragInt3Ex(label, ref v, v_speed, v_min, v_max, format, (int)flags);
+    public bool DragInt3Ex(ReadOnlySpan<byte> label, ref int v, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragInt3Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragInt4(string label, ref int v) => ImGuiMethods.DragInt4(label, ref v);
+    public bool DragInt4(ReadOnlySpan<byte> label, ref int v) => ImGuiMethods.DragInt4((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool DragInt4Ex(string label, ref int v, float v_speed, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragInt4Ex(label, ref v, v_speed, v_min, v_max, format, (int)flags);
+    public bool DragInt4Ex(ReadOnlySpan<byte> label, ref int v, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragInt4Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragIntRange2(string label, ref int v_current_min, ref int v_current_max) => ImGuiMethods.DragIntRange2(label, ref v_current_min, ref v_current_max);
+    public bool DragIntRange2(ReadOnlySpan<byte> label, ref int v_current_min, ref int v_current_max) => ImGuiMethods.DragIntRange2((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v_current_min, ref v_current_max);
     public bool DragIntRange2Ex(string label, ref int v_current_min, ref int v_current_max, float v_speed, int v_min, int v_max, string format, string format_max, ImGuiSliderFlags flags) => ImGuiMethods.DragIntRange2Ex(label, ref v_current_min, ref v_current_max, v_speed, v_min, v_max, format, format_max, (int)flags);
+    public bool DragIntRange2Ex(ReadOnlySpan<byte> label, ref int v_current_min, ref int v_current_max, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ReadOnlySpan<byte> format_max, ImGuiSliderFlags flags) => ImGuiMethods.DragIntRange2Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v_current_min, ref v_current_max, v_speed, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format_max)), (int)flags);
     public bool DragScalar(string label, ImGuiDataType data_type, void* p_data) => ImGuiMethods.DragScalar(label, (int)data_type, p_data);
+    public bool DragScalar(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data) => ImGuiMethods.DragScalar((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data);
     public bool DragScalarEx(string label, ImGuiDataType data_type, void* p_data, float v_speed, void* p_min, void* p_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragScalarEx(label, (int)data_type, p_data, v_speed, p_min, p_max, format, (int)flags);
+    public bool DragScalarEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, float v_speed, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragScalarEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, v_speed, p_min, p_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool DragScalarN(string label, ImGuiDataType data_type, void* p_data, int components) => ImGuiMethods.DragScalarN(label, (int)data_type, p_data, components);
+    public bool DragScalarN(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components) => ImGuiMethods.DragScalarN((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, components);
     public bool DragScalarNEx(string label, ImGuiDataType data_type, void* p_data, int components, float v_speed, void* p_min, void* p_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.DragScalarNEx(label, (int)data_type, p_data, components, v_speed, p_min, p_max, format, (int)flags);
+    public bool DragScalarNEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components, float v_speed, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.DragScalarNEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, components, v_speed, p_min, p_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderFloat(string label, ref float v, float v_min, float v_max) => ImGuiMethods.SliderFloat(label, ref v, v_min, v_max);
+    public bool SliderFloat(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max) => ImGuiMethods.SliderFloat((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max);
     public bool SliderFloatEx(string label, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderFloatEx(label, ref v, v_min, v_max, format, (int)flags);
+    public bool SliderFloatEx(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderFloatEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderFloat2(string label, ref float v, float v_min, float v_max) => ImGuiMethods.SliderFloat2(label, ref v, v_min, v_max);
+    public bool SliderFloat2(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max) => ImGuiMethods.SliderFloat2((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max);
     public bool SliderFloat2Ex(string label, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderFloat2Ex(label, ref v, v_min, v_max, format, (int)flags);
+    public bool SliderFloat2Ex(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderFloat2Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderFloat3(string label, ref float v, float v_min, float v_max) => ImGuiMethods.SliderFloat3(label, ref v, v_min, v_max);
+    public bool SliderFloat3(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max) => ImGuiMethods.SliderFloat3((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max);
     public bool SliderFloat3Ex(string label, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderFloat3Ex(label, ref v, v_min, v_max, format, (int)flags);
+    public bool SliderFloat3Ex(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderFloat3Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderFloat4(string label, ref float v, float v_min, float v_max) => ImGuiMethods.SliderFloat4(label, ref v, v_min, v_max);
+    public bool SliderFloat4(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max) => ImGuiMethods.SliderFloat4((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max);
     public bool SliderFloat4Ex(string label, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderFloat4Ex(label, ref v, v_min, v_max, format, (int)flags);
+    public bool SliderFloat4Ex(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderFloat4Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderAngle(string label, ref float v_rad) => ImGuiMethods.SliderAngle(label, ref v_rad);
+    public bool SliderAngle(ReadOnlySpan<byte> label, ref float v_rad) => ImGuiMethods.SliderAngle((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v_rad);
     public bool SliderAngleEx(string label, ref float v_rad, float v_degrees_min, float v_degrees_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderAngleEx(label, ref v_rad, v_degrees_min, v_degrees_max, format, (int)flags);
+    public bool SliderAngleEx(ReadOnlySpan<byte> label, ref float v_rad, float v_degrees_min, float v_degrees_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderAngleEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v_rad, v_degrees_min, v_degrees_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderInt(string label, ref int v, int v_min, int v_max) => ImGuiMethods.SliderInt(label, ref v, v_min, v_max);
+    public bool SliderInt(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max) => ImGuiMethods.SliderInt((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max);
     public bool SliderIntEx(string label, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderIntEx(label, ref v, v_min, v_max, format, (int)flags);
+    public bool SliderIntEx(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderIntEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderInt2(string label, ref int v, int v_min, int v_max) => ImGuiMethods.SliderInt2(label, ref v, v_min, v_max);
+    public bool SliderInt2(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max) => ImGuiMethods.SliderInt2((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max);
     public bool SliderInt2Ex(string label, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderInt2Ex(label, ref v, v_min, v_max, format, (int)flags);
+    public bool SliderInt2Ex(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderInt2Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderInt3(string label, ref int v, int v_min, int v_max) => ImGuiMethods.SliderInt3(label, ref v, v_min, v_max);
+    public bool SliderInt3(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max) => ImGuiMethods.SliderInt3((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max);
     public bool SliderInt3Ex(string label, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderInt3Ex(label, ref v, v_min, v_max, format, (int)flags);
+    public bool SliderInt3Ex(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderInt3Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderInt4(string label, ref int v, int v_min, int v_max) => ImGuiMethods.SliderInt4(label, ref v, v_min, v_max);
+    public bool SliderInt4(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max) => ImGuiMethods.SliderInt4((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max);
     public bool SliderInt4Ex(string label, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderInt4Ex(label, ref v, v_min, v_max, format, (int)flags);
+    public bool SliderInt4Ex(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderInt4Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderScalar(string label, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max) => ImGuiMethods.SliderScalar(label, (int)data_type, p_data, p_min, p_max);
+    public bool SliderScalar(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max) => ImGuiMethods.SliderScalar((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, p_min, p_max);
     public bool SliderScalarEx(string label, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderScalarEx(label, (int)data_type, p_data, p_min, p_max, format, (int)flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderScalarEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, p_min, p_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool SliderScalarN(string label, ImGuiDataType data_type, void* p_data, int components, void* p_min, void* p_max) => ImGuiMethods.SliderScalarN(label, (int)data_type, p_data, components, p_min, p_max);
+    public bool SliderScalarN(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components, void* p_min, void* p_max) => ImGuiMethods.SliderScalarN((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, components, p_min, p_max);
     public bool SliderScalarNEx(string label, ImGuiDataType data_type, void* p_data, int components, void* p_min, void* p_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.SliderScalarNEx(label, (int)data_type, p_data, components, p_min, p_max, format, (int)flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.SliderScalarNEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, components, p_min, p_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool VSliderFloat(string label, Vector2 size, ref float v, float v_min, float v_max) => ImGuiMethods.VSliderFloat(label, size, ref v, v_min, v_max);
+    public bool VSliderFloat(ReadOnlySpan<byte> label, Vector2 size, ref float v, float v_min, float v_max) => ImGuiMethods.VSliderFloat((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), size, ref v, v_min, v_max);
     public bool VSliderFloatEx(string label, Vector2 size, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.VSliderFloatEx(label, size, ref v, v_min, v_max, format, (int)flags);
+    public bool VSliderFloatEx(ReadOnlySpan<byte> label, Vector2 size, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.VSliderFloatEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), size, ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool VSliderInt(string label, Vector2 size, ref int v, int v_min, int v_max) => ImGuiMethods.VSliderInt(label, size, ref v, v_min, v_max);
+    public bool VSliderInt(ReadOnlySpan<byte> label, Vector2 size, ref int v, int v_min, int v_max) => ImGuiMethods.VSliderInt((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), size, ref v, v_min, v_max);
     public bool VSliderIntEx(string label, Vector2 size, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.VSliderIntEx(label, size, ref v, v_min, v_max, format, (int)flags);
+    public bool VSliderIntEx(ReadOnlySpan<byte> label, Vector2 size, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.VSliderIntEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), size, ref v, v_min, v_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max) => ImGuiMethods.VSliderScalar(label, size, (int)data_type, p_data, p_min, p_max);
+    public bool VSliderScalar(ReadOnlySpan<byte> label, Vector2 size, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max) => ImGuiMethods.VSliderScalar((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), size, (int)data_type, p_data, p_min, p_max);
     public bool VSliderScalarEx(string label, Vector2 size, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max, string format, ImGuiSliderFlags flags) => ImGuiMethods.VSliderScalarEx(label, size, (int)data_type, p_data, p_min, p_max, format, (int)flags);
+    public bool VSliderScalarEx(ReadOnlySpan<byte> label, Vector2 size, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags) => ImGuiMethods.VSliderScalarEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), size, (int)data_type, p_data, p_min, p_max, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool InputText(string label, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags) => ImGuiMethods.InputText(label, buf, buf_size, (int)flags);
+    public bool InputText(ReadOnlySpan<byte> label, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags) => ImGuiMethods.InputText((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), buf, buf_size, (int)flags);
     public bool InputTextEx(string label, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data) => ImGuiMethods.InputTextEx(label, buf, buf_size, (int)flags, callback, user_data);
+    public bool InputTextEx(ReadOnlySpan<byte> label, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data) => ImGuiMethods.InputTextEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), buf, buf_size, (int)flags, callback, user_data);
     public bool InputTextMultiline(string label, sbyte* buf, nuint buf_size) => ImGuiMethods.InputTextMultiline(label, buf, buf_size);
+    public bool InputTextMultiline(ReadOnlySpan<byte> label, sbyte* buf, nuint buf_size) => ImGuiMethods.InputTextMultiline((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), buf, buf_size);
     public bool InputTextMultilineEx(string label, sbyte* buf, nuint buf_size, Vector2 size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data) => ImGuiMethods.InputTextMultilineEx(label, buf, buf_size, size, (int)flags, callback, user_data);
+    public bool InputTextMultilineEx(ReadOnlySpan<byte> label, sbyte* buf, nuint buf_size, Vector2 size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data) => ImGuiMethods.InputTextMultilineEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), buf, buf_size, size, (int)flags, callback, user_data);
     public bool InputTextWithHint(string label, string hint, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags) => ImGuiMethods.InputTextWithHint(label, hint, buf, buf_size, (int)flags);
+    public bool InputTextWithHint(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags) => ImGuiMethods.InputTextWithHint((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(hint)), buf, buf_size, (int)flags);
     public bool InputTextWithHintEx(string label, string hint, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data) => ImGuiMethods.InputTextWithHintEx(label, hint, buf, buf_size, (int)flags, callback, user_data);
+    public bool InputTextWithHintEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data) => ImGuiMethods.InputTextWithHintEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(hint)), buf, buf_size, (int)flags, callback, user_data);
     public bool InputFloat(string label, ref float v) => ImGuiMethods.InputFloat(label, ref v);
+    public bool InputFloat(ReadOnlySpan<byte> label, ref float v) => ImGuiMethods.InputFloat((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool InputFloatEx(string label, ref float v, float step, float step_fast, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloatEx(label, ref v, step, step_fast, format, (int)flags);
+    public bool InputFloatEx(ReadOnlySpan<byte> label, ref float v, float step, float step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloatEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, step, step_fast, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool InputFloat2(string label, ref float v) => ImGuiMethods.InputFloat2(label, ref v);
+    public bool InputFloat2(ReadOnlySpan<byte> label, ref float v) => ImGuiMethods.InputFloat2((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool InputFloat2Ex(string label, ref float v, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat2Ex(label, ref v, format, (int)flags);
+    public bool InputFloat2Ex(ReadOnlySpan<byte> label, ref float v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat2Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool InputFloat3(string label, ref float v) => ImGuiMethods.InputFloat3(label, ref v);
+    public bool InputFloat3(ReadOnlySpan<byte> label, ref float v) => ImGuiMethods.InputFloat3((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool InputFloat3Ex(string label, ref float v, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat3Ex(label, ref v, format, (int)flags);
+    public bool InputFloat3Ex(ReadOnlySpan<byte> label, ref float v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat3Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool InputFloat4(string label, ref float v) => ImGuiMethods.InputFloat4(label, ref v);
+    public bool InputFloat4(ReadOnlySpan<byte> label, ref float v) => ImGuiMethods.InputFloat4((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool InputFloat4Ex(string label, ref float v, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat4Ex(label, ref v, format, (int)flags);
+    public bool InputFloat4Ex(ReadOnlySpan<byte> label, ref float v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat4Ex((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool InputInt(string label, ref int v) => ImGuiMethods.InputInt(label, ref v);
+    public bool InputInt(ReadOnlySpan<byte> label, ref int v) => ImGuiMethods.InputInt((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool InputIntEx(string label, ref int v, int step, int step_fast, ImGuiInputTextFlags flags) => ImGuiMethods.InputIntEx(label, ref v, step, step_fast, (int)flags);
+    public bool InputIntEx(ReadOnlySpan<byte> label, ref int v, int step, int step_fast, ImGuiInputTextFlags flags) => ImGuiMethods.InputIntEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, step, step_fast, (int)flags);
     public bool InputInt2(string label, ref int v, ImGuiInputTextFlags flags) => ImGuiMethods.InputInt2(label, ref v, (int)flags);
+    public bool InputInt2(ReadOnlySpan<byte> label, ref int v, ImGuiInputTextFlags flags) => ImGuiMethods.InputInt2((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, (int)flags);
     public bool InputInt3(string label, ref int v, ImGuiInputTextFlags flags) => ImGuiMethods.InputInt3(label, ref v, (int)flags);
+    public bool InputInt3(ReadOnlySpan<byte> label, ref int v, ImGuiInputTextFlags flags) => ImGuiMethods.InputInt3((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, (int)flags);
     public bool InputInt4(string label, ref int v, ImGuiInputTextFlags flags) => ImGuiMethods.InputInt4(label, ref v, (int)flags);
+    public bool InputInt4(ReadOnlySpan<byte> label, ref int v, ImGuiInputTextFlags flags) => ImGuiMethods.InputInt4((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, (int)flags);
     public bool InputDouble(string label, ref double v) => ImGuiMethods.InputDouble(label, ref v);
+    public bool InputDouble(ReadOnlySpan<byte> label, ref double v) => ImGuiMethods.InputDouble((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v);
     public bool InputDoubleEx(string label, ref double v, double step, double step_fast, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputDoubleEx(label, ref v, step, step_fast, format, (int)flags);
+    public bool InputDoubleEx(ReadOnlySpan<byte> label, ref double v, double step, double step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags) => ImGuiMethods.InputDoubleEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref v, step, step_fast, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool InputScalar(string label, ImGuiDataType data_type, void* p_data) => ImGuiMethods.InputScalar(label, (int)data_type, p_data);
+    public bool InputScalar(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data) => ImGuiMethods.InputScalar((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data);
     public bool InputScalarEx(string label, ImGuiDataType data_type, void* p_data, void* p_step, void* p_step_fast, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputScalarEx(label, (int)data_type, p_data, p_step, p_step_fast, format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, void* p_step, void* p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags) => ImGuiMethods.InputScalarEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, p_step, p_step_fast, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool InputScalarN(string label, ImGuiDataType data_type, void* p_data, int components) => ImGuiMethods.InputScalarN(label, (int)data_type, p_data, components);
+    public bool InputScalarN(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components) => ImGuiMethods.InputScalarN((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, components);
     public bool InputScalarNEx(string label, ImGuiDataType data_type, void* p_data, int components, void* p_step, void* p_step_fast, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputScalarNEx(label, (int)data_type, p_data, components, p_step, p_step_fast, format, (int)flags);
+    public bool InputScalarNEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components, void* p_step, void* p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags) => ImGuiMethods.InputScalarNEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)data_type, p_data, components, p_step, p_step_fast, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(format)), (int)flags);
     public bool ColorEdit3(string label, ref float col, ImGuiColorEditFlags flags) => ImGuiMethods.ColorEdit3(label, ref col, (int)flags);
+    public bool ColorEdit3(ReadOnlySpan<byte> label, ref float col, ImGuiColorEditFlags flags) => ImGuiMethods.ColorEdit3((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref col, (int)flags);
     public bool ColorEdit4(string label, ref float col, ImGuiColorEditFlags flags) => ImGuiMethods.ColorEdit4(label, ref col, (int)flags);
+    public bool ColorEdit4(ReadOnlySpan<byte> label, ref float col, ImGuiColorEditFlags flags) => ImGuiMethods.ColorEdit4((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref col, (int)flags);
     public bool ColorPicker3(string label, ref float col, ImGuiColorEditFlags flags) => ImGuiMethods.ColorPicker3(label, ref col, (int)flags);
+    public bool ColorPicker3(ReadOnlySpan<byte> label, ref float col, ImGuiColorEditFlags flags) => ImGuiMethods.ColorPicker3((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref col, (int)flags);
     public bool ColorPicker4(string label, ref float col, ImGuiColorEditFlags flags, ref float ref_col) => ImGuiMethods.ColorPicker4(label, ref col, (int)flags, ref ref_col);
+    public bool ColorPicker4(ReadOnlySpan<byte> label, ref float col, ImGuiColorEditFlags flags, ref float ref_col) => ImGuiMethods.ColorPicker4((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref col, (int)flags, ref ref_col);
     public bool ColorButton(string desc_id, Vector4 col, ImGuiColorEditFlags flags) => ImGuiMethods.ColorButton(desc_id, col, (int)flags);
+    public bool ColorButton(ReadOnlySpan<byte> desc_id, Vector4 col, ImGuiColorEditFlags flags) => ImGuiMethods.ColorButton((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(desc_id)), col, (int)flags);
     public bool ColorButtonEx(string desc_id, Vector4 col, ImGuiColorEditFlags flags, Vector2 size) => ImGuiMethods.ColorButtonEx(desc_id, col, (int)flags, size);
+    public bool ColorButtonEx(ReadOnlySpan<byte> desc_id, Vector4 col, ImGuiColorEditFlags flags, Vector2 size) => ImGuiMethods.ColorButtonEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(desc_id)), col, (int)flags, size);
     public void SetColorEditOptions(ImGuiColorEditFlags flags) => ImGuiMethods.SetColorEditOptions((int)flags);
     public bool TreeNode(string label) => ImGuiMethods.TreeNode(label);
+    public bool TreeNode(ReadOnlySpan<byte> label) => ImGuiMethods.TreeNode((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool TreeNodeStr(string str_id, string fmt) => ImGuiMethods.TreeNodeStr(str_id, fmt);
+    public bool TreeNodeStr(ReadOnlySpan<byte> str_id, ReadOnlySpan<byte> fmt) => ImGuiMethods.TreeNodeStr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public bool TreeNodePtr(void* ptr_id, string fmt) => ImGuiMethods.TreeNodePtr(ptr_id, fmt);
+    public bool TreeNodePtr(void* ptr_id, ReadOnlySpan<byte> fmt) => ImGuiMethods.TreeNodePtr(ptr_id, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public bool TreeNodeV(string str_id, string fmt, sbyte* args) => ImGuiMethods.TreeNodeV(str_id, fmt, args);
+    public bool TreeNodeV(ReadOnlySpan<byte> str_id, ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.TreeNodeV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public bool TreeNodeVPtr(void* ptr_id, string fmt, sbyte* args) => ImGuiMethods.TreeNodeVPtr(ptr_id, fmt, args);
+    public bool TreeNodeVPtr(void* ptr_id, ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.TreeNodeVPtr(ptr_id, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public bool TreeNodeEx(string label, ImGuiTreeNodeFlags flags) => ImGuiMethods.TreeNodeEx(label, (int)flags);
+    public bool TreeNodeEx(ReadOnlySpan<byte> label, ImGuiTreeNodeFlags flags) => ImGuiMethods.TreeNodeEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)flags);
     public bool TreeNodeExStr(string str_id, ImGuiTreeNodeFlags flags, string fmt) => ImGuiMethods.TreeNodeExStr(str_id, (int)flags, fmt);
+    public bool TreeNodeExStr(ReadOnlySpan<byte> str_id, ImGuiTreeNodeFlags flags, ReadOnlySpan<byte> fmt) => ImGuiMethods.TreeNodeExStr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)flags, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public bool TreeNodeExPtr(void* ptr_id, ImGuiTreeNodeFlags flags, string fmt) => ImGuiMethods.TreeNodeExPtr(ptr_id, (int)flags, fmt);
+    public bool TreeNodeExPtr(void* ptr_id, ImGuiTreeNodeFlags flags, ReadOnlySpan<byte> fmt) => ImGuiMethods.TreeNodeExPtr(ptr_id, (int)flags, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public bool TreeNodeExV(string str_id, ImGuiTreeNodeFlags flags, string fmt, sbyte* args) => ImGuiMethods.TreeNodeExV(str_id, (int)flags, fmt, args);
+    public bool TreeNodeExV(ReadOnlySpan<byte> str_id, ImGuiTreeNodeFlags flags, ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.TreeNodeExV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)flags, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public bool TreeNodeExVPtr(void* ptr_id, ImGuiTreeNodeFlags flags, string fmt, sbyte* args) => ImGuiMethods.TreeNodeExVPtr(ptr_id, (int)flags, fmt, args);
+    public bool TreeNodeExVPtr(void* ptr_id, ImGuiTreeNodeFlags flags, ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.TreeNodeExVPtr(ptr_id, (int)flags, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void TreePush(string str_id) => ImGuiMethods.TreePush(str_id);
+    public void TreePush(ReadOnlySpan<byte> str_id) => ImGuiMethods.TreePush((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)));
     public void TreePushPtr(void* ptr_id) => ImGuiMethods.TreePushPtr(ptr_id);
     public void TreePop() => ImGuiMethods.TreePop();
     public float GetTreeNodeToLabelSpacing() => ImGuiMethods.GetTreeNodeToLabelSpacing();
     public bool CollapsingHeader(string label, ImGuiTreeNodeFlags flags) => ImGuiMethods.CollapsingHeader(label, (int)flags);
+    public bool CollapsingHeader(ReadOnlySpan<byte> label, ImGuiTreeNodeFlags flags) => ImGuiMethods.CollapsingHeader((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)flags);
     public bool CollapsingHeaderBoolPtr(string label, ref bool p_visible, ImGuiTreeNodeFlags flags) => ImGuiMethods.CollapsingHeaderBoolPtr(label, ref p_visible, (int)flags);
+    public bool CollapsingHeaderBoolPtr(ReadOnlySpan<byte> label, ref bool p_visible, ImGuiTreeNodeFlags flags) => ImGuiMethods.CollapsingHeaderBoolPtr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref p_visible, (int)flags);
     public void SetNextItemOpen(bool is_open, ImGuiCond cond) => ImGuiMethods.SetNextItemOpen(is_open, (int)cond);
     public void SetNextItemStorageID(uint storage_id) => ImGuiMethods.SetNextItemStorageID(storage_id);
     public bool Selectable(string label) => ImGuiMethods.Selectable(label);
+    public bool Selectable(ReadOnlySpan<byte> label) => ImGuiMethods.Selectable((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool SelectableEx(string label, bool selected, ImGuiSelectableFlags flags, Vector2 size) => ImGuiMethods.SelectableEx(label, selected, (int)flags, size);
+    public bool SelectableEx(ReadOnlySpan<byte> label, bool selected, ImGuiSelectableFlags flags, Vector2 size) => ImGuiMethods.SelectableEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), selected, (int)flags, size);
     public bool SelectableBoolPtr(string label, ref bool p_selected, ImGuiSelectableFlags flags) => ImGuiMethods.SelectableBoolPtr(label, ref p_selected, (int)flags);
+    public bool SelectableBoolPtr(ReadOnlySpan<byte> label, ref bool p_selected, ImGuiSelectableFlags flags) => ImGuiMethods.SelectableBoolPtr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref p_selected, (int)flags);
     public bool SelectableBoolPtrEx(string label, ref bool p_selected, ImGuiSelectableFlags flags, Vector2 size) => ImGuiMethods.SelectableBoolPtrEx(label, ref p_selected, (int)flags, size);
+    public bool SelectableBoolPtrEx(ReadOnlySpan<byte> label, ref bool p_selected, ImGuiSelectableFlags flags, Vector2 size) => ImGuiMethods.SelectableBoolPtrEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref p_selected, (int)flags, size);
     public IImGuiMultiSelectIO BeginMultiSelect(ImGuiMultiSelectFlags flags)
     {
         var ret = ImGuiMethods.BeginMultiSelect((int)flags);
@@ -402,60 +552,94 @@ public unsafe partial class ImGui : IImGui
     public void SetNextItemSelectionUserData(long selection_user_data) => ImGuiMethods.SetNextItemSelectionUserData(selection_user_data);
     public bool IsItemToggledSelection() => ImGuiMethods.IsItemToggledSelection();
     public bool BeginListBox(string label, Vector2 size) => ImGuiMethods.BeginListBox(label, size);
+    public bool BeginListBox(ReadOnlySpan<byte> label, Vector2 size) => ImGuiMethods.BeginListBox((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), size);
     public void EndListBox() => ImGuiMethods.EndListBox();
     public bool ListBox(string label, ref int current_item, sbyte** items, int items_count, int height_in_items) => ImGuiMethods.ListBox(label, ref current_item, items, items_count, height_in_items);
+    public bool ListBox(ReadOnlySpan<byte> label, ref int current_item, sbyte** items, int items_count, int height_in_items) => ImGuiMethods.ListBox((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, items, items_count, height_in_items);
     public bool ListBoxCallback(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count) => ImGuiMethods.ListBoxCallback(label, ref current_item, getter, user_data, items_count);
+    public bool ListBoxCallback(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count) => ImGuiMethods.ListBoxCallback((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, getter, user_data, items_count);
     public bool ListBoxCallbackEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int height_in_items) => ImGuiMethods.ListBoxCallbackEx(label, ref current_item, getter, user_data, items_count, height_in_items);
+    public bool ListBoxCallbackEx(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int height_in_items) => ImGuiMethods.ListBoxCallbackEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, getter, user_data, items_count, height_in_items);
     public void PlotLines(string label, ref float values, int values_count) => ImGuiMethods.PlotLines(label, ref values, values_count);
+    public void PlotLines(ReadOnlySpan<byte> label, ref float values, int values_count) => ImGuiMethods.PlotLines((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref values, values_count);
     public void PlotLinesEx(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride) => ImGuiMethods.PlotLinesEx(label, ref values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
+    public void PlotLinesEx(ReadOnlySpan<byte> label, ref float values, int values_count, int values_offset, ReadOnlySpan<byte> overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride) => ImGuiMethods.PlotLinesEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref values, values_count, values_offset, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(overlay_text)), scale_min, scale_max, graph_size, stride);
     public void PlotLinesCallback(string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count) => ImGuiMethods.PlotLinesCallback(label, values_getter, data, values_count);
+    public void PlotLinesCallback(ReadOnlySpan<byte> label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count) => ImGuiMethods.PlotLinesCallback((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), values_getter, data, values_count);
     public void PlotLinesCallbackEx(string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size) => ImGuiMethods.PlotLinesCallbackEx(label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
+    public void PlotLinesCallbackEx(ReadOnlySpan<byte> label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, ReadOnlySpan<byte> overlay_text, float scale_min, float scale_max, Vector2 graph_size) => ImGuiMethods.PlotLinesCallbackEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), values_getter, data, values_count, values_offset, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(overlay_text)), scale_min, scale_max, graph_size);
     public void PlotHistogram(string label, ref float values, int values_count) => ImGuiMethods.PlotHistogram(label, ref values, values_count);
+    public void PlotHistogram(ReadOnlySpan<byte> label, ref float values, int values_count) => ImGuiMethods.PlotHistogram((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref values, values_count);
     public void PlotHistogramEx(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride) => ImGuiMethods.PlotHistogramEx(label, ref values, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size, stride);
+    public void PlotHistogramEx(ReadOnlySpan<byte> label, ref float values, int values_count, int values_offset, ReadOnlySpan<byte> overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride) => ImGuiMethods.PlotHistogramEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref values, values_count, values_offset, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(overlay_text)), scale_min, scale_max, graph_size, stride);
     public void PlotHistogramCallback(string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count) => ImGuiMethods.PlotHistogramCallback(label, values_getter, data, values_count);
+    public void PlotHistogramCallback(ReadOnlySpan<byte> label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count) => ImGuiMethods.PlotHistogramCallback((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), values_getter, data, values_count);
     public void PlotHistogramCallbackEx(string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size) => ImGuiMethods.PlotHistogramCallbackEx(label, values_getter, data, values_count, values_offset, overlay_text, scale_min, scale_max, graph_size);
+    public void PlotHistogramCallbackEx(ReadOnlySpan<byte> label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, ReadOnlySpan<byte> overlay_text, float scale_min, float scale_max, Vector2 graph_size) => ImGuiMethods.PlotHistogramCallbackEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), values_getter, data, values_count, values_offset, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(overlay_text)), scale_min, scale_max, graph_size);
     public bool BeginMenuBar() => ImGuiMethods.BeginMenuBar();
     public void EndMenuBar() => ImGuiMethods.EndMenuBar();
     public bool BeginMainMenuBar() => ImGuiMethods.BeginMainMenuBar();
     public void EndMainMenuBar() => ImGuiMethods.EndMainMenuBar();
     public bool BeginMenu(string label) => ImGuiMethods.BeginMenu(label);
+    public bool BeginMenu(ReadOnlySpan<byte> label) => ImGuiMethods.BeginMenu((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool BeginMenuEx(string label, bool enabled) => ImGuiMethods.BeginMenuEx(label, enabled);
+    public bool BeginMenuEx(ReadOnlySpan<byte> label, bool enabled) => ImGuiMethods.BeginMenuEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), enabled);
     public void EndMenu() => ImGuiMethods.EndMenu();
     public bool MenuItem(string label) => ImGuiMethods.MenuItem(label);
+    public bool MenuItem(ReadOnlySpan<byte> label) => ImGuiMethods.MenuItem((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public bool MenuItemEx(string label, string shortcut, bool selected, bool enabled) => ImGuiMethods.MenuItemEx(label, shortcut, selected, enabled);
+    public bool MenuItemEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> shortcut, bool selected, bool enabled) => ImGuiMethods.MenuItemEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(shortcut)), selected, enabled);
     public bool MenuItemBoolPtr(string label, string shortcut, ref bool p_selected, bool enabled) => ImGuiMethods.MenuItemBoolPtr(label, shortcut, ref p_selected, enabled);
+    public bool MenuItemBoolPtr(ReadOnlySpan<byte> label, ReadOnlySpan<byte> shortcut, ref bool p_selected, bool enabled) => ImGuiMethods.MenuItemBoolPtr((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(shortcut)), ref p_selected, enabled);
     public bool BeginTooltip() => ImGuiMethods.BeginTooltip();
     public void EndTooltip() => ImGuiMethods.EndTooltip();
     public void SetTooltip(string fmt) => ImGuiMethods.SetTooltip(fmt);
+    public void SetTooltip(ReadOnlySpan<byte> fmt) => ImGuiMethods.SetTooltip((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void SetTooltipV(string fmt, sbyte* args) => ImGuiMethods.SetTooltipV(fmt, args);
+    public void SetTooltipV(ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.SetTooltipV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public bool BeginItemTooltip() => ImGuiMethods.BeginItemTooltip();
     public void SetItemTooltip(string fmt) => ImGuiMethods.SetItemTooltip(fmt);
+    public void SetItemTooltip(ReadOnlySpan<byte> fmt) => ImGuiMethods.SetItemTooltip((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void SetItemTooltipV(string fmt, sbyte* args) => ImGuiMethods.SetItemTooltipV(fmt, args);
+    public void SetItemTooltipV(ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.SetItemTooltipV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public bool BeginPopup(string str_id, ImGuiWindowFlags flags) => ImGuiMethods.BeginPopup(str_id, (int)flags);
+    public bool BeginPopup(ReadOnlySpan<byte> str_id, ImGuiWindowFlags flags) => ImGuiMethods.BeginPopup((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)flags);
     public bool BeginPopupModal(string name, ref bool p_open, ImGuiWindowFlags flags) => ImGuiMethods.BeginPopupModal(name, ref p_open, (int)flags);
+    public bool BeginPopupModal(ReadOnlySpan<byte> name, ref bool p_open, ImGuiWindowFlags flags) => ImGuiMethods.BeginPopupModal((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), ref p_open, (int)flags);
     public void EndPopup() => ImGuiMethods.EndPopup();
     public void OpenPopup(string str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.OpenPopup(str_id, (int)popup_flags);
+    public void OpenPopup(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.OpenPopup((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)popup_flags);
     public void OpenPopupID(uint id, ImGuiPopupFlags popup_flags) => ImGuiMethods.OpenPopupID(id, (int)popup_flags);
     public void OpenPopupOnItemClick(string str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.OpenPopupOnItemClick(str_id, (int)popup_flags);
+    public void OpenPopupOnItemClick(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.OpenPopupOnItemClick((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)popup_flags);
     public void CloseCurrentPopup() => ImGuiMethods.CloseCurrentPopup();
     public bool BeginPopupContextItem() => ImGuiMethods.BeginPopupContextItem();
     public bool BeginPopupContextItemEx(string str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.BeginPopupContextItemEx(str_id, (int)popup_flags);
+    public bool BeginPopupContextItemEx(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.BeginPopupContextItemEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)popup_flags);
     public bool BeginPopupContextWindow() => ImGuiMethods.BeginPopupContextWindow();
     public bool BeginPopupContextWindowEx(string str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.BeginPopupContextWindowEx(str_id, (int)popup_flags);
+    public bool BeginPopupContextWindowEx(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.BeginPopupContextWindowEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)popup_flags);
     public bool BeginPopupContextVoid() => ImGuiMethods.BeginPopupContextVoid();
     public bool BeginPopupContextVoidEx(string str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.BeginPopupContextVoidEx(str_id, (int)popup_flags);
+    public bool BeginPopupContextVoidEx(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags) => ImGuiMethods.BeginPopupContextVoidEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)popup_flags);
     public bool IsPopupOpen(string str_id, ImGuiPopupFlags flags) => ImGuiMethods.IsPopupOpen(str_id, (int)flags);
+    public bool IsPopupOpen(ReadOnlySpan<byte> str_id, ImGuiPopupFlags flags) => ImGuiMethods.IsPopupOpen((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)flags);
     public bool BeginTable(string str_id, int columns, ImGuiTableFlags flags) => ImGuiMethods.BeginTable(str_id, columns, (int)flags);
+    public bool BeginTable(ReadOnlySpan<byte> str_id, int columns, ImGuiTableFlags flags) => ImGuiMethods.BeginTable((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), columns, (int)flags);
     public bool BeginTableEx(string str_id, int columns, ImGuiTableFlags flags, Vector2 outer_size, float inner_width) => ImGuiMethods.BeginTableEx(str_id, columns, (int)flags, outer_size, inner_width);
+    public bool BeginTableEx(ReadOnlySpan<byte> str_id, int columns, ImGuiTableFlags flags, Vector2 outer_size, float inner_width) => ImGuiMethods.BeginTableEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), columns, (int)flags, outer_size, inner_width);
     public void EndTable() => ImGuiMethods.EndTable();
     public void TableNextRow() => ImGuiMethods.TableNextRow();
     public void TableNextRowEx(ImGuiTableRowFlags row_flags, float min_row_height) => ImGuiMethods.TableNextRowEx((int)row_flags, min_row_height);
     public bool TableNextColumn() => ImGuiMethods.TableNextColumn();
     public bool TableSetColumnIndex(int column_n) => ImGuiMethods.TableSetColumnIndex(column_n);
     public void TableSetupColumn(string label, ImGuiTableColumnFlags flags) => ImGuiMethods.TableSetupColumn(label, (int)flags);
+    public void TableSetupColumn(ReadOnlySpan<byte> label, ImGuiTableColumnFlags flags) => ImGuiMethods.TableSetupColumn((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)flags);
     public void TableSetupColumnEx(string label, ImGuiTableColumnFlags flags, float init_width_or_weight, uint user_id) => ImGuiMethods.TableSetupColumnEx(label, (int)flags, init_width_or_weight, user_id);
+    public void TableSetupColumnEx(ReadOnlySpan<byte> label, ImGuiTableColumnFlags flags, float init_width_or_weight, uint user_id) => ImGuiMethods.TableSetupColumnEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)flags, init_width_or_weight, user_id);
     public void TableSetupScrollFreeze(int cols, int rows) => ImGuiMethods.TableSetupScrollFreeze(cols, rows);
     public void TableHeader(string label) => ImGuiMethods.TableHeader(label);
+    public void TableHeader(ReadOnlySpan<byte> label) => ImGuiMethods.TableHeader((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)));
     public void TableHeadersRow() => ImGuiMethods.TableHeadersRow();
     public void TableAngledHeadersRow() => ImGuiMethods.TableAngledHeadersRow();
     public IImGuiTableSortSpecs TableGetSortSpecs()
@@ -484,6 +668,7 @@ public unsafe partial class ImGui : IImGui
     public void TableSetBgColor(ImGuiTableBgTarget target, uint color, int column_n) => ImGuiMethods.TableSetBgColor((int)target, color, column_n);
     public void Columns() => ImGuiMethods.Columns();
     public void ColumnsEx(int count, string id, bool borders) => ImGuiMethods.ColumnsEx(count, id, borders);
+    public void ColumnsEx(int count, ReadOnlySpan<byte> id, bool borders) => ImGuiMethods.ColumnsEx(count, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(id)), borders);
     public void NextColumn() => ImGuiMethods.NextColumn();
     public int GetColumnIndex() => ImGuiMethods.GetColumnIndex();
     public float GetColumnWidth(int column_index) => ImGuiMethods.GetColumnWidth(column_index);
@@ -492,11 +677,15 @@ public unsafe partial class ImGui : IImGui
     public void SetColumnOffset(int column_index, float offset_x) => ImGuiMethods.SetColumnOffset(column_index, offset_x);
     public int GetColumnsCount() => ImGuiMethods.GetColumnsCount();
     public bool BeginTabBar(string str_id, ImGuiTabBarFlags flags) => ImGuiMethods.BeginTabBar(str_id, (int)flags);
+    public bool BeginTabBar(ReadOnlySpan<byte> str_id, ImGuiTabBarFlags flags) => ImGuiMethods.BeginTabBar((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_id)), (int)flags);
     public void EndTabBar() => ImGuiMethods.EndTabBar();
     public bool BeginTabItem(string label, ref bool p_open, ImGuiTabItemFlags flags) => ImGuiMethods.BeginTabItem(label, ref p_open, (int)flags);
+    public bool BeginTabItem(ReadOnlySpan<byte> label, ref bool p_open, ImGuiTabItemFlags flags) => ImGuiMethods.BeginTabItem((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref p_open, (int)flags);
     public void EndTabItem() => ImGuiMethods.EndTabItem();
     public bool TabItemButton(string label, ImGuiTabItemFlags flags) => ImGuiMethods.TabItemButton(label, (int)flags);
+    public bool TabItemButton(ReadOnlySpan<byte> label, ImGuiTabItemFlags flags) => ImGuiMethods.TabItemButton((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (int)flags);
     public void SetTabItemClosed(string tab_or_docked_window_label) => ImGuiMethods.SetTabItemClosed(tab_or_docked_window_label);
+    public void SetTabItemClosed(ReadOnlySpan<byte> tab_or_docked_window_label) => ImGuiMethods.SetTabItemClosed((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(tab_or_docked_window_label)));
     public uint DockSpace(uint dockspace_id) => ImGuiMethods.DockSpace(dockspace_id);
     public uint DockSpaceEx(uint dockspace_id, Vector2 size, ImGuiDockNodeFlags flags, IImGuiWindowClass window_class) => ImGuiMethods.DockSpaceEx(dockspace_id, size, (int)flags, window_class is not null ? (ImGuiWindowClassStruct*)window_class.NativePointer : null);
     public uint DockSpaceOverViewport() => ImGuiMethods.DockSpaceOverViewport();
@@ -507,18 +696,30 @@ public unsafe partial class ImGui : IImGui
     public bool IsWindowDocked() => ImGuiMethods.IsWindowDocked();
     public void LogToTTY(int auto_open_depth) => ImGuiMethods.LogToTTY(auto_open_depth);
     public void LogToFile(int auto_open_depth, string filename) => ImGuiMethods.LogToFile(auto_open_depth, filename);
+    public void LogToFile(int auto_open_depth, ReadOnlySpan<byte> filename) => ImGuiMethods.LogToFile(auto_open_depth, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(filename)));
     public void LogToClipboard(int auto_open_depth) => ImGuiMethods.LogToClipboard(auto_open_depth);
     public void LogFinish() => ImGuiMethods.LogFinish();
     public void LogButtons() => ImGuiMethods.LogButtons();
     public void LogText(string fmt) => ImGuiMethods.LogText(fmt);
+    public void LogText(ReadOnlySpan<byte> fmt) => ImGuiMethods.LogText((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void LogTextV(string fmt, sbyte* args) => ImGuiMethods.LogTextV(fmt, args);
+    public void LogTextV(ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.LogTextV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public bool BeginDragDropSource(ImGuiDragDropFlags flags) => ImGuiMethods.BeginDragDropSource((int)flags);
     public bool SetDragDropPayload(string type, void* data, nuint sz, ImGuiCond cond) => ImGuiMethods.SetDragDropPayload(type, data, sz, (int)cond);
+    public bool SetDragDropPayload(ReadOnlySpan<byte> type, void* data, nuint sz, ImGuiCond cond) => ImGuiMethods.SetDragDropPayload((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(type)), data, sz, (int)cond);
     public void EndDragDropSource() => ImGuiMethods.EndDragDropSource();
     public bool BeginDragDropTarget() => ImGuiMethods.BeginDragDropTarget();
     public IImGuiPayload AcceptDragDropPayload(string type, ImGuiDragDropFlags flags)
     {
         var ret = ImGuiMethods.AcceptDragDropPayload(type, (int)flags);
+        if (ret is null)
+        return null !;
+        return new ImGuiPayload(ret);
+    }
+
+    public IImGuiPayload AcceptDragDropPayload(ReadOnlySpan<byte> type, ImGuiDragDropFlags flags)
+    {
+        var ret = ImGuiMethods.AcceptDragDropPayload((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(type)), (int)flags);
         if (ret is null)
         return null !;
         return new ImGuiPayload(ret);
@@ -624,7 +825,9 @@ public unsafe partial class ImGui : IImGui
     }
 
     public Vector2 CalcTextSize(string text) => ImGuiMethods.CalcTextSize(text);
+    public Vector2 CalcTextSize(ReadOnlySpan<byte> text) => ImGuiMethods.CalcTextSize((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)));
     public Vector2 CalcTextSizeEx(string text, string text_end, bool hide_text_after_double_hash, float wrap_width) => ImGuiMethods.CalcTextSizeEx(text, text_end, hide_text_after_double_hash, wrap_width);
+    public Vector2 CalcTextSizeEx(ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end, bool hide_text_after_double_hash, float wrap_width) => ImGuiMethods.CalcTextSizeEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)), hide_text_after_double_hash, wrap_width);
     public Vector4 ColorConvertU32ToFloat4(uint @in) => ImGuiMethods.ColorConvertU32ToFloat4(@in);
     public uint ColorConvertFloat4ToU32(Vector4 @in) => ImGuiMethods.ColorConvertFloat4ToU32(@in);
     public void ColorConvertRGBtoHSV(float r, float g, float b, ref float out_h, ref float out_s, ref float out_v) => ImGuiMethods.ColorConvertRGBtoHSV(r, g, b, ref out_h, ref out_s, ref out_v);
@@ -678,14 +881,21 @@ public unsafe partial class ImGui : IImGui
     }
 
     public void SetClipboardText(string text) => ImGuiMethods.SetClipboardText(text);
+    public void SetClipboardText(ReadOnlySpan<byte> text) => ImGuiMethods.SetClipboardText((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)));
     public void LoadIniSettingsFromDisk(string ini_filename) => ImGuiMethods.LoadIniSettingsFromDisk(ini_filename);
+    public void LoadIniSettingsFromDisk(ReadOnlySpan<byte> ini_filename) => ImGuiMethods.LoadIniSettingsFromDisk((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(ini_filename)));
     public void SaveIniSettingsToDisk(string ini_filename) => ImGuiMethods.SaveIniSettingsToDisk(ini_filename);
+    public void SaveIniSettingsToDisk(ReadOnlySpan<byte> ini_filename) => ImGuiMethods.SaveIniSettingsToDisk((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(ini_filename)));
     public void DebugTextEncoding(string text) => ImGuiMethods.DebugTextEncoding(text);
+    public void DebugTextEncoding(ReadOnlySpan<byte> text) => ImGuiMethods.DebugTextEncoding((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)));
     public void DebugFlashStyleColor(ImGuiCol idx) => ImGuiMethods.DebugFlashStyleColor((int)idx);
     public void DebugStartItemPicker() => ImGuiMethods.DebugStartItemPicker();
     public bool DebugCheckVersionAndDataLayout(string version_str, nuint sz_io, nuint sz_style, nuint sz_vec2, nuint sz_vec4, nuint sz_drawvert, nuint sz_drawidx) => ImGuiMethods.DebugCheckVersionAndDataLayout(version_str, sz_io, sz_style, sz_vec2, sz_vec4, sz_drawvert, sz_drawidx);
+    public bool DebugCheckVersionAndDataLayout(ReadOnlySpan<byte> version_str, nuint sz_io, nuint sz_style, nuint sz_vec2, nuint sz_vec4, nuint sz_drawvert, nuint sz_drawidx) => ImGuiMethods.DebugCheckVersionAndDataLayout((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(version_str)), sz_io, sz_style, sz_vec2, sz_vec4, sz_drawvert, sz_drawidx);
     public void DebugLog(string fmt) => ImGuiMethods.DebugLog(fmt);
+    public void DebugLog(ReadOnlySpan<byte> fmt) => ImGuiMethods.DebugLog((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void DebugLogV(string fmt, sbyte* args) => ImGuiMethods.DebugLogV(fmt, args);
+    public void DebugLogV(ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.DebugLogV((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void SetAllocatorFunctions(delegate* unmanaged[Cdecl]<nuint, nint, nint> alloc_func, delegate* unmanaged[Cdecl]<nint, nint, void> free_func, void* user_data) => ImGuiMethods.SetAllocatorFunctions(alloc_func, free_func, user_data);
     public void GetAllocatorFunctions(delegate* unmanaged[Cdecl]<nuint, void*, void*> * p_alloc_func, delegate* unmanaged[Cdecl]<void*, void*, void> * p_free_func, void** p_user_data) => ImGuiMethods.GetAllocatorFunctions(p_alloc_func, p_free_func, p_user_data);
     public void* MemAlloc(nuint size) => ImGuiMethods.MemAlloc(size);
@@ -728,6 +938,7 @@ public unsafe partial class ImGui : IImGui
     public void ImGuiIO_AddInputCharacter(IImGuiIO self, uint c) => ImGuiMethods.ImGuiIO_AddInputCharacter(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, c);
     public void ImGuiIO_AddInputCharacterUTF16(IImGuiIO self, ushort c) => ImGuiMethods.ImGuiIO_AddInputCharacterUTF16(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, c);
     public void ImGuiIO_AddInputCharactersUTF8(IImGuiIO self, string str) => ImGuiMethods.ImGuiIO_AddInputCharactersUTF8(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, str);
+    public void ImGuiIO_AddInputCharactersUTF8(IImGuiIO self, ReadOnlySpan<byte> str) => ImGuiMethods.ImGuiIO_AddInputCharactersUTF8(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str)));
     public void ImGuiIO_SetKeyEventNativeData(IImGuiIO self, ImGuiKey key, int native_keycode, int native_scancode) => ImGuiMethods.ImGuiIO_SetKeyEventNativeData(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, (int)key, native_keycode, native_scancode);
     public void ImGuiIO_SetKeyEventNativeDataEx(IImGuiIO self, ImGuiKey key, int native_keycode, int native_scancode, int native_legacy_index) => ImGuiMethods.ImGuiIO_SetKeyEventNativeDataEx(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, (int)key, native_keycode, native_scancode, native_legacy_index);
     public void ImGuiIO_SetAppAcceptingEvents(IImGuiIO self, bool accepting_events) => ImGuiMethods.ImGuiIO_SetAppAcceptingEvents(self is not null ? (ImGuiIOStruct*)self.NativePointer : null, accepting_events);
@@ -736,16 +947,20 @@ public unsafe partial class ImGui : IImGui
     public void ImGuiIO_ClearInputMouse(IImGuiIO self) => ImGuiMethods.ImGuiIO_ClearInputMouse(self is not null ? (ImGuiIOStruct*)self.NativePointer : null);
     public void ImGuiInputTextCallbackData_DeleteChars(IImGuiInputTextCallbackData self, int pos, int bytes_count) => ImGuiMethods.ImGuiInputTextCallbackData_DeleteChars(self is not null ? (ImGuiInputTextCallbackDataStruct*)self.NativePointer : null, pos, bytes_count);
     public void ImGuiInputTextCallbackData_InsertChars(IImGuiInputTextCallbackData self, int pos, string text, string text_end) => ImGuiMethods.ImGuiInputTextCallbackData_InsertChars(self is not null ? (ImGuiInputTextCallbackDataStruct*)self.NativePointer : null, pos, text, text_end);
+    public void ImGuiInputTextCallbackData_InsertChars(IImGuiInputTextCallbackData self, int pos, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end) => ImGuiMethods.ImGuiInputTextCallbackData_InsertChars(self is not null ? (ImGuiInputTextCallbackDataStruct*)self.NativePointer : null, pos, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)));
     public void ImGuiInputTextCallbackData_SelectAll(IImGuiInputTextCallbackData self) => ImGuiMethods.ImGuiInputTextCallbackData_SelectAll(self is not null ? (ImGuiInputTextCallbackDataStruct*)self.NativePointer : null);
     public void ImGuiInputTextCallbackData_ClearSelection(IImGuiInputTextCallbackData self) => ImGuiMethods.ImGuiInputTextCallbackData_ClearSelection(self is not null ? (ImGuiInputTextCallbackDataStruct*)self.NativePointer : null);
     public bool ImGuiInputTextCallbackData_HasSelection(IImGuiInputTextCallbackData self) => ImGuiMethods.ImGuiInputTextCallbackData_HasSelection(self is not null ? (ImGuiInputTextCallbackDataStruct*)self.NativePointer : null);
     public void ImGuiPayload_Clear(IImGuiPayload self) => ImGuiMethods.ImGuiPayload_Clear(self is not null ? (ImGuiPayloadStruct*)self.NativePointer : null);
     public bool ImGuiPayload_IsDataType(IImGuiPayload self, string type) => ImGuiMethods.ImGuiPayload_IsDataType(self is not null ? (ImGuiPayloadStruct*)self.NativePointer : null, type);
+    public bool ImGuiPayload_IsDataType(IImGuiPayload self, ReadOnlySpan<byte> type) => ImGuiMethods.ImGuiPayload_IsDataType(self is not null ? (ImGuiPayloadStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(type)));
     public bool ImGuiPayload_IsPreview(IImGuiPayload self) => ImGuiMethods.ImGuiPayload_IsPreview(self is not null ? (ImGuiPayloadStruct*)self.NativePointer : null);
     public bool ImGuiPayload_IsDelivery(IImGuiPayload self) => ImGuiMethods.ImGuiPayload_IsDelivery(self is not null ? (ImGuiPayloadStruct*)self.NativePointer : null);
     public bool ImGuiTextFilter_ImGuiTextRange_empty(IImGuiTextFilter_ImGuiTextRange self) => ImGuiMethods.ImGuiTextFilter_ImGuiTextRange_empty(self is not null ? (ImGuiTextFilter_ImGuiTextRangeStruct*)self.NativePointer : null);
     public bool ImGuiTextFilter_Draw(IImGuiTextFilter self, string label, float width) => ImGuiMethods.ImGuiTextFilter_Draw(self is not null ? (ImGuiTextFilterStruct*)self.NativePointer : null, label, width);
+    public bool ImGuiTextFilter_Draw(IImGuiTextFilter self, ReadOnlySpan<byte> label, float width) => ImGuiMethods.ImGuiTextFilter_Draw(self is not null ? (ImGuiTextFilterStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), width);
     public bool ImGuiTextFilter_PassFilter(IImGuiTextFilter self, string text, string text_end) => ImGuiMethods.ImGuiTextFilter_PassFilter(self is not null ? (ImGuiTextFilterStruct*)self.NativePointer : null, text, text_end);
+    public bool ImGuiTextFilter_PassFilter(IImGuiTextFilter self, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end) => ImGuiMethods.ImGuiTextFilter_PassFilter(self is not null ? (ImGuiTextFilterStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)));
     public void ImGuiTextFilter_Build(IImGuiTextFilter self) => ImGuiMethods.ImGuiTextFilter_Build(self is not null ? (ImGuiTextFilterStruct*)self.NativePointer : null);
     public void ImGuiTextFilter_Clear(IImGuiTextFilter self) => ImGuiMethods.ImGuiTextFilter_Clear(self is not null ? (ImGuiTextFilterStruct*)self.NativePointer : null);
     public bool ImGuiTextFilter_IsActive(IImGuiTextFilter self) => ImGuiMethods.ImGuiTextFilter_IsActive(self is not null ? (ImGuiTextFilterStruct*)self.NativePointer : null);
@@ -782,8 +997,11 @@ public unsafe partial class ImGui : IImGui
     }
 
     public void ImGuiTextBuffer_append(IImGuiTextBuffer self, string str, string str_end) => ImGuiMethods.ImGuiTextBuffer_append(self is not null ? (ImGuiTextBufferStruct*)self.NativePointer : null, str, str_end);
+    public void ImGuiTextBuffer_append(IImGuiTextBuffer self, ReadOnlySpan<byte> str, ReadOnlySpan<byte> str_end) => ImGuiMethods.ImGuiTextBuffer_append(self is not null ? (ImGuiTextBufferStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(str_end)));
     public void ImGuiTextBuffer_appendf(IImGuiTextBuffer self, string fmt) => ImGuiMethods.ImGuiTextBuffer_appendf(self is not null ? (ImGuiTextBufferStruct*)self.NativePointer : null, fmt);
+    public void ImGuiTextBuffer_appendf(IImGuiTextBuffer self, ReadOnlySpan<byte> fmt) => ImGuiMethods.ImGuiTextBuffer_appendf(self is not null ? (ImGuiTextBufferStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)));
     public void ImGuiTextBuffer_appendfv(IImGuiTextBuffer self, string fmt, sbyte* args) => ImGuiMethods.ImGuiTextBuffer_appendfv(self is not null ? (ImGuiTextBufferStruct*)self.NativePointer : null, fmt, args);
+    public void ImGuiTextBuffer_appendfv(IImGuiTextBuffer self, ReadOnlySpan<byte> fmt, sbyte* args) => ImGuiMethods.ImGuiTextBuffer_appendfv(self is not null ? (ImGuiTextBufferStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(fmt)), args);
     public void ImGuiStorage_Clear(IImGuiStorage self) => ImGuiMethods.ImGuiStorage_Clear(self is not null ? (ImGuiStorageStruct*)self.NativePointer : null);
     public int ImGuiStorage_GetInt(IImGuiStorage self, uint key, int default_val) => ImGuiMethods.ImGuiStorage_GetInt(self is not null ? (ImGuiStorageStruct*)self.NativePointer : null, key, default_val);
     public void ImGuiStorage_SetInt(IImGuiStorage self, uint key, int val) => ImGuiMethods.ImGuiStorage_SetInt(self is not null ? (ImGuiStorageStruct*)self.NativePointer : null, key, val);
@@ -852,9 +1070,13 @@ public unsafe partial class ImGui : IImGui
     public void ImDrawList_AddEllipseFilled(IImDrawList self, Vector2 center, Vector2 radius, uint col) => ImGuiMethods.ImDrawList_AddEllipseFilled(self is not null ? (ImDrawListStruct*)self.NativePointer : null, center, radius, col);
     public void ImDrawList_AddEllipseFilledEx(IImDrawList self, Vector2 center, Vector2 radius, uint col, float rot, int num_segments) => ImGuiMethods.ImDrawList_AddEllipseFilledEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, center, radius, col, rot, num_segments);
     public void ImDrawList_AddText(IImDrawList self, Vector2 pos, uint col, string text_begin) => ImGuiMethods.ImDrawList_AddText(self is not null ? (ImDrawListStruct*)self.NativePointer : null, pos, col, text_begin);
+    public void ImDrawList_AddText(IImDrawList self, Vector2 pos, uint col, ReadOnlySpan<byte> text_begin) => ImGuiMethods.ImDrawList_AddText(self is not null ? (ImDrawListStruct*)self.NativePointer : null, pos, col, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_begin)));
     public void ImDrawList_AddTextEx(IImDrawList self, Vector2 pos, uint col, string text_begin, string text_end) => ImGuiMethods.ImDrawList_AddTextEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, pos, col, text_begin, text_end);
+    public void ImDrawList_AddTextEx(IImDrawList self, Vector2 pos, uint col, ReadOnlySpan<byte> text_begin, ReadOnlySpan<byte> text_end) => ImGuiMethods.ImDrawList_AddTextEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, pos, col, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_begin)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)));
     public void ImDrawList_AddTextImFontPtr(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, string text_begin) => ImGuiMethods.ImDrawList_AddTextImFontPtr(self is not null ? (ImDrawListStruct*)self.NativePointer : null, font is not null ? (ImFontStruct*)font.NativePointer : null, font_size, pos, col, text_begin);
+    public void ImDrawList_AddTextImFontPtr(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, ReadOnlySpan<byte> text_begin) => ImGuiMethods.ImDrawList_AddTextImFontPtr(self is not null ? (ImDrawListStruct*)self.NativePointer : null, font is not null ? (ImFontStruct*)font.NativePointer : null, font_size, pos, col, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_begin)));
     public void ImDrawList_AddTextImFontPtrEx(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, string text_begin, string text_end, float wrap_width, Vector4 cpu_fine_clip_rect) => ImGuiMethods.ImDrawList_AddTextImFontPtrEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, font is not null ? (ImFontStruct*)font.NativePointer : null, font_size, pos, col, text_begin, text_end, wrap_width, cpu_fine_clip_rect);
+    public void ImDrawList_AddTextImFontPtrEx(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, ReadOnlySpan<byte> text_begin, ReadOnlySpan<byte> text_end, float wrap_width, Vector4 cpu_fine_clip_rect) => ImGuiMethods.ImDrawList_AddTextImFontPtrEx(self is not null ? (ImDrawListStruct*)self.NativePointer : null, font is not null ? (ImFontStruct*)font.NativePointer : null, font_size, pos, col, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_begin)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)), wrap_width, cpu_fine_clip_rect);
     public void ImDrawList_AddBezierCubic(IImDrawList self, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, uint col, float thickness, int num_segments) => ImGuiMethods.ImDrawList_AddBezierCubic(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p1, p2, p3, p4, col, thickness, num_segments);
     public void ImDrawList_AddBezierQuadratic(IImDrawList self, Vector2 p1, Vector2 p2, Vector2 p3, uint col, float thickness, int num_segments) => ImGuiMethods.ImDrawList_AddBezierQuadratic(self is not null ? (ImDrawListStruct*)self.NativePointer : null, p1, p2, p3, col, thickness, num_segments);
     public void ImDrawList_AddPolyline(IImDrawList self, Vector2 points, int num_points, uint col, int flags, float thickness) => ImGuiMethods.ImDrawList_AddPolyline(self is not null ? (ImDrawListStruct*)self.NativePointer : null, points, num_points, col, flags, thickness);
@@ -938,6 +1160,7 @@ public unsafe partial class ImGui : IImGui
     public void ImFontGlyphRangesBuilder_SetBit(IImFontGlyphRangesBuilder self, nuint n) => ImGuiMethods.ImFontGlyphRangesBuilder_SetBit(self is not null ? (ImFontGlyphRangesBuilderStruct*)self.NativePointer : null, n);
     public void ImFontGlyphRangesBuilder_AddChar(IImFontGlyphRangesBuilder self, uint c) => ImGuiMethods.ImFontGlyphRangesBuilder_AddChar(self is not null ? (ImFontGlyphRangesBuilderStruct*)self.NativePointer : null, c);
     public void ImFontGlyphRangesBuilder_AddText(IImFontGlyphRangesBuilder self, string text, string text_end) => ImGuiMethods.ImFontGlyphRangesBuilder_AddText(self is not null ? (ImFontGlyphRangesBuilderStruct*)self.NativePointer : null, text, text_end);
+    public void ImFontGlyphRangesBuilder_AddText(IImFontGlyphRangesBuilder self, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end) => ImGuiMethods.ImFontGlyphRangesBuilder_AddText(self is not null ? (ImFontGlyphRangesBuilderStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)));
     public void ImFontGlyphRangesBuilder_AddRanges(IImFontGlyphRangesBuilder self, ref uint ranges) => ImGuiMethods.ImFontGlyphRangesBuilder_AddRanges(self is not null ? (ImFontGlyphRangesBuilderStruct*)self.NativePointer : null, ref ranges);
     public IImFont ImFontAtlas_AddFont(IImFontAtlas self, IImFontConfig font_cfg)
     {
@@ -963,6 +1186,14 @@ public unsafe partial class ImGui : IImGui
         return new ImFont(ret);
     }
 
+    public IImFont ImFontAtlas_AddFontFromFileTTF(IImFontAtlas self, ReadOnlySpan<byte> filename, float size_pixels, IImFontConfig font_cfg, ref uint glyph_ranges)
+    {
+        var ret = ImGuiMethods.ImFontAtlas_AddFontFromFileTTF(self is not null ? (ImFontAtlasStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(filename)), size_pixels, font_cfg is not null ? (ImFontConfigStruct*)font_cfg.NativePointer : null, ref glyph_ranges);
+        if (ret is null)
+        return null !;
+        return new ImFont(ret);
+    }
+
     public IImFont ImFontAtlas_AddFontFromMemoryTTF(IImFontAtlas self, void* font_data, int font_data_size, float size_pixels, IImFontConfig font_cfg, ref uint glyph_ranges)
     {
         var ret = ImGuiMethods.ImFontAtlas_AddFontFromMemoryTTF(self is not null ? (ImFontAtlasStruct*)self.NativePointer : null, font_data, font_data_size, size_pixels, font_cfg is not null ? (ImFontConfigStruct*)font_cfg.NativePointer : null, ref glyph_ranges);
@@ -982,6 +1213,14 @@ public unsafe partial class ImGui : IImGui
     public IImFont ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(IImFontAtlas self, string compressed_font_data_base85, float size_pixels, IImFontConfig font_cfg, ref uint glyph_ranges)
     {
         var ret = ImGuiMethods.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(self is not null ? (ImFontAtlasStruct*)self.NativePointer : null, compressed_font_data_base85, size_pixels, font_cfg is not null ? (ImFontConfigStruct*)font_cfg.NativePointer : null, ref glyph_ranges);
+        if (ret is null)
+        return null !;
+        return new ImFont(ret);
+    }
+
+    public IImFont ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(IImFontAtlas self, ReadOnlySpan<byte> compressed_font_data_base85, float size_pixels, IImFontConfig font_cfg, ref uint glyph_ranges)
+    {
+        var ret = ImGuiMethods.ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(self is not null ? (ImFontAtlasStruct*)self.NativePointer : null, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(compressed_font_data_base85)), size_pixels, font_cfg is not null ? (ImFontConfigStruct*)font_cfg.NativePointer : null, ref glyph_ranges);
         if (ret is null)
         return null !;
         return new ImFont(ret);
@@ -1071,7 +1310,9 @@ public unsafe partial class ImGui : IImGui
     }
 
     public Vector2 ImFont_CalcTextSizeA(IImFont self, float size, float max_width, float wrap_width, string text_begin) => ImGuiMethods.ImFont_CalcTextSizeA(self is not null ? (ImFontStruct*)self.NativePointer : null, size, max_width, wrap_width, text_begin);
+    public Vector2 ImFont_CalcTextSizeA(IImFont self, float size, float max_width, float wrap_width, ReadOnlySpan<byte> text_begin) => ImGuiMethods.ImFont_CalcTextSizeA(self is not null ? (ImFontStruct*)self.NativePointer : null, size, max_width, wrap_width, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_begin)));
     public Vector2 ImFont_CalcTextSizeAEx(IImFont self, float size, float max_width, float wrap_width, string text_begin, string text_end, sbyte** out_remaining) => ImGuiMethods.ImFont_CalcTextSizeAEx(self is not null ? (ImFontStruct*)self.NativePointer : null, size, max_width, wrap_width, text_begin, text_end, out_remaining);
+    public Vector2 ImFont_CalcTextSizeAEx(IImFont self, float size, float max_width, float wrap_width, ReadOnlySpan<byte> text_begin, ReadOnlySpan<byte> text_end, sbyte** out_remaining) => ImGuiMethods.ImFont_CalcTextSizeAEx(self is not null ? (ImFontStruct*)self.NativePointer : null, size, max_width, wrap_width, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_begin)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)), out_remaining);
     public string ImFont_CalcWordWrapPosition(IImFont self, float size, string text, string text_end, float wrap_width)
     {
         sbyte* retStrPtr = ImGuiMethods.ImFont_CalcWordWrapPosition(self is not null ? (ImFontStruct*)self.NativePointer : null, size, text, text_end, wrap_width);
@@ -1081,12 +1322,31 @@ public unsafe partial class ImGui : IImGui
         return retStr;
     }
 
+    public string ImFont_CalcWordWrapPosition(IImFont self, float size, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end, float wrap_width)
+    {
+        sbyte* retStrPtr = ImGuiMethods.ImFont_CalcWordWrapPosition(self is not null ? (ImFontStruct*)self.NativePointer : null, size, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)), wrap_width);
+        if (retStrPtr is null)
+        return null !;
+        string retStr = Marshal.PtrToStringUTF8((nint)retStrPtr)!;
+        return retStr;
+    }
+
     public void ImFont_RenderChar(IImFont self, IImDrawList draw_list, float size, Vector2 pos, uint col, uint c) => ImGuiMethods.ImFont_RenderChar(self is not null ? (ImFontStruct*)self.NativePointer : null, draw_list is not null ? (ImDrawListStruct*)draw_list.NativePointer : null, size, pos, col, c);
     public void ImFont_RenderCharEx(IImFont self, IImDrawList draw_list, float size, Vector2 pos, uint col, uint c, Vector4 cpu_fine_clip) => ImGuiMethods.ImFont_RenderCharEx(self is not null ? (ImFontStruct*)self.NativePointer : null, draw_list is not null ? (ImDrawListStruct*)draw_list.NativePointer : null, size, pos, col, c, cpu_fine_clip);
     public void ImFont_RenderText(IImFont self, IImDrawList draw_list, float size, Vector2 pos, uint col, Vector4 clip_rect, string text_begin, string text_end, float wrap_width, int flags) => ImGuiMethods.ImFont_RenderText(self is not null ? (ImFontStruct*)self.NativePointer : null, draw_list is not null ? (ImDrawListStruct*)draw_list.NativePointer : null, size, pos, col, clip_rect, text_begin, text_end, wrap_width, flags);
+    public void ImFont_RenderText(IImFont self, IImDrawList draw_list, float size, Vector2 pos, uint col, Vector4 clip_rect, ReadOnlySpan<byte> text_begin, ReadOnlySpan<byte> text_end, float wrap_width, int flags) => ImGuiMethods.ImFont_RenderText(self is not null ? (ImFontStruct*)self.NativePointer : null, draw_list is not null ? (ImDrawListStruct*)draw_list.NativePointer : null, size, pos, col, clip_rect, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_begin)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)), wrap_width, flags);
     public string ImFont_CalcWordWrapPositionA(IImFont self, float scale, string text, string text_end, float wrap_width)
     {
         sbyte* retStrPtr = ImGuiMethods.ImFont_CalcWordWrapPositionA(self is not null ? (ImFontStruct*)self.NativePointer : null, scale, text, text_end, wrap_width);
+        if (retStrPtr is null)
+        return null !;
+        string retStr = Marshal.PtrToStringUTF8((nint)retStrPtr)!;
+        return retStr;
+    }
+
+    public string ImFont_CalcWordWrapPositionA(IImFont self, float scale, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end, float wrap_width)
+    {
+        sbyte* retStrPtr = ImGuiMethods.ImFont_CalcWordWrapPositionA(self is not null ? (ImFontStruct*)self.NativePointer : null, scale, (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(text_end)), wrap_width);
         if (retStrPtr is null)
         return null !;
         string retStr = Marshal.PtrToStringUTF8((nint)retStrPtr)!;
@@ -1115,9 +1375,13 @@ public unsafe partial class ImGui : IImGui
     public void EndChildFrame() => ImGuiMethods.EndChildFrame();
     public void ShowStackToolWindow(ref bool p_open) => ImGuiMethods.ShowStackToolWindow(ref p_open);
     public bool ComboObsolete(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count) => ImGuiMethods.ComboObsolete(label, ref current_item, old_callback, user_data, items_count);
+    public bool ComboObsolete(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count) => ImGuiMethods.ComboObsolete((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, old_callback, user_data, items_count);
     public bool ComboObsoleteEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int popup_max_height_in_items) => ImGuiMethods.ComboObsoleteEx(label, ref current_item, old_callback, user_data, items_count, popup_max_height_in_items);
+    public bool ComboObsoleteEx(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int popup_max_height_in_items) => ImGuiMethods.ComboObsoleteEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, old_callback, user_data, items_count, popup_max_height_in_items);
     public bool ListBoxObsolete(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count) => ImGuiMethods.ListBoxObsolete(label, ref current_item, old_callback, user_data, items_count);
+    public bool ListBoxObsolete(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count) => ImGuiMethods.ListBoxObsolete((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, old_callback, user_data, items_count);
     public bool ListBoxObsoleteEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int height_in_items) => ImGuiMethods.ListBoxObsoleteEx(label, ref current_item, old_callback, user_data, items_count, height_in_items);
+    public bool ListBoxObsoleteEx(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int height_in_items) => ImGuiMethods.ListBoxObsoleteEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), ref current_item, old_callback, user_data, items_count, height_in_items);
     public unsafe partial struct ImDrawListSharedData : IImDrawListSharedData
     {
         public nint NativePointer { get; set; }

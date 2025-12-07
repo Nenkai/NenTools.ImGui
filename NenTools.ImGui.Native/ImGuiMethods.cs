@@ -57,8 +57,12 @@ public unsafe partial class ImGuiMethods
     public static extern void ShowStyleEditor(ImGuiStyleStruct* @ref);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ShowStyleSelector", ExactSpelling = true)]
     public static extern bool ShowStyleSelector([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ShowStyleSelector", ExactSpelling = true)]
+    public static extern bool ShowStyleSelector(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ShowFontSelector", ExactSpelling = true)]
     public static extern void ShowFontSelector([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ShowFontSelector", ExactSpelling = true)]
+    public static extern void ShowFontSelector(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ShowUserGuide", ExactSpelling = true)]
     public static extern void ShowUserGuide();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetVersion", ExactSpelling = true)]
@@ -71,10 +75,14 @@ public unsafe partial class ImGuiMethods
     public static extern void StyleColorsClassic(ImGuiStyleStruct* dst);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Begin", ExactSpelling = true)]
     public static extern bool Begin([MarshalAs(UnmanagedType.LPUTF8Str)] string name, ref bool p_open, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Begin", ExactSpelling = true)]
+    public static extern bool Begin(sbyte* name, ref bool p_open, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_End", ExactSpelling = true)]
     public static extern void End();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginChild", ExactSpelling = true)]
     public static extern bool BeginChild([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, Vector2 size, int child_flags, int window_flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginChild", ExactSpelling = true)]
+    public static extern bool BeginChild(sbyte* str_id, Vector2 size, int child_flags, int window_flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginChildID", ExactSpelling = true)]
     public static extern bool BeginChildID(uint id, Vector2 size, int child_flags, int window_flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndChild", ExactSpelling = true)]
@@ -131,12 +139,20 @@ public unsafe partial class ImGuiMethods
     public static extern void SetWindowFocus();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetWindowPosStr", ExactSpelling = true)]
     public static extern void SetWindowPosStr([MarshalAs(UnmanagedType.LPUTF8Str)] string name, Vector2 pos, int cond);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetWindowPosStr", ExactSpelling = true)]
+    public static extern void SetWindowPosStr(sbyte* name, Vector2 pos, int cond);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetWindowSizeStr", ExactSpelling = true)]
     public static extern void SetWindowSizeStr([MarshalAs(UnmanagedType.LPUTF8Str)] string name, Vector2 size, int cond);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetWindowSizeStr", ExactSpelling = true)]
+    public static extern void SetWindowSizeStr(sbyte* name, Vector2 size, int cond);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetWindowCollapsedStr", ExactSpelling = true)]
     public static extern void SetWindowCollapsedStr([MarshalAs(UnmanagedType.LPUTF8Str)] string name, bool collapsed, int cond);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetWindowCollapsedStr", ExactSpelling = true)]
+    public static extern void SetWindowCollapsedStr(sbyte* name, bool collapsed, int cond);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetWindowFocusStr", ExactSpelling = true)]
     public static extern void SetWindowFocusStr([MarshalAs(UnmanagedType.LPUTF8Str)] string name);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetWindowFocusStr", ExactSpelling = true)]
+    public static extern void SetWindowFocusStr(sbyte* name);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetScrollX", ExactSpelling = true)]
     public static extern float GetScrollX();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetScrollY", ExactSpelling = true)]
@@ -273,8 +289,12 @@ public unsafe partial class ImGuiMethods
     public static extern float GetFrameHeightWithSpacing();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PushID", ExactSpelling = true)]
     public static extern void PushID([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PushID", ExactSpelling = true)]
+    public static extern void PushID(sbyte* str_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PushIDStr", ExactSpelling = true)]
     public static extern void PushIDStr([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id_begin, [MarshalAs(UnmanagedType.LPUTF8Str)] string str_id_end);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PushIDStr", ExactSpelling = true)]
+    public static extern void PushIDStr(sbyte* str_id_begin, sbyte* str_id_end);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PushIDPtr", ExactSpelling = true)]
     public static extern void PushIDPtr(void* ptr_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PushIDInt", ExactSpelling = true)]
@@ -283,72 +303,134 @@ public unsafe partial class ImGuiMethods
     public static extern void PopID();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetID", ExactSpelling = true)]
     public static extern uint GetID([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetID", ExactSpelling = true)]
+    public static extern uint GetID(sbyte* str_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetIDStr", ExactSpelling = true)]
     public static extern uint GetIDStr([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id_begin, [MarshalAs(UnmanagedType.LPUTF8Str)] string str_id_end);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetIDStr", ExactSpelling = true)]
+    public static extern uint GetIDStr(sbyte* str_id_begin, sbyte* str_id_end);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetIDPtr", ExactSpelling = true)]
     public static extern uint GetIDPtr(void* ptr_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetIDInt", ExactSpelling = true)]
     public static extern uint GetIDInt(int int_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextUnformatted", ExactSpelling = true)]
     public static extern void TextUnformatted([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextUnformatted", ExactSpelling = true)]
+    public static extern void TextUnformatted(sbyte* text);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextUnformattedEx", ExactSpelling = true)]
     public static extern void TextUnformattedEx([MarshalAs(UnmanagedType.LPUTF8Str)] string text, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextUnformattedEx", ExactSpelling = true)]
+    public static extern void TextUnformattedEx(sbyte* text, sbyte* text_end);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Text", ExactSpelling = true)]
     public static extern void Text([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Text", ExactSpelling = true)]
+    public static extern void Text(sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextV", ExactSpelling = true)]
     public static extern void TextV([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextV", ExactSpelling = true)]
+    public static extern void TextV(sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextColored", ExactSpelling = true)]
     public static extern void TextColored(Vector4 col, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextColored", ExactSpelling = true)]
+    public static extern void TextColored(Vector4 col, sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextColoredV", ExactSpelling = true)]
     public static extern void TextColoredV(Vector4 col, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextColoredV", ExactSpelling = true)]
+    public static extern void TextColoredV(Vector4 col, sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextDisabled", ExactSpelling = true)]
     public static extern void TextDisabled([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextDisabled", ExactSpelling = true)]
+    public static extern void TextDisabled(sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextDisabledV", ExactSpelling = true)]
     public static extern void TextDisabledV([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextDisabledV", ExactSpelling = true)]
+    public static extern void TextDisabledV(sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextWrapped", ExactSpelling = true)]
     public static extern void TextWrapped([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextWrapped", ExactSpelling = true)]
+    public static extern void TextWrapped(sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextWrappedV", ExactSpelling = true)]
     public static extern void TextWrappedV([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextWrappedV", ExactSpelling = true)]
+    public static extern void TextWrappedV(sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LabelText", ExactSpelling = true)]
     public static extern void LabelText([MarshalAs(UnmanagedType.LPUTF8Str)] string label, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LabelText", ExactSpelling = true)]
+    public static extern void LabelText(sbyte* label, sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LabelTextV", ExactSpelling = true)]
     public static extern void LabelTextV([MarshalAs(UnmanagedType.LPUTF8Str)] string label, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LabelTextV", ExactSpelling = true)]
+    public static extern void LabelTextV(sbyte* label, sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BulletText", ExactSpelling = true)]
     public static extern void BulletText([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BulletText", ExactSpelling = true)]
+    public static extern void BulletText(sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BulletTextV", ExactSpelling = true)]
     public static extern void BulletTextV([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BulletTextV", ExactSpelling = true)]
+    public static extern void BulletTextV(sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SeparatorText", ExactSpelling = true)]
     public static extern void SeparatorText([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SeparatorText", ExactSpelling = true)]
+    public static extern void SeparatorText(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Button", ExactSpelling = true)]
     public static extern bool Button([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Button", ExactSpelling = true)]
+    public static extern bool Button(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ButtonEx", ExactSpelling = true)]
     public static extern bool ButtonEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, Vector2 size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ButtonEx", ExactSpelling = true)]
+    public static extern bool ButtonEx(sbyte* label, Vector2 size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SmallButton", ExactSpelling = true)]
     public static extern bool SmallButton([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SmallButton", ExactSpelling = true)]
+    public static extern bool SmallButton(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InvisibleButton", ExactSpelling = true)]
     public static extern bool InvisibleButton([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, Vector2 size, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InvisibleButton", ExactSpelling = true)]
+    public static extern bool InvisibleButton(sbyte* str_id, Vector2 size, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ArrowButton", ExactSpelling = true)]
     public static extern bool ArrowButton([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int dir);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ArrowButton", ExactSpelling = true)]
+    public static extern bool ArrowButton(sbyte* str_id, int dir);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Checkbox", ExactSpelling = true)]
     public static extern bool Checkbox([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref bool v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Checkbox", ExactSpelling = true)]
+    public static extern bool Checkbox(sbyte* label, ref bool v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CheckboxFlagsIntPtr", ExactSpelling = true)]
     public static extern bool CheckboxFlagsIntPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int flags, int flags_value);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CheckboxFlagsIntPtr", ExactSpelling = true)]
+    public static extern bool CheckboxFlagsIntPtr(sbyte* label, ref int flags, int flags_value);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CheckboxFlagsUintPtr", ExactSpelling = true)]
     public static extern bool CheckboxFlagsUintPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref uint flags, uint flags_value);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CheckboxFlagsUintPtr", ExactSpelling = true)]
+    public static extern bool CheckboxFlagsUintPtr(sbyte* label, ref uint flags, uint flags_value);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_RadioButton", ExactSpelling = true)]
     public static extern bool RadioButton([MarshalAs(UnmanagedType.LPUTF8Str)] string label, bool active);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_RadioButton", ExactSpelling = true)]
+    public static extern bool RadioButton(sbyte* label, bool active);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_RadioButtonIntPtr", ExactSpelling = true)]
     public static extern bool RadioButtonIntPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_button);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_RadioButtonIntPtr", ExactSpelling = true)]
+    public static extern bool RadioButtonIntPtr(sbyte* label, ref int v, int v_button);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ProgressBar", ExactSpelling = true)]
     public static extern void ProgressBar(float fraction, Vector2 size_arg, [MarshalAs(UnmanagedType.LPUTF8Str)] string overlay);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ProgressBar", ExactSpelling = true)]
+    public static extern void ProgressBar(float fraction, Vector2 size_arg, sbyte* overlay);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Bullet", ExactSpelling = true)]
     public static extern void Bullet();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextLink", ExactSpelling = true)]
     public static extern bool TextLink([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextLink", ExactSpelling = true)]
+    public static extern bool TextLink(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextLinkOpenURL", ExactSpelling = true)]
     public static extern bool TextLinkOpenURL([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextLinkOpenURL", ExactSpelling = true)]
+    public static extern bool TextLinkOpenURL(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextLinkOpenURLEx", ExactSpelling = true)]
     public static extern bool TextLinkOpenURLEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, [MarshalAs(UnmanagedType.LPUTF8Str)] string url);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TextLinkOpenURLEx", ExactSpelling = true)]
+    public static extern bool TextLinkOpenURLEx(sbyte* label, sbyte* url);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Image", ExactSpelling = true)]
     public static extern void Image(ImTextureRefStruct tex_ref, Vector2 image_size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ImageEx", ExactSpelling = true)]
@@ -359,214 +441,420 @@ public unsafe partial class ImGuiMethods
     public static extern void ImageWithBgEx(ImTextureRefStruct tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1, Vector4 bg_col, Vector4 tint_col);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ImageButton", ExactSpelling = true)]
     public static extern bool ImageButton([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, ImTextureRefStruct tex_ref, Vector2 image_size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ImageButton", ExactSpelling = true)]
+    public static extern bool ImageButton(sbyte* str_id, ImTextureRefStruct tex_ref, Vector2 image_size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ImageButtonEx", ExactSpelling = true)]
     public static extern bool ImageButtonEx([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, ImTextureRefStruct tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1, Vector4 bg_col, Vector4 tint_col);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ImageButtonEx", ExactSpelling = true)]
+    public static extern bool ImageButtonEx(sbyte* str_id, ImTextureRefStruct tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1, Vector4 bg_col, Vector4 tint_col);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginCombo", ExactSpelling = true)]
     public static extern bool BeginCombo([MarshalAs(UnmanagedType.LPUTF8Str)] string label, [MarshalAs(UnmanagedType.LPUTF8Str)] string preview_value, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginCombo", ExactSpelling = true)]
+    public static extern bool BeginCombo(sbyte* label, sbyte* preview_value, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndCombo", ExactSpelling = true)]
     public static extern void EndCombo();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboChar", ExactSpelling = true)]
     public static extern bool ComboChar([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, sbyte** items, int items_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboChar", ExactSpelling = true)]
+    public static extern bool ComboChar(sbyte* label, ref int current_item, sbyte** items, int items_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboCharEx", ExactSpelling = true)]
     public static extern bool ComboCharEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, sbyte** items, int items_count, int popup_max_height_in_items);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboCharEx", ExactSpelling = true)]
+    public static extern bool ComboCharEx(sbyte* label, ref int current_item, sbyte** items, int items_count, int popup_max_height_in_items);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Combo", ExactSpelling = true)]
     public static extern bool Combo([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, [MarshalAs(UnmanagedType.LPUTF8Str)] string items_separated_by_zeros);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Combo", ExactSpelling = true)]
+    public static extern bool Combo(sbyte* label, ref int current_item, sbyte* items_separated_by_zeros);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboEx", ExactSpelling = true)]
     public static extern bool ComboEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, [MarshalAs(UnmanagedType.LPUTF8Str)] string items_separated_by_zeros, int popup_max_height_in_items);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboEx", ExactSpelling = true)]
+    public static extern bool ComboEx(sbyte* label, ref int current_item, sbyte* items_separated_by_zeros, int popup_max_height_in_items);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboCallback", ExactSpelling = true)]
     public static extern bool ComboCallback([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboCallback", ExactSpelling = true)]
+    public static extern bool ComboCallback(sbyte* label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboCallbackEx", ExactSpelling = true)]
     public static extern bool ComboCallbackEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int popup_max_height_in_items);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboCallbackEx", ExactSpelling = true)]
+    public static extern bool ComboCallbackEx(sbyte* label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int popup_max_height_in_items);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat", ExactSpelling = true)]
     public static extern bool DragFloat([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat", ExactSpelling = true)]
+    public static extern bool DragFloat(sbyte* label, ref float v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloatEx", ExactSpelling = true)]
     public static extern bool DragFloatEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_speed, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloatEx", ExactSpelling = true)]
+    public static extern bool DragFloatEx(sbyte* label, ref float v, float v_speed, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat2", ExactSpelling = true)]
     public static extern bool DragFloat2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat2", ExactSpelling = true)]
+    public static extern bool DragFloat2(sbyte* label, ref float v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat2Ex", ExactSpelling = true)]
     public static extern bool DragFloat2Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_speed, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat2Ex", ExactSpelling = true)]
+    public static extern bool DragFloat2Ex(sbyte* label, ref float v, float v_speed, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat3", ExactSpelling = true)]
     public static extern bool DragFloat3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat3", ExactSpelling = true)]
+    public static extern bool DragFloat3(sbyte* label, ref float v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat3Ex", ExactSpelling = true)]
     public static extern bool DragFloat3Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_speed, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat3Ex", ExactSpelling = true)]
+    public static extern bool DragFloat3Ex(sbyte* label, ref float v, float v_speed, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat4", ExactSpelling = true)]
     public static extern bool DragFloat4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat4", ExactSpelling = true)]
+    public static extern bool DragFloat4(sbyte* label, ref float v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat4Ex", ExactSpelling = true)]
     public static extern bool DragFloat4Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_speed, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloat4Ex", ExactSpelling = true)]
+    public static extern bool DragFloat4Ex(sbyte* label, ref float v, float v_speed, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloatRange2", ExactSpelling = true)]
     public static extern bool DragFloatRange2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v_current_min, ref float v_current_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloatRange2", ExactSpelling = true)]
+    public static extern bool DragFloatRange2(sbyte* label, ref float v_current_min, ref float v_current_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloatRange2Ex", ExactSpelling = true)]
     public static extern bool DragFloatRange2Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v_current_min, ref float v_current_max, float v_speed, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, [MarshalAs(UnmanagedType.LPUTF8Str)] string format_max, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragFloatRange2Ex", ExactSpelling = true)]
+    public static extern bool DragFloatRange2Ex(sbyte* label, ref float v_current_min, ref float v_current_max, float v_speed, float v_min, float v_max, sbyte* format, sbyte* format_max, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt", ExactSpelling = true)]
     public static extern bool DragInt([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt", ExactSpelling = true)]
+    public static extern bool DragInt(sbyte* label, ref int v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragIntEx", ExactSpelling = true)]
     public static extern bool DragIntEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, float v_speed, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragIntEx", ExactSpelling = true)]
+    public static extern bool DragIntEx(sbyte* label, ref int v, float v_speed, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt2", ExactSpelling = true)]
     public static extern bool DragInt2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt2", ExactSpelling = true)]
+    public static extern bool DragInt2(sbyte* label, ref int v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt2Ex", ExactSpelling = true)]
     public static extern bool DragInt2Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, float v_speed, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt2Ex", ExactSpelling = true)]
+    public static extern bool DragInt2Ex(sbyte* label, ref int v, float v_speed, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt3", ExactSpelling = true)]
     public static extern bool DragInt3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt3", ExactSpelling = true)]
+    public static extern bool DragInt3(sbyte* label, ref int v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt3Ex", ExactSpelling = true)]
     public static extern bool DragInt3Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, float v_speed, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt3Ex", ExactSpelling = true)]
+    public static extern bool DragInt3Ex(sbyte* label, ref int v, float v_speed, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt4", ExactSpelling = true)]
     public static extern bool DragInt4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt4", ExactSpelling = true)]
+    public static extern bool DragInt4(sbyte* label, ref int v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt4Ex", ExactSpelling = true)]
     public static extern bool DragInt4Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, float v_speed, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragInt4Ex", ExactSpelling = true)]
+    public static extern bool DragInt4Ex(sbyte* label, ref int v, float v_speed, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragIntRange2", ExactSpelling = true)]
     public static extern bool DragIntRange2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v_current_min, ref int v_current_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragIntRange2", ExactSpelling = true)]
+    public static extern bool DragIntRange2(sbyte* label, ref int v_current_min, ref int v_current_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragIntRange2Ex", ExactSpelling = true)]
     public static extern bool DragIntRange2Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v_current_min, ref int v_current_max, float v_speed, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, [MarshalAs(UnmanagedType.LPUTF8Str)] string format_max, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragIntRange2Ex", ExactSpelling = true)]
+    public static extern bool DragIntRange2Ex(sbyte* label, ref int v_current_min, ref int v_current_max, float v_speed, int v_min, int v_max, sbyte* format, sbyte* format_max, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragScalar", ExactSpelling = true)]
     public static extern bool DragScalar([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragScalar", ExactSpelling = true)]
+    public static extern bool DragScalar(sbyte* label, int data_type, void* p_data);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragScalarEx", ExactSpelling = true)]
     public static extern bool DragScalarEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, float v_speed, void* p_min, void* p_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragScalarEx", ExactSpelling = true)]
+    public static extern bool DragScalarEx(sbyte* label, int data_type, void* p_data, float v_speed, void* p_min, void* p_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragScalarN", ExactSpelling = true)]
     public static extern bool DragScalarN([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, int components);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragScalarN", ExactSpelling = true)]
+    public static extern bool DragScalarN(sbyte* label, int data_type, void* p_data, int components);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragScalarNEx", ExactSpelling = true)]
     public static extern bool DragScalarNEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, int components, float v_speed, void* p_min, void* p_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DragScalarNEx", ExactSpelling = true)]
+    public static extern bool DragScalarNEx(sbyte* label, int data_type, void* p_data, int components, float v_speed, void* p_min, void* p_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat", ExactSpelling = true)]
     public static extern bool SliderFloat([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_min, float v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat", ExactSpelling = true)]
+    public static extern bool SliderFloat(sbyte* label, ref float v, float v_min, float v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloatEx", ExactSpelling = true)]
     public static extern bool SliderFloatEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloatEx", ExactSpelling = true)]
+    public static extern bool SliderFloatEx(sbyte* label, ref float v, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat2", ExactSpelling = true)]
     public static extern bool SliderFloat2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_min, float v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat2", ExactSpelling = true)]
+    public static extern bool SliderFloat2(sbyte* label, ref float v, float v_min, float v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat2Ex", ExactSpelling = true)]
     public static extern bool SliderFloat2Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat2Ex", ExactSpelling = true)]
+    public static extern bool SliderFloat2Ex(sbyte* label, ref float v, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat3", ExactSpelling = true)]
     public static extern bool SliderFloat3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_min, float v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat3", ExactSpelling = true)]
+    public static extern bool SliderFloat3(sbyte* label, ref float v, float v_min, float v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat3Ex", ExactSpelling = true)]
     public static extern bool SliderFloat3Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat3Ex", ExactSpelling = true)]
+    public static extern bool SliderFloat3Ex(sbyte* label, ref float v, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat4", ExactSpelling = true)]
     public static extern bool SliderFloat4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_min, float v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat4", ExactSpelling = true)]
+    public static extern bool SliderFloat4(sbyte* label, ref float v, float v_min, float v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat4Ex", ExactSpelling = true)]
     public static extern bool SliderFloat4Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderFloat4Ex", ExactSpelling = true)]
+    public static extern bool SliderFloat4Ex(sbyte* label, ref float v, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderAngle", ExactSpelling = true)]
     public static extern bool SliderAngle([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v_rad);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderAngle", ExactSpelling = true)]
+    public static extern bool SliderAngle(sbyte* label, ref float v_rad);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderAngleEx", ExactSpelling = true)]
     public static extern bool SliderAngleEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v_rad, float v_degrees_min, float v_degrees_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderAngleEx", ExactSpelling = true)]
+    public static extern bool SliderAngleEx(sbyte* label, ref float v_rad, float v_degrees_min, float v_degrees_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt", ExactSpelling = true)]
     public static extern bool SliderInt([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_min, int v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt", ExactSpelling = true)]
+    public static extern bool SliderInt(sbyte* label, ref int v, int v_min, int v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderIntEx", ExactSpelling = true)]
     public static extern bool SliderIntEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderIntEx", ExactSpelling = true)]
+    public static extern bool SliderIntEx(sbyte* label, ref int v, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt2", ExactSpelling = true)]
     public static extern bool SliderInt2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_min, int v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt2", ExactSpelling = true)]
+    public static extern bool SliderInt2(sbyte* label, ref int v, int v_min, int v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt2Ex", ExactSpelling = true)]
     public static extern bool SliderInt2Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt2Ex", ExactSpelling = true)]
+    public static extern bool SliderInt2Ex(sbyte* label, ref int v, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt3", ExactSpelling = true)]
     public static extern bool SliderInt3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_min, int v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt3", ExactSpelling = true)]
+    public static extern bool SliderInt3(sbyte* label, ref int v, int v_min, int v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt3Ex", ExactSpelling = true)]
     public static extern bool SliderInt3Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt3Ex", ExactSpelling = true)]
+    public static extern bool SliderInt3Ex(sbyte* label, ref int v, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt4", ExactSpelling = true)]
     public static extern bool SliderInt4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_min, int v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt4", ExactSpelling = true)]
+    public static extern bool SliderInt4(sbyte* label, ref int v, int v_min, int v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt4Ex", ExactSpelling = true)]
     public static extern bool SliderInt4Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderInt4Ex", ExactSpelling = true)]
+    public static extern bool SliderInt4Ex(sbyte* label, ref int v, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderScalar", ExactSpelling = true)]
     public static extern bool SliderScalar([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, void* p_min, void* p_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderScalar", ExactSpelling = true)]
+    public static extern bool SliderScalar(sbyte* label, int data_type, void* p_data, void* p_min, void* p_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderScalarEx", ExactSpelling = true)]
     public static extern bool SliderScalarEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, void* p_min, void* p_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderScalarEx", ExactSpelling = true)]
+    public static extern bool SliderScalarEx(sbyte* label, int data_type, void* p_data, void* p_min, void* p_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderScalarN", ExactSpelling = true)]
     public static extern bool SliderScalarN([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, int components, void* p_min, void* p_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderScalarN", ExactSpelling = true)]
+    public static extern bool SliderScalarN(sbyte* label, int data_type, void* p_data, int components, void* p_min, void* p_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderScalarNEx", ExactSpelling = true)]
     public static extern bool SliderScalarNEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, int components, void* p_min, void* p_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SliderScalarNEx", ExactSpelling = true)]
+    public static extern bool SliderScalarNEx(sbyte* label, int data_type, void* p_data, int components, void* p_min, void* p_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderFloat", ExactSpelling = true)]
     public static extern bool VSliderFloat([MarshalAs(UnmanagedType.LPUTF8Str)] string label, Vector2 size, ref float v, float v_min, float v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderFloat", ExactSpelling = true)]
+    public static extern bool VSliderFloat(sbyte* label, Vector2 size, ref float v, float v_min, float v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderFloatEx", ExactSpelling = true)]
     public static extern bool VSliderFloatEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, Vector2 size, ref float v, float v_min, float v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderFloatEx", ExactSpelling = true)]
+    public static extern bool VSliderFloatEx(sbyte* label, Vector2 size, ref float v, float v_min, float v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderInt", ExactSpelling = true)]
     public static extern bool VSliderInt([MarshalAs(UnmanagedType.LPUTF8Str)] string label, Vector2 size, ref int v, int v_min, int v_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderInt", ExactSpelling = true)]
+    public static extern bool VSliderInt(sbyte* label, Vector2 size, ref int v, int v_min, int v_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderIntEx", ExactSpelling = true)]
     public static extern bool VSliderIntEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, Vector2 size, ref int v, int v_min, int v_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderIntEx", ExactSpelling = true)]
+    public static extern bool VSliderIntEx(sbyte* label, Vector2 size, ref int v, int v_min, int v_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderScalar", ExactSpelling = true)]
     public static extern bool VSliderScalar([MarshalAs(UnmanagedType.LPUTF8Str)] string label, Vector2 size, int data_type, void* p_data, void* p_min, void* p_max);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderScalar", ExactSpelling = true)]
+    public static extern bool VSliderScalar(sbyte* label, Vector2 size, int data_type, void* p_data, void* p_min, void* p_max);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderScalarEx", ExactSpelling = true)]
     public static extern bool VSliderScalarEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, Vector2 size, int data_type, void* p_data, void* p_min, void* p_max, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_VSliderScalarEx", ExactSpelling = true)]
+    public static extern bool VSliderScalarEx(sbyte* label, Vector2 size, int data_type, void* p_data, void* p_min, void* p_max, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputText", ExactSpelling = true)]
     public static extern bool InputText([MarshalAs(UnmanagedType.LPUTF8Str)] string label, sbyte* buf, nuint buf_size, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputText", ExactSpelling = true)]
+    public static extern bool InputText(sbyte* label, sbyte* buf, nuint buf_size, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextEx", ExactSpelling = true)]
     public static extern bool InputTextEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, sbyte* buf, nuint buf_size, int flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextEx", ExactSpelling = true)]
+    public static extern bool InputTextEx(sbyte* label, sbyte* buf, nuint buf_size, int flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextMultiline", ExactSpelling = true)]
     public static extern bool InputTextMultiline([MarshalAs(UnmanagedType.LPUTF8Str)] string label, sbyte* buf, nuint buf_size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextMultiline", ExactSpelling = true)]
+    public static extern bool InputTextMultiline(sbyte* label, sbyte* buf, nuint buf_size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextMultilineEx", ExactSpelling = true)]
     public static extern bool InputTextMultilineEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, sbyte* buf, nuint buf_size, Vector2 size, int flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextMultilineEx", ExactSpelling = true)]
+    public static extern bool InputTextMultilineEx(sbyte* label, sbyte* buf, nuint buf_size, Vector2 size, int flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextWithHint", ExactSpelling = true)]
     public static extern bool InputTextWithHint([MarshalAs(UnmanagedType.LPUTF8Str)] string label, [MarshalAs(UnmanagedType.LPUTF8Str)] string hint, sbyte* buf, nuint buf_size, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextWithHint", ExactSpelling = true)]
+    public static extern bool InputTextWithHint(sbyte* label, sbyte* hint, sbyte* buf, nuint buf_size, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextWithHintEx", ExactSpelling = true)]
     public static extern bool InputTextWithHintEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, [MarshalAs(UnmanagedType.LPUTF8Str)] string hint, sbyte* buf, nuint buf_size, int flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputTextWithHintEx", ExactSpelling = true)]
+    public static extern bool InputTextWithHintEx(sbyte* label, sbyte* hint, sbyte* buf, nuint buf_size, int flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat", ExactSpelling = true)]
     public static extern bool InputFloat([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat", ExactSpelling = true)]
+    public static extern bool InputFloat(sbyte* label, ref float v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloatEx", ExactSpelling = true)]
     public static extern bool InputFloatEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, float step, float step_fast, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloatEx", ExactSpelling = true)]
+    public static extern bool InputFloatEx(sbyte* label, ref float v, float step, float step_fast, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat2", ExactSpelling = true)]
     public static extern bool InputFloat2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat2", ExactSpelling = true)]
+    public static extern bool InputFloat2(sbyte* label, ref float v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat2Ex", ExactSpelling = true)]
     public static extern bool InputFloat2Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat2Ex", ExactSpelling = true)]
+    public static extern bool InputFloat2Ex(sbyte* label, ref float v, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat3", ExactSpelling = true)]
     public static extern bool InputFloat3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat3", ExactSpelling = true)]
+    public static extern bool InputFloat3(sbyte* label, ref float v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat3Ex", ExactSpelling = true)]
     public static extern bool InputFloat3Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat3Ex", ExactSpelling = true)]
+    public static extern bool InputFloat3Ex(sbyte* label, ref float v, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat4", ExactSpelling = true)]
     public static extern bool InputFloat4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat4", ExactSpelling = true)]
+    public static extern bool InputFloat4(sbyte* label, ref float v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat4Ex", ExactSpelling = true)]
     public static extern bool InputFloat4Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float v, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat4Ex", ExactSpelling = true)]
+    public static extern bool InputFloat4Ex(sbyte* label, ref float v, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputInt", ExactSpelling = true)]
     public static extern bool InputInt([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputInt", ExactSpelling = true)]
+    public static extern bool InputInt(sbyte* label, ref int v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputIntEx", ExactSpelling = true)]
     public static extern bool InputIntEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int step, int step_fast, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputIntEx", ExactSpelling = true)]
+    public static extern bool InputIntEx(sbyte* label, ref int v, int step, int step_fast, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputInt2", ExactSpelling = true)]
     public static extern bool InputInt2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputInt2", ExactSpelling = true)]
+    public static extern bool InputInt2(sbyte* label, ref int v, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputInt3", ExactSpelling = true)]
     public static extern bool InputInt3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputInt3", ExactSpelling = true)]
+    public static extern bool InputInt3(sbyte* label, ref int v, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputInt4", ExactSpelling = true)]
     public static extern bool InputInt4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int v, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputInt4", ExactSpelling = true)]
+    public static extern bool InputInt4(sbyte* label, ref int v, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputDouble", ExactSpelling = true)]
     public static extern bool InputDouble([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref double v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputDouble", ExactSpelling = true)]
+    public static extern bool InputDouble(sbyte* label, ref double v);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputDoubleEx", ExactSpelling = true)]
     public static extern bool InputDoubleEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref double v, double step, double step_fast, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputDoubleEx", ExactSpelling = true)]
+    public static extern bool InputDoubleEx(sbyte* label, ref double v, double step, double step_fast, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputScalar", ExactSpelling = true)]
     public static extern bool InputScalar([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputScalar", ExactSpelling = true)]
+    public static extern bool InputScalar(sbyte* label, int data_type, void* p_data);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputScalarEx", ExactSpelling = true)]
     public static extern bool InputScalarEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, void* p_step, void* p_step_fast, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputScalarEx", ExactSpelling = true)]
+    public static extern bool InputScalarEx(sbyte* label, int data_type, void* p_data, void* p_step, void* p_step_fast, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputScalarN", ExactSpelling = true)]
     public static extern bool InputScalarN([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, int components);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputScalarN", ExactSpelling = true)]
+    public static extern bool InputScalarN(sbyte* label, int data_type, void* p_data, int components);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputScalarNEx", ExactSpelling = true)]
     public static extern bool InputScalarNEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int data_type, void* p_data, int components, void* p_step, void* p_step_fast, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputScalarNEx", ExactSpelling = true)]
+    public static extern bool InputScalarNEx(sbyte* label, int data_type, void* p_data, int components, void* p_step, void* p_step_fast, sbyte* format, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorEdit3", ExactSpelling = true)]
     public static extern bool ColorEdit3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float col, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorEdit3", ExactSpelling = true)]
+    public static extern bool ColorEdit3(sbyte* label, ref float col, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorEdit4", ExactSpelling = true)]
     public static extern bool ColorEdit4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float col, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorEdit4", ExactSpelling = true)]
+    public static extern bool ColorEdit4(sbyte* label, ref float col, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorPicker3", ExactSpelling = true)]
     public static extern bool ColorPicker3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float col, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorPicker3", ExactSpelling = true)]
+    public static extern bool ColorPicker3(sbyte* label, ref float col, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorPicker4", ExactSpelling = true)]
     public static extern bool ColorPicker4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float col, int flags, ref float ref_col);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorPicker4", ExactSpelling = true)]
+    public static extern bool ColorPicker4(sbyte* label, ref float col, int flags, ref float ref_col);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorButton", ExactSpelling = true)]
     public static extern bool ColorButton([MarshalAs(UnmanagedType.LPUTF8Str)] string desc_id, Vector4 col, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorButton", ExactSpelling = true)]
+    public static extern bool ColorButton(sbyte* desc_id, Vector4 col, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorButtonEx", ExactSpelling = true)]
     public static extern bool ColorButtonEx([MarshalAs(UnmanagedType.LPUTF8Str)] string desc_id, Vector4 col, int flags, Vector2 size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorButtonEx", ExactSpelling = true)]
+    public static extern bool ColorButtonEx(sbyte* desc_id, Vector4 col, int flags, Vector2 size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetColorEditOptions", ExactSpelling = true)]
     public static extern void SetColorEditOptions(int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNode", ExactSpelling = true)]
     public static extern bool TreeNode([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNode", ExactSpelling = true)]
+    public static extern bool TreeNode(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeStr", ExactSpelling = true)]
     public static extern bool TreeNodeStr([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeStr", ExactSpelling = true)]
+    public static extern bool TreeNodeStr(sbyte* str_id, sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodePtr", ExactSpelling = true)]
     public static extern bool TreeNodePtr(void* ptr_id, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodePtr", ExactSpelling = true)]
+    public static extern bool TreeNodePtr(void* ptr_id, sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeV", ExactSpelling = true)]
     public static extern bool TreeNodeV([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeV", ExactSpelling = true)]
+    public static extern bool TreeNodeV(sbyte* str_id, sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeVPtr", ExactSpelling = true)]
     public static extern bool TreeNodeVPtr(void* ptr_id, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeVPtr", ExactSpelling = true)]
+    public static extern bool TreeNodeVPtr(void* ptr_id, sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeEx", ExactSpelling = true)]
     public static extern bool TreeNodeEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeEx", ExactSpelling = true)]
+    public static extern bool TreeNodeEx(sbyte* label, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeExStr", ExactSpelling = true)]
     public static extern bool TreeNodeExStr([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int flags, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeExStr", ExactSpelling = true)]
+    public static extern bool TreeNodeExStr(sbyte* str_id, int flags, sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeExPtr", ExactSpelling = true)]
     public static extern bool TreeNodeExPtr(void* ptr_id, int flags, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeExPtr", ExactSpelling = true)]
+    public static extern bool TreeNodeExPtr(void* ptr_id, int flags, sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeExV", ExactSpelling = true)]
     public static extern bool TreeNodeExV([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int flags, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeExV", ExactSpelling = true)]
+    public static extern bool TreeNodeExV(sbyte* str_id, int flags, sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeExVPtr", ExactSpelling = true)]
     public static extern bool TreeNodeExVPtr(void* ptr_id, int flags, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreeNodeExVPtr", ExactSpelling = true)]
+    public static extern bool TreeNodeExVPtr(void* ptr_id, int flags, sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreePush", ExactSpelling = true)]
     public static extern void TreePush([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreePush", ExactSpelling = true)]
+    public static extern void TreePush(sbyte* str_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreePushPtr", ExactSpelling = true)]
     public static extern void TreePushPtr(void* ptr_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TreePop", ExactSpelling = true)]
@@ -575,20 +863,32 @@ public unsafe partial class ImGuiMethods
     public static extern float GetTreeNodeToLabelSpacing();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CollapsingHeader", ExactSpelling = true)]
     public static extern bool CollapsingHeader([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CollapsingHeader", ExactSpelling = true)]
+    public static extern bool CollapsingHeader(sbyte* label, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CollapsingHeaderBoolPtr", ExactSpelling = true)]
     public static extern bool CollapsingHeaderBoolPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref bool p_visible, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CollapsingHeaderBoolPtr", ExactSpelling = true)]
+    public static extern bool CollapsingHeaderBoolPtr(sbyte* label, ref bool p_visible, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetNextItemOpen", ExactSpelling = true)]
     public static extern void SetNextItemOpen(bool is_open, int cond);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetNextItemStorageID", ExactSpelling = true)]
     public static extern void SetNextItemStorageID(uint storage_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Selectable", ExactSpelling = true)]
     public static extern bool Selectable([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Selectable", ExactSpelling = true)]
+    public static extern bool Selectable(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SelectableEx", ExactSpelling = true)]
     public static extern bool SelectableEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, bool selected, int flags, Vector2 size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SelectableEx", ExactSpelling = true)]
+    public static extern bool SelectableEx(sbyte* label, bool selected, int flags, Vector2 size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SelectableBoolPtr", ExactSpelling = true)]
     public static extern bool SelectableBoolPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref bool p_selected, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SelectableBoolPtr", ExactSpelling = true)]
+    public static extern bool SelectableBoolPtr(sbyte* label, ref bool p_selected, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SelectableBoolPtrEx", ExactSpelling = true)]
     public static extern bool SelectableBoolPtrEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref bool p_selected, int flags, Vector2 size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SelectableBoolPtrEx", ExactSpelling = true)]
+    public static extern bool SelectableBoolPtrEx(sbyte* label, ref bool p_selected, int flags, Vector2 size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginMultiSelect", ExactSpelling = true)]
     public static extern ImGuiMultiSelectIOStruct* BeginMultiSelect(int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginMultiSelectEx", ExactSpelling = true)]
@@ -601,30 +901,54 @@ public unsafe partial class ImGuiMethods
     public static extern bool IsItemToggledSelection();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginListBox", ExactSpelling = true)]
     public static extern bool BeginListBox([MarshalAs(UnmanagedType.LPUTF8Str)] string label, Vector2 size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginListBox", ExactSpelling = true)]
+    public static extern bool BeginListBox(sbyte* label, Vector2 size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndListBox", ExactSpelling = true)]
     public static extern void EndListBox();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBox", ExactSpelling = true)]
     public static extern bool ListBox([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, sbyte** items, int items_count, int height_in_items);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBox", ExactSpelling = true)]
+    public static extern bool ListBox(sbyte* label, ref int current_item, sbyte** items, int items_count, int height_in_items);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBoxCallback", ExactSpelling = true)]
     public static extern bool ListBoxCallback([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBoxCallback", ExactSpelling = true)]
+    public static extern bool ListBoxCallback(sbyte* label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBoxCallbackEx", ExactSpelling = true)]
     public static extern bool ListBoxCallbackEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int height_in_items);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBoxCallbackEx", ExactSpelling = true)]
+    public static extern bool ListBoxCallbackEx(sbyte* label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int height_in_items);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotLines", ExactSpelling = true)]
     public static extern void PlotLines([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float values, int values_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotLines", ExactSpelling = true)]
+    public static extern void PlotLines(sbyte* label, ref float values, int values_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotLinesEx", ExactSpelling = true)]
     public static extern void PlotLinesEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float values, int values_count, int values_offset, [MarshalAs(UnmanagedType.LPUTF8Str)] string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotLinesEx", ExactSpelling = true)]
+    public static extern void PlotLinesEx(sbyte* label, ref float values, int values_count, int values_offset, sbyte* overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotLinesCallback", ExactSpelling = true)]
     public static extern void PlotLinesCallback([MarshalAs(UnmanagedType.LPUTF8Str)] string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotLinesCallback", ExactSpelling = true)]
+    public static extern void PlotLinesCallback(sbyte* label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotLinesCallbackEx", ExactSpelling = true)]
     public static extern void PlotLinesCallbackEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, [MarshalAs(UnmanagedType.LPUTF8Str)] string overlay_text, float scale_min, float scale_max, Vector2 graph_size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotLinesCallbackEx", ExactSpelling = true)]
+    public static extern void PlotLinesCallbackEx(sbyte* label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, sbyte* overlay_text, float scale_min, float scale_max, Vector2 graph_size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotHistogram", ExactSpelling = true)]
     public static extern void PlotHistogram([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float values, int values_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotHistogram", ExactSpelling = true)]
+    public static extern void PlotHistogram(sbyte* label, ref float values, int values_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotHistogramEx", ExactSpelling = true)]
     public static extern void PlotHistogramEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref float values, int values_count, int values_offset, [MarshalAs(UnmanagedType.LPUTF8Str)] string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotHistogramEx", ExactSpelling = true)]
+    public static extern void PlotHistogramEx(sbyte* label, ref float values, int values_count, int values_offset, sbyte* overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotHistogramCallback", ExactSpelling = true)]
     public static extern void PlotHistogramCallback([MarshalAs(UnmanagedType.LPUTF8Str)] string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotHistogramCallback", ExactSpelling = true)]
+    public static extern void PlotHistogramCallback(sbyte* label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotHistogramCallbackEx", ExactSpelling = true)]
     public static extern void PlotHistogramCallbackEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, [MarshalAs(UnmanagedType.LPUTF8Str)] string overlay_text, float scale_min, float scale_max, Vector2 graph_size);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_PlotHistogramCallbackEx", ExactSpelling = true)]
+    public static extern void PlotHistogramCallbackEx(sbyte* label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, sbyte* overlay_text, float scale_min, float scale_max, Vector2 graph_size);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginMenuBar", ExactSpelling = true)]
     public static extern bool BeginMenuBar();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndMenuBar", ExactSpelling = true)]
@@ -635,62 +959,100 @@ public unsafe partial class ImGuiMethods
     public static extern void EndMainMenuBar();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginMenu", ExactSpelling = true)]
     public static extern bool BeginMenu([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginMenu", ExactSpelling = true)]
+    public static extern bool BeginMenu(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginMenuEx", ExactSpelling = true)]
     public static extern bool BeginMenuEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, bool enabled);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginMenuEx", ExactSpelling = true)]
+    public static extern bool BeginMenuEx(sbyte* label, bool enabled);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndMenu", ExactSpelling = true)]
     public static extern void EndMenu();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_MenuItem", ExactSpelling = true)]
     public static extern bool MenuItem([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_MenuItem", ExactSpelling = true)]
+    public static extern bool MenuItem(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_MenuItemEx", ExactSpelling = true)]
     public static extern bool MenuItemEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, [MarshalAs(UnmanagedType.LPUTF8Str)] string shortcut, bool selected, bool enabled);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_MenuItemEx", ExactSpelling = true)]
+    public static extern bool MenuItemEx(sbyte* label, sbyte* shortcut, bool selected, bool enabled);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_MenuItemBoolPtr", ExactSpelling = true)]
     public static extern bool MenuItemBoolPtr([MarshalAs(UnmanagedType.LPUTF8Str)] string label, [MarshalAs(UnmanagedType.LPUTF8Str)] string shortcut, ref bool p_selected, bool enabled);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_MenuItemBoolPtr", ExactSpelling = true)]
+    public static extern bool MenuItemBoolPtr(sbyte* label, sbyte* shortcut, ref bool p_selected, bool enabled);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTooltip", ExactSpelling = true)]
     public static extern bool BeginTooltip();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndTooltip", ExactSpelling = true)]
     public static extern void EndTooltip();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetTooltip", ExactSpelling = true)]
     public static extern void SetTooltip([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetTooltip", ExactSpelling = true)]
+    public static extern void SetTooltip(sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetTooltipV", ExactSpelling = true)]
     public static extern void SetTooltipV([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetTooltipV", ExactSpelling = true)]
+    public static extern void SetTooltipV(sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginItemTooltip", ExactSpelling = true)]
     public static extern bool BeginItemTooltip();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetItemTooltip", ExactSpelling = true)]
     public static extern void SetItemTooltip([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetItemTooltip", ExactSpelling = true)]
+    public static extern void SetItemTooltip(sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetItemTooltipV", ExactSpelling = true)]
     public static extern void SetItemTooltipV([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetItemTooltipV", ExactSpelling = true)]
+    public static extern void SetItemTooltipV(sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopup", ExactSpelling = true)]
     public static extern bool BeginPopup([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopup", ExactSpelling = true)]
+    public static extern bool BeginPopup(sbyte* str_id, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupModal", ExactSpelling = true)]
     public static extern bool BeginPopupModal([MarshalAs(UnmanagedType.LPUTF8Str)] string name, ref bool p_open, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupModal", ExactSpelling = true)]
+    public static extern bool BeginPopupModal(sbyte* name, ref bool p_open, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndPopup", ExactSpelling = true)]
     public static extern void EndPopup();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_OpenPopup", ExactSpelling = true)]
     public static extern void OpenPopup([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int popup_flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_OpenPopup", ExactSpelling = true)]
+    public static extern void OpenPopup(sbyte* str_id, int popup_flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_OpenPopupID", ExactSpelling = true)]
     public static extern void OpenPopupID(uint id, int popup_flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_OpenPopupOnItemClick", ExactSpelling = true)]
     public static extern void OpenPopupOnItemClick([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int popup_flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_OpenPopupOnItemClick", ExactSpelling = true)]
+    public static extern void OpenPopupOnItemClick(sbyte* str_id, int popup_flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CloseCurrentPopup", ExactSpelling = true)]
     public static extern void CloseCurrentPopup();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextItem", ExactSpelling = true)]
     public static extern bool BeginPopupContextItem();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextItemEx", ExactSpelling = true)]
     public static extern bool BeginPopupContextItemEx([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int popup_flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextItemEx", ExactSpelling = true)]
+    public static extern bool BeginPopupContextItemEx(sbyte* str_id, int popup_flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextWindow", ExactSpelling = true)]
     public static extern bool BeginPopupContextWindow();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextWindowEx", ExactSpelling = true)]
     public static extern bool BeginPopupContextWindowEx([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int popup_flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextWindowEx", ExactSpelling = true)]
+    public static extern bool BeginPopupContextWindowEx(sbyte* str_id, int popup_flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextVoid", ExactSpelling = true)]
     public static extern bool BeginPopupContextVoid();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextVoidEx", ExactSpelling = true)]
     public static extern bool BeginPopupContextVoidEx([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int popup_flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginPopupContextVoidEx", ExactSpelling = true)]
+    public static extern bool BeginPopupContextVoidEx(sbyte* str_id, int popup_flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_IsPopupOpen", ExactSpelling = true)]
     public static extern bool IsPopupOpen([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_IsPopupOpen", ExactSpelling = true)]
+    public static extern bool IsPopupOpen(sbyte* str_id, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTable", ExactSpelling = true)]
     public static extern bool BeginTable([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int columns, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTable", ExactSpelling = true)]
+    public static extern bool BeginTable(sbyte* str_id, int columns, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTableEx", ExactSpelling = true)]
     public static extern bool BeginTableEx([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int columns, int flags, Vector2 outer_size, float inner_width);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTableEx", ExactSpelling = true)]
+    public static extern bool BeginTableEx(sbyte* str_id, int columns, int flags, Vector2 outer_size, float inner_width);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndTable", ExactSpelling = true)]
     public static extern void EndTable();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableNextRow", ExactSpelling = true)]
@@ -703,12 +1065,18 @@ public unsafe partial class ImGuiMethods
     public static extern bool TableSetColumnIndex(int column_n);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableSetupColumn", ExactSpelling = true)]
     public static extern void TableSetupColumn([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableSetupColumn", ExactSpelling = true)]
+    public static extern void TableSetupColumn(sbyte* label, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableSetupColumnEx", ExactSpelling = true)]
     public static extern void TableSetupColumnEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int flags, float init_width_or_weight, uint user_id);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableSetupColumnEx", ExactSpelling = true)]
+    public static extern void TableSetupColumnEx(sbyte* label, int flags, float init_width_or_weight, uint user_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableSetupScrollFreeze", ExactSpelling = true)]
     public static extern void TableSetupScrollFreeze(int cols, int rows);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableHeader", ExactSpelling = true)]
     public static extern void TableHeader([MarshalAs(UnmanagedType.LPUTF8Str)] string label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableHeader", ExactSpelling = true)]
+    public static extern void TableHeader(sbyte* label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableHeadersRow", ExactSpelling = true)]
     public static extern void TableHeadersRow();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TableAngledHeadersRow", ExactSpelling = true)]
@@ -735,6 +1103,8 @@ public unsafe partial class ImGuiMethods
     public static extern void Columns();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColumnsEx", ExactSpelling = true)]
     public static extern void ColumnsEx(int count, [MarshalAs(UnmanagedType.LPUTF8Str)] string id, bool borders);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColumnsEx", ExactSpelling = true)]
+    public static extern void ColumnsEx(int count, sbyte* id, bool borders);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_NextColumn", ExactSpelling = true)]
     public static extern void NextColumn();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetColumnIndex", ExactSpelling = true)]
@@ -751,16 +1121,24 @@ public unsafe partial class ImGuiMethods
     public static extern int GetColumnsCount();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTabBar", ExactSpelling = true)]
     public static extern bool BeginTabBar([MarshalAs(UnmanagedType.LPUTF8Str)] string str_id, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTabBar", ExactSpelling = true)]
+    public static extern bool BeginTabBar(sbyte* str_id, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndTabBar", ExactSpelling = true)]
     public static extern void EndTabBar();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTabItem", ExactSpelling = true)]
     public static extern bool BeginTabItem([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref bool p_open, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginTabItem", ExactSpelling = true)]
+    public static extern bool BeginTabItem(sbyte* label, ref bool p_open, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndTabItem", ExactSpelling = true)]
     public static extern void EndTabItem();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TabItemButton", ExactSpelling = true)]
     public static extern bool TabItemButton([MarshalAs(UnmanagedType.LPUTF8Str)] string label, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_TabItemButton", ExactSpelling = true)]
+    public static extern bool TabItemButton(sbyte* label, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetTabItemClosed", ExactSpelling = true)]
     public static extern void SetTabItemClosed([MarshalAs(UnmanagedType.LPUTF8Str)] string tab_or_docked_window_label);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetTabItemClosed", ExactSpelling = true)]
+    public static extern void SetTabItemClosed(sbyte* tab_or_docked_window_label);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DockSpace", ExactSpelling = true)]
     public static extern uint DockSpace(uint dockspace_id);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DockSpaceEx", ExactSpelling = true)]
@@ -781,6 +1159,8 @@ public unsafe partial class ImGuiMethods
     public static extern void LogToTTY(int auto_open_depth);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LogToFile", ExactSpelling = true)]
     public static extern void LogToFile(int auto_open_depth, [MarshalAs(UnmanagedType.LPUTF8Str)] string filename);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LogToFile", ExactSpelling = true)]
+    public static extern void LogToFile(int auto_open_depth, sbyte* filename);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LogToClipboard", ExactSpelling = true)]
     public static extern void LogToClipboard(int auto_open_depth);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LogFinish", ExactSpelling = true)]
@@ -789,18 +1169,26 @@ public unsafe partial class ImGuiMethods
     public static extern void LogButtons();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LogText", ExactSpelling = true)]
     public static extern void LogText([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LogText", ExactSpelling = true)]
+    public static extern void LogText(sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LogTextV", ExactSpelling = true)]
     public static extern void LogTextV([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LogTextV", ExactSpelling = true)]
+    public static extern void LogTextV(sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginDragDropSource", ExactSpelling = true)]
     public static extern bool BeginDragDropSource(int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetDragDropPayload", ExactSpelling = true)]
     public static extern bool SetDragDropPayload([MarshalAs(UnmanagedType.LPUTF8Str)] string type, void* data, nuint sz, int cond);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetDragDropPayload", ExactSpelling = true)]
+    public static extern bool SetDragDropPayload(sbyte* type, void* data, nuint sz, int cond);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndDragDropSource", ExactSpelling = true)]
     public static extern void EndDragDropSource();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_BeginDragDropTarget", ExactSpelling = true)]
     public static extern bool BeginDragDropTarget();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_AcceptDragDropPayload", ExactSpelling = true)]
     public static extern ImGuiPayloadStruct* AcceptDragDropPayload([MarshalAs(UnmanagedType.LPUTF8Str)] string type, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_AcceptDragDropPayload", ExactSpelling = true)]
+    public static extern ImGuiPayloadStruct* AcceptDragDropPayload(sbyte* type, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_EndDragDropTarget", ExactSpelling = true)]
     public static extern void EndDragDropTarget();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetDragDropPayload", ExactSpelling = true)]
@@ -887,8 +1275,12 @@ public unsafe partial class ImGuiMethods
     public static extern ImGuiStorageStruct* GetStateStorage();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CalcTextSize", ExactSpelling = true)]
     public static extern Vector2 CalcTextSize([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CalcTextSize", ExactSpelling = true)]
+    public static extern Vector2 CalcTextSize(sbyte* text);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CalcTextSizeEx", ExactSpelling = true)]
     public static extern Vector2 CalcTextSizeEx([MarshalAs(UnmanagedType.LPUTF8Str)] string text, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end, bool hide_text_after_double_hash, float wrap_width);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_CalcTextSizeEx", ExactSpelling = true)]
+    public static extern Vector2 CalcTextSizeEx(sbyte* text, sbyte* text_end, bool hide_text_after_double_hash, float wrap_width);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorConvertU32ToFloat4", ExactSpelling = true)]
     public static extern Vector4 ColorConvertU32ToFloat4(uint @in);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ColorConvertFloat4ToU32", ExactSpelling = true)]
@@ -963,22 +1355,36 @@ public unsafe partial class ImGuiMethods
     public static extern sbyte* GetClipboardText();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetClipboardText", ExactSpelling = true)]
     public static extern void SetClipboardText([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetClipboardText", ExactSpelling = true)]
+    public static extern void SetClipboardText(sbyte* text);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LoadIniSettingsFromDisk", ExactSpelling = true)]
     public static extern void LoadIniSettingsFromDisk([MarshalAs(UnmanagedType.LPUTF8Str)] string ini_filename);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_LoadIniSettingsFromDisk", ExactSpelling = true)]
+    public static extern void LoadIniSettingsFromDisk(sbyte* ini_filename);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SaveIniSettingsToDisk", ExactSpelling = true)]
     public static extern void SaveIniSettingsToDisk([MarshalAs(UnmanagedType.LPUTF8Str)] string ini_filename);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SaveIniSettingsToDisk", ExactSpelling = true)]
+    public static extern void SaveIniSettingsToDisk(sbyte* ini_filename);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugTextEncoding", ExactSpelling = true)]
     public static extern void DebugTextEncoding([MarshalAs(UnmanagedType.LPUTF8Str)] string text);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugTextEncoding", ExactSpelling = true)]
+    public static extern void DebugTextEncoding(sbyte* text);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugFlashStyleColor", ExactSpelling = true)]
     public static extern void DebugFlashStyleColor(int idx);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugStartItemPicker", ExactSpelling = true)]
     public static extern void DebugStartItemPicker();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugCheckVersionAndDataLayout", ExactSpelling = true)]
     public static extern bool DebugCheckVersionAndDataLayout([MarshalAs(UnmanagedType.LPUTF8Str)] string version_str, nuint sz_io, nuint sz_style, nuint sz_vec2, nuint sz_vec4, nuint sz_drawvert, nuint sz_drawidx);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugCheckVersionAndDataLayout", ExactSpelling = true)]
+    public static extern bool DebugCheckVersionAndDataLayout(sbyte* version_str, nuint sz_io, nuint sz_style, nuint sz_vec2, nuint sz_vec4, nuint sz_drawvert, nuint sz_drawidx);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugLog", ExactSpelling = true)]
     public static extern void DebugLog([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugLog", ExactSpelling = true)]
+    public static extern void DebugLog(sbyte* fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugLogV", ExactSpelling = true)]
     public static extern void DebugLogV([MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_DebugLogV", ExactSpelling = true)]
+    public static extern void DebugLogV(sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SetAllocatorFunctions", ExactSpelling = true)]
     public static extern void SetAllocatorFunctions(delegate* unmanaged[Cdecl]<nuint, nint, nint> alloc_func, delegate* unmanaged[Cdecl]<nint, nint, void> free_func, void* user_data);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_GetAllocatorFunctions", ExactSpelling = true)]
@@ -1036,6 +1442,8 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiIO_AddInputCharactersUTF8(ImGuiIOStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string str);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImGuiIO_AddInputCharactersUTF8(ImGuiIOStruct* self, sbyte* str);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiIO_SetKeyEventNativeData(ImGuiIOStruct* self, int key, int native_keycode, int native_scancode);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiIO_SetKeyEventNativeDataEx(ImGuiIOStruct* self, int key, int native_keycode, int native_scancode, int native_legacy_index);
@@ -1052,6 +1460,8 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiInputTextCallbackData_InsertChars(ImGuiInputTextCallbackDataStruct* self, int pos, [MarshalAs(UnmanagedType.LPUTF8Str)] string text, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImGuiInputTextCallbackData_InsertChars(ImGuiInputTextCallbackDataStruct* self, int pos, sbyte* text, sbyte* text_end);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiInputTextCallbackData_SelectAll(ImGuiInputTextCallbackDataStruct* self);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiInputTextCallbackData_ClearSelection(ImGuiInputTextCallbackDataStruct* self);
@@ -1061,6 +1471,8 @@ public unsafe partial class ImGuiMethods
     public static extern void ImGuiPayload_Clear(ImGuiPayloadStruct* self);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern bool ImGuiPayload_IsDataType(ImGuiPayloadStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string type);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern bool ImGuiPayload_IsDataType(ImGuiPayloadStruct* self, sbyte* type);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern bool ImGuiPayload_IsPreview(ImGuiPayloadStruct* self);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -1072,7 +1484,11 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern bool ImGuiTextFilter_Draw(ImGuiTextFilterStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string label, float width);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern bool ImGuiTextFilter_Draw(ImGuiTextFilterStruct* self, sbyte* label, float width);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern bool ImGuiTextFilter_PassFilter(ImGuiTextFilterStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string text, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern bool ImGuiTextFilter_PassFilter(ImGuiTextFilterStruct* self, sbyte* text, sbyte* text_end);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiTextFilter_Build(ImGuiTextFilterStruct* self);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -1098,9 +1514,15 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiTextBuffer_append(ImGuiTextBufferStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string str, [MarshalAs(UnmanagedType.LPUTF8Str)] string str_end);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImGuiTextBuffer_append(ImGuiTextBufferStruct* self, sbyte* str, sbyte* str_end);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiTextBuffer_appendf(ImGuiTextBufferStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImGuiTextBuffer_appendf(ImGuiTextBufferStruct* self, sbyte* fmt);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiTextBuffer_appendfv(ImGuiTextBufferStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string fmt, sbyte* args);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImGuiTextBuffer_appendfv(ImGuiTextBufferStruct* self, sbyte* fmt, sbyte* args);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImGuiStorage_Clear(ImGuiStorageStruct* self);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -1238,11 +1660,19 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImDrawList_AddText(ImDrawListStruct* self, Vector2 pos, uint col, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_begin);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImDrawList_AddText(ImDrawListStruct* self, Vector2 pos, uint col, sbyte* text_begin);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImDrawList_AddTextEx(ImDrawListStruct* self, Vector2 pos, uint col, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_begin, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImDrawList_AddTextEx(ImDrawListStruct* self, Vector2 pos, uint col, sbyte* text_begin, sbyte* text_end);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImDrawList_AddTextImFontPtr(ImDrawListStruct* self, ImFontStruct* font, float font_size, Vector2 pos, uint col, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_begin);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImDrawList_AddTextImFontPtr(ImDrawListStruct* self, ImFontStruct* font, float font_size, Vector2 pos, uint col, sbyte* text_begin);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImDrawList_AddTextImFontPtrEx(ImDrawListStruct* self, ImFontStruct* font, float font_size, Vector2 pos, uint col, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_begin, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end, float wrap_width, Vector4 cpu_fine_clip_rect);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImDrawList_AddTextImFontPtrEx(ImDrawListStruct* self, ImFontStruct* font, float font_size, Vector2 pos, uint col, sbyte* text_begin, sbyte* text_end, float wrap_width, Vector4 cpu_fine_clip_rect);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImDrawList_AddBezierCubic(ImDrawListStruct* self, Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, uint col, float thickness, int num_segments);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -1386,6 +1816,8 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImFontGlyphRangesBuilder_AddText(ImFontGlyphRangesBuilderStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string text, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImFontGlyphRangesBuilder_AddText(ImFontGlyphRangesBuilderStruct* self, sbyte* text, sbyte* text_end);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImFontGlyphRangesBuilder_AddRanges(ImFontGlyphRangesBuilderStruct* self, ref uint ranges);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImFontGlyphRangesBuilder_BuildRanges(ImFontGlyphRangesBuilderStruct* self, ref ImVector<uint> out_ranges);
@@ -1396,11 +1828,15 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern ImFontStruct* ImFontAtlas_AddFontFromFileTTF(ImFontAtlasStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string filename, float size_pixels, ImFontConfigStruct* font_cfg, ref uint glyph_ranges);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern ImFontStruct* ImFontAtlas_AddFontFromFileTTF(ImFontAtlasStruct* self, sbyte* filename, float size_pixels, ImFontConfigStruct* font_cfg, ref uint glyph_ranges);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern ImFontStruct* ImFontAtlas_AddFontFromMemoryTTF(ImFontAtlasStruct* self, void* font_data, int font_data_size, float size_pixels, ImFontConfigStruct* font_cfg, ref uint glyph_ranges);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern ImFontStruct* ImFontAtlas_AddFontFromMemoryCompressedTTF(ImFontAtlasStruct* self, void* compressed_font_data, int compressed_font_data_size, float size_pixels, ImFontConfigStruct* font_cfg, ref uint glyph_ranges);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern ImFontStruct* ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(ImFontAtlasStruct* self, [MarshalAs(UnmanagedType.LPUTF8Str)] string compressed_font_data_base85, float size_pixels, ImFontConfigStruct* font_cfg, ref uint glyph_ranges);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern ImFontStruct* ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(ImFontAtlasStruct* self, sbyte* compressed_font_data_base85, float size_pixels, ImFontConfigStruct* font_cfg, ref uint glyph_ranges);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImFontAtlas_RemoveFont(ImFontAtlasStruct* self, ImFontStruct* font);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -1484,9 +1920,15 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern Vector2 ImFont_CalcTextSizeA(ImFontStruct* self, float size, float max_width, float wrap_width, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_begin);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern Vector2 ImFont_CalcTextSizeA(ImFontStruct* self, float size, float max_width, float wrap_width, sbyte* text_begin);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern Vector2 ImFont_CalcTextSizeAEx(ImFontStruct* self, float size, float max_width, float wrap_width, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_begin, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end, sbyte** out_remaining);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern Vector2 ImFont_CalcTextSizeAEx(ImFontStruct* self, float size, float max_width, float wrap_width, sbyte* text_begin, sbyte* text_end, sbyte** out_remaining);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern sbyte* ImFont_CalcWordWrapPosition(ImFontStruct* self, float size, [MarshalAs(UnmanagedType.LPUTF8Str)] string text, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end, float wrap_width);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern sbyte* ImFont_CalcWordWrapPosition(ImFontStruct* self, float size, sbyte* text, sbyte* text_end, float wrap_width);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImFont_RenderChar(ImFontStruct* self, ImDrawListStruct* draw_list, float size, Vector2 pos, uint col, uint c);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -1494,7 +1936,11 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImFont_RenderText(ImFontStruct* self, ImDrawListStruct* draw_list, float size, Vector2 pos, uint col, Vector4 clip_rect, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_begin, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end, float wrap_width, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern void ImFont_RenderText(ImFontStruct* self, ImDrawListStruct* draw_list, float size, Vector2 pos, uint col, Vector4 clip_rect, sbyte* text_begin, sbyte* text_end, float wrap_width, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern sbyte* ImFont_CalcWordWrapPositionA(ImFontStruct* self, float scale, [MarshalAs(UnmanagedType.LPUTF8Str)] string text, [MarshalAs(UnmanagedType.LPUTF8Str)] string text_end, float wrap_width);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
+    public static extern sbyte* ImFont_CalcWordWrapPositionA(ImFontStruct* self, float scale, sbyte* text, sbyte* text_end, float wrap_width);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern void ImFont_ClearOutputData(ImFontStruct* self);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
@@ -1539,12 +1985,20 @@ public unsafe partial class ImGuiMethods
     public static extern void ShowStackToolWindow(ref bool p_open);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboObsolete", ExactSpelling = true)]
     public static extern bool ComboObsolete([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboObsolete", ExactSpelling = true)]
+    public static extern bool ComboObsolete(sbyte* label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboObsoleteEx", ExactSpelling = true)]
     public static extern bool ComboObsoleteEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int popup_max_height_in_items);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ComboObsoleteEx", ExactSpelling = true)]
+    public static extern bool ComboObsoleteEx(sbyte* label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int popup_max_height_in_items);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBoxObsolete", ExactSpelling = true)]
     public static extern bool ListBoxObsolete([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBoxObsolete", ExactSpelling = true)]
+    public static extern bool ListBoxObsolete(sbyte* label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBoxObsoleteEx", ExactSpelling = true)]
     public static extern bool ListBoxObsoleteEx([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int height_in_items);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_ListBoxObsoleteEx", ExactSpelling = true)]
+    public static extern bool ListBoxObsoleteEx(sbyte* label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int height_in_items);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]
     public static extern ImFontLoaderStruct* ImGuiFreeTypeGetFontLoader();
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]

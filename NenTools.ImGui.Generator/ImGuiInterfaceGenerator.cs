@@ -93,60 +93,10 @@ public class ImGuiInterfaceGenerator
                     if (ManuallyImplementedFunctions.Contains(method.Identifier.ValueText))
                         continue;
 
-                    // Strip attributes.
-                    var newParamList = new List<ParameterSyntax>();
-                    foreach (var param in method.ParameterList.Parameters)
-                    {
-                        // Skip arglist (it's fine to skip, according to CppSharp. Not like we need it anyway.)
-                        if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
-                            continue;
+                    AddInterfaceMethod(method);
 
-                        TypeSyntax newType = FixupParameterType(param.Type, param.AttributeLists, ImGuiStructTypeKind.ForInterface, modifiers: out SyntaxTokenList modifiers);
-                        newType = FixParameterTypeForFunctionCall(newType, ref modifiers);
-
-                        ParameterSyntax newParam = param.WithType(newType)
-                            .WithModifiers(modifiers)
-                            .WithAttributeLists([]);
-
-                        // For each pointer type, we're gonna need to wrap them.
-                        if (newType is PointerTypeSyntax pointerType && pointerType.ElementType is IdentifierNameSyntax identifierName)
-                            _typesToWrap.Add(identifierName.Identifier.ValueText);
-
-                        newParamList.Add(newParam);
-                    }
-
-                    var paramListSyntaxList = new SeparatedSyntaxList<ParameterSyntax>();
-                    paramListSyntaxList = paramListSyntaxList.AddRange(newParamList);
-
-                    string? nativeTypeName = GetNativeTypeName(method.AttributeLists);
-                    TypeSyntax returnType = method.ReturnType;
-                    if (nativeTypeName is not null)
-                        returnType = FixupParameterType(method.ReturnType, method.AttributeLists, ImGuiStructTypeKind.ForInterface, modifiers: out SyntaxTokenList modifiers);
-
-                    MethodDeclarationSyntax newMethod = SF.MethodDeclaration(
-                            attributeLists: [],
-                            modifiers: [],
-                            returnType,
-                            explicitInterfaceSpecifier: null!,
-                            method.Identifier,
-                            method.TypeParameterList!,
-                            SF.ParameterList(paramListSyntaxList),
-                            method.ConstraintClauses,
-                            body: null!,
-                            method.SemicolonToken);
-
-                    string? methodName = GetEntryPoint(method);
-                    if (methodName is not null)
-                    {
-                        FunctionMetadata funcMetadata = _metadata.FunctionsByName![methodName];
-                        newMethod = DecorateWithComments(newMethod, funcMetadata.Comments?.Attached, funcMetadata.Comments?.Preceding, numTabs: 1);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Warning: Method name {methodName} not found in dear bindings metadata");
-                    }
-
-                    _interfaceMethodList.Add(newMethod);
+                    if (MethodHasStringArguments(method))
+                        AddInterfaceMethod(method, RemapStringPointerKind.ReadOnlySpan);
                 }
 
                 // Add everything else next
@@ -219,7 +169,7 @@ public class ImGuiInterfaceGenerator
                                 StructFieldMetadata? fieldMetadata = _metadata.StructsByName![structName].Fields.FirstOrDefault(e => e.Name == fieldName);
 
                                 TypeSyntax newType = FixupParameterType(variableDeclaration.Type, fieldDeclaration.AttributeLists, ImGuiStructTypeKind.ForInterface, modifiers: out SyntaxTokenList modifiers, 
-                                    doNotRemapStrings: true, isArrayElement: fieldMetadata?.IsArray == true);
+                                    RemapStringPointerKind.Pointer, isArrayElement: fieldMetadata?.IsArray == true);
 
                                 bool withSetter = true;
                                 if (IsRefableProperty(newType))
@@ -286,6 +236,64 @@ public class ImGuiInterfaceGenerator
             }
 
         }
+    }
+
+    private void AddInterfaceMethod(MethodDeclarationSyntax method, RemapStringPointerKind remapStringPointerKind = RemapStringPointerKind.String)
+    {
+        // Strip attributes.
+        var newParamList = new List<ParameterSyntax>();
+        foreach (var param in method.ParameterList.Parameters)
+        {
+            // Skip arglist (it's fine to skip, according to CppSharp. Not like we need it anyway.)
+            if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
+                continue;
+
+            TypeSyntax newType = FixupParameterType(param.Type, param.AttributeLists, ImGuiStructTypeKind.ForInterface, remapStringPointerKind: remapStringPointerKind, modifiers: out SyntaxTokenList modifiers);
+            newType = FixParameterTypeForFunctionCall(newType, ref modifiers);
+
+            ParameterSyntax newParam = param.WithType(newType)
+                .WithModifiers(modifiers)
+                .WithAttributeLists([]);
+
+            // For each pointer type, we're gonna need to wrap them.
+            if (newType is PointerTypeSyntax pointerType && pointerType.ElementType is IdentifierNameSyntax identifierName)
+                _typesToWrap.Add(identifierName.Identifier.ValueText);
+
+            newParamList.Add(newParam);
+        }
+
+        var paramListSyntaxList = new SeparatedSyntaxList<ParameterSyntax>();
+        paramListSyntaxList = paramListSyntaxList.AddRange(newParamList);
+
+        string? nativeTypeName = GetNativeTypeName(method.AttributeLists);
+        TypeSyntax returnType = method.ReturnType;
+        if (nativeTypeName is not null)
+            returnType = FixupParameterType(method.ReturnType, method.AttributeLists, ImGuiStructTypeKind.ForInterface, modifiers: out SyntaxTokenList modifiers);
+
+        MethodDeclarationSyntax newMethod = SF.MethodDeclaration(
+                attributeLists: [],
+                modifiers: [],
+                returnType,
+                explicitInterfaceSpecifier: null!,
+                method.Identifier,
+                method.TypeParameterList!,
+                SF.ParameterList(paramListSyntaxList),
+                method.ConstraintClauses,
+                body: null!,
+                method.SemicolonToken);
+
+        string? methodName = GetEntryPoint(method);
+        if (methodName is not null)
+        {
+            FunctionMetadata funcMetadata = _metadata.FunctionsByName![methodName];
+            newMethod = DecorateWithComments(newMethod, funcMetadata.Comments?.Attached, funcMetadata.Comments?.Preceding, numTabs: 1);
+        }
+        else
+        {
+            Console.WriteLine($"Warning: Method name {methodName} not found in dear bindings metadata");
+        }
+
+        _interfaceMethodList.Add(newMethod);
     }
 
     private static T DecorateWithComments<T>(T member, string? attached, List<string>? preceding, int numTabs = 0) where T : MemberDeclarationSyntax
@@ -364,196 +372,12 @@ public class ImGuiInterfaceGenerator
                     if (ManuallyImplementedFunctions.Contains(method.Identifier.ValueText))
                         continue;
 
-                    // Strip attributes.
-                    var newParamList = new List<ParameterSyntax>();
-                    foreach (var param in method.ParameterList.Parameters)
-                    {
-                        // Skip arglist (it's fine to skip, according to CppSharp. Not like we need it anyway.)
-                        if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
-                            continue;
+                    AddImplementationMethod(method);
 
-                        TypeSyntax newType = FixupParameterType(param.Type, param.AttributeLists, ImGuiStructTypeKind.ForInterface, modifiers: out SyntaxTokenList modifiers);
-                        newType = FixParameterTypeForFunctionCall(newType, ref modifiers);
-
-                        ParameterSyntax newParam = param.WithType(newType)
-                            .WithModifiers(modifiers)
-                            .WithAttributeLists([]);
-                        newParamList.Add(newParam);
-                    }
-
-                    var paramListSyntaxList = new SeparatedSyntaxList<ParameterSyntax>();
-                    paramListSyntaxList = paramListSyntaxList.AddRange(newParamList);
-
-                    // Create argument list for call
-                    var implCallArguments = new List<SyntaxNodeOrToken>();
-                    for (int i = 0; i < newParamList.Count; i++)
-                    {
-                        var param = newParamList[i];
-                        ExpressionSyntax newExpression;
-
-                        // Try to resolve impl into native pointer for call. (implStruct.NativePointer)
-                        string typeName = param.Type!.GetText().ToString().TrimEnd();
-                        if (param.Type.IsKind(SyntaxKind.IdentifierName) && 
-                            method.ParameterList.Parameters[i].Type.IsKind(SyntaxKind.PointerType) &&
-                            !TypeInfo.CSharpNoPointerIdentifiers.Contains(typeName) && !TypeInfo.KnownEnums.Contains(typeName))
-                        {
-                            // cast nint pointer to struct pointer - '(struct*)ctx.NativePointer'
-                            string structName = $"{typeName.Substring(1)}Struct";
-                            newExpression = SyntaxTreeUtils.CreatePointerArgumentWithNullPatternExpression(structName, param.Identifier.Text, "NativePointer");
-                        }
-                        else if (TypeInfo.KnownEnums.Contains(typeName))
-                        {
-                            newExpression = SF.ParseExpression($"(int){param.Identifier.Text}");
-                        }
-                        else if (TypeInfo.ManuallyDeclaredValueTypesAsInterfaces.Contains(typeName.Substring(1))) // ImTextureRef
-                        {
-                            // Converting an interface for a value type, back to a struct to pass as argument
-                            // ToStruct methods are expected on the implementation.
-                            newExpression = SF.ParseExpression($"(({typeName.Substring(1)}){param.Identifier.Text}).ToStruct()");
-                        }
-                        else if (typeName.StartsWith("ImVectorWrapper")) // For weird cases like 'ImGuiTextFilter_ImGuiTextRange_split'.
-                        {
-                            // Hacky. but works
-                            GenericNameSyntax genericType = (GenericNameSyntax)param.Type;
-                            string elemTypeName = genericType.TypeArgumentList.Arguments[0].ToString();
-                            newExpression = SF.ParseExpression($"ref Unsafe.AsRef<ImVector<{elemTypeName.Substring(1)}Struct>>(&{param.Identifier.Text}.Size)");
-                        }
-                        else
-                        {
-                            // Otherwise just pass the argument as is
-                            newExpression = SF.IdentifierName(param.Identifier.Text);
-                        }
-
-                        // Add ref if needed.
-                        bool withRefKeyword = param.Modifiers.Any(e => e.IsKind(SyntaxKind.RefKeyword));
-                        ArgumentSyntax newArgument = SF.Argument(newExpression);
-                        if (withRefKeyword)
-                            newArgument = newArgument.WithRefKindKeyword(SF.Token(SyntaxKind.RefKeyword));
-                        implCallArguments.Add(newArgument);
-
-                        if (i != newParamList.Count - 1)
-                            implCallArguments.Add(SF.Token(SyntaxKind.CommaToken));
-                    }
-
-
-                    // Fix up return types
-                    string? nativeTypeName = GetNativeTypeName(method.AttributeLists);
-                    TypeSyntax returnType = method.ReturnType;
-                    if (nativeTypeName is not null)
-                        returnType = FixupParameterType(method.ReturnType, method.AttributeLists, ImGuiStructTypeKind.ForInterface, modifiers: out SyntaxTokenList modifiers);
-
-                    ExpressionSyntax callExpression = SF.InvocationExpression(
-                        expression: SF.MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            SF.IdentifierName("ImGuiMethods"),
-                            SF.IdentifierName(method.Identifier.Text)),
-                        argumentList: SF.ArgumentList(SF.SeparatedList<ArgumentSyntax>(implCallArguments)));
-
-                    /*
-                    // Put return pointer of native call into wrapper if needed.
-                    // IImGuiPayload GetDragDropPayload() => new ImGuiPayload(ImGuiMethods.GetDragDropPayload());
-                    if (returnType.IsKind(SyntaxKind.IdentifierName))
-                    {
-                        IdentifierNameSyntax returnIdentifier = (IdentifierNameSyntax)returnType;
-                        string identifierName = returnIdentifier.Identifier.ValueText;
-                        if (!TypeInfo.CSharpNoPointerIdentifiers.Contains(identifierName) && !TypeInfo.KnownEnums.Contains(identifierName))
-                        {
-                            string implName = returnIdentifier.Identifier.ValueText.Substring(1);
-                            callExpression = SF.ObjectCreationExpression(
-                                SF.IdentifierName(implName),
-                                SF.ArgumentList(SF.SeparatedList([SF.Argument(callExpression)])),
-                                null);
-                        }
-                    }
-                    */
-
-                    MethodDeclarationSyntax newMethod = SF.MethodDeclaration(
-                            attributeLists: [],
-                            modifiers: SF.TokenList(SF.Token(SyntaxKind.PublicKeyword)),
-                            returnType,
-                            explicitInterfaceSpecifier: null,
-                            method.Identifier,
-                            method.TypeParameterList,
-                            SF.ParameterList(paramListSyntaxList),
-                            method.ConstraintClauses,
-                            body: null,
-                            expressionBody: null);
-
-                    // For functions that return strings, we create a body that checks the return value.
-                    // We can't just use MarshalAs for returned strings, something to do with memory management.
-                    if (returnType.IsKind(SyntaxKind.PredefinedType))
-                    {
-                        var predefinedType = (PredefinedTypeSyntax)returnType;
-                        if (predefinedType.Keyword.ValueText == "string")
-                        {
-                            var body = SF.Block(SF.List([
-                                SF.LocalDeclarationStatement(
-                                    SF.VariableDeclaration(method.ReturnType)
-                                    .WithVariables(
-                                        SF.SingletonSeparatedList<VariableDeclaratorSyntax>(
-                                            SF.VariableDeclarator(
-                                                SF.Identifier("retStrPtr"))
-                                            .WithInitializer(SF.EqualsValueClause(callExpression))))),
-                                SF.ParseStatement("if (retStrPtr is null)"),
-                                SF.ParseStatement("    return null!;"),
-                                SF.ParseStatement("string retStr = Marshal.PtrToStringUTF8((nint)retStrPtr)!;"),
-                                SF.ParseStatement("return retStr;")
-                            ]));
-                            newMethod = newMethod.WithBody(body);
-                        }
-                        else
-                        {
-                            newMethod = newMethod.WithExpressionBody(SF.ArrowExpressionClause(callExpression))
-                                .WithSemicolonToken(method.SemicolonToken);
-                        }
-                    }
-                    else if (returnType.IsKind(SyntaxKind.IdentifierName))
-                    {
-                        // Add a null check for methods that return a structure pointer.
-                        IdentifierNameSyntax returnIdentifier = (IdentifierNameSyntax)returnType;
-                        string identifierName = returnIdentifier.Identifier.ValueText;
-                        if (!TypeInfo.CSharpNoPointerIdentifiers.Contains(identifierName) && !TypeInfo.KnownEnums.Contains(identifierName))
-                        {
-                            List<StatementSyntax> statements = [];
-                            statements.Add(SF.LocalDeclarationStatement(
-                                    SF.VariableDeclaration(SF.ParseTypeName("var"))
-                                    .WithVariables(
-                                        SF.SingletonSeparatedList<VariableDeclaratorSyntax>(
-                                            SF.VariableDeclarator(
-                                                SF.Identifier("ret"))
-                                            .WithInitializer(SF.EqualsValueClause(callExpression))))));
-
-                            // If it's not a value type, include a null check
-                            if (!TypeInfo.ManuallyDeclaredValueTypesAsInterfaces.Contains(identifierName.Substring(1)))
-                            {
-                                statements.Add(SF.ParseStatement("if (ret is null)"));
-                                statements.Add(SF.ParseStatement("    return null!;"));
-                            }
-                            
-                            statements.Add(SF.ParseStatement($"return new {returnIdentifier.Identifier.ValueText.Substring(1)}(ret);"));
-
-                            var body = SF.Block(SF.List(statements));
-                            newMethod = newMethod.WithBody(body);
-                        }
-                        else if (TypeInfo.KnownEnums.Contains(identifierName))
-                        {
-                            // Cast enum result from call (int) to actual enum type.
-                            newMethod = newMethod.WithExpressionBody(SF.ArrowExpressionClause(SF.CastExpression(SF.ParseTypeName(identifierName), callExpression)))
-                                .WithSemicolonToken(method.SemicolonToken);
-                        }
-                        else
-                        {
-                            newMethod = newMethod.WithExpressionBody(SF.ArrowExpressionClause(callExpression))
-                                .WithSemicolonToken(method.SemicolonToken);
-                        }
-                    }
-                    else
-                    {
-                        newMethod = newMethod.WithExpressionBody(SF.ArrowExpressionClause(callExpression))
-                            .WithSemicolonToken(method.SemicolonToken);
-                    }
-
-                    _implMemberList.Add(newMethod);
+                    // Add the same one but with strings being a ReadOnlySpan.
+                    // Allows utf8 literals, we convert ReadOnlySpan to a pointer
+                    if (MethodHasStringArguments(method))
+                        AddImplementationMethod(method, RemapStringPointerKind.ReadOnlySpan);
                 }
 
                 // Add everything else next
@@ -603,7 +427,7 @@ public class ImGuiInterfaceGenerator
                                 StructFieldMetadata? fieldMetadata = _metadata.StructsByName![structName].Fields.FirstOrDefault(e => e.Name == fieldName);
 
                                 TypeSyntax newType = FixupParameterType(variableDeclaration.Type, fieldDeclaration.AttributeLists, ImGuiStructTypeKind.ForInterface, 
-                                    isArrayElement: fieldMetadata?.IsArray == true, doNotRemapStrings: true,
+                                    isArrayElement: fieldMetadata?.IsArray == true, remapStringPointerKind: RemapStringPointerKind.Pointer,
                                     modifiers: out SyntaxTokenList modifiers);
 
                                 PropertyDeclarationSyntax newProperty = CreatePropertyWithImplementation(fieldDeclaration, variableDeclaration, structName + "Struct", fieldName, ref newType);
@@ -647,6 +471,205 @@ public class ImGuiInterfaceGenerator
                 }
             }
         }
+    }
+
+    private void AddImplementationMethod(MethodDeclarationSyntax method, RemapStringPointerKind remapStringPointerKind = RemapStringPointerKind.String)
+    {
+        // Strip attributes.
+        var newParamList = new List<ParameterSyntax>();
+        foreach (var param in method.ParameterList.Parameters)
+        {
+            // Skip arglist (it's fine to skip, according to CppSharp. Not like we need it anyway.)
+            if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
+                continue;
+
+            TypeSyntax newType = FixupParameterType(param.Type, param.AttributeLists, ImGuiStructTypeKind.ForInterface,
+                remapStringPointerKind: remapStringPointerKind, modifiers: out SyntaxTokenList modifiers);
+            newType = FixParameterTypeForFunctionCall(newType, ref modifiers);
+
+            ParameterSyntax newParam = param.WithType(newType)
+                .WithModifiers(modifiers)
+                .WithAttributeLists([]);
+            newParamList.Add(newParam);
+        }
+
+        var paramListSyntaxList = new SeparatedSyntaxList<ParameterSyntax>();
+        paramListSyntaxList = paramListSyntaxList.AddRange(newParamList);
+
+        // Create argument list for call
+        var implCallArguments = new List<SyntaxNodeOrToken>();
+        for (int i = 0; i < newParamList.Count; i++)
+        {
+            var param = newParamList[i];
+            ExpressionSyntax newExpression;
+
+            // Try to resolve impl into native pointer for call. (implStruct.NativePointer)
+            string typeName = param.Type!.GetText().ToString().TrimEnd();
+            if (param.Type.IsKind(SyntaxKind.IdentifierName) &&
+                method.ParameterList.Parameters[i].Type.IsKind(SyntaxKind.PointerType) &&
+                !TypeInfo.CSharpNoPointerIdentifiers.Contains(typeName) && !TypeInfo.KnownEnums.Contains(typeName))
+            {
+                // cast nint pointer to struct pointer - '(struct*)ctx.NativePointer'
+                string structName = $"{typeName.Substring(1)}Struct";
+                newExpression = SyntaxTreeUtils.CreatePointerArgumentWithNullPatternExpression(structName, param.Identifier.Text, "NativePointer");
+            }
+            else if (TypeInfo.KnownEnums.Contains(typeName))
+            {
+                newExpression = SF.ParseExpression($"(int){param.Identifier.Text}");
+            }
+            else if (TypeInfo.ManuallyDeclaredValueTypesAsInterfaces.Contains(typeName.Substring(1))) // ImTextureRef
+            {
+                // Converting an interface for a value type, back to a struct to pass as argument
+                // ToStruct methods are expected on the implementation.
+                newExpression = SF.ParseExpression($"(({typeName.Substring(1)}){param.Identifier.Text}).ToStruct()");
+            }
+            else if (typeName.StartsWith("ReadOnlySpan<byte>")) // Converting span to pointer. Used mainly for string methods.
+            {
+                newExpression = SyntaxTreeUtils.CreateReadOnlySpanToStringPointerExpression(param.Identifier.Text);
+            }
+            else if (typeName.StartsWith("ImVectorWrapper")) // For weird cases like 'ImGuiTextFilter_ImGuiTextRange_split'.
+            {
+                // Hacky. but works
+                GenericNameSyntax genericType = (GenericNameSyntax)param.Type;
+                string elemTypeName = genericType.TypeArgumentList.Arguments[0].ToString();
+                newExpression = SF.ParseExpression($"ref Unsafe.AsRef<ImVector<{elemTypeName.Substring(1)}Struct>>(&{param.Identifier.Text}.Size)");
+            }
+            else
+            {
+                // Otherwise just pass the argument as is
+                newExpression = SF.IdentifierName(param.Identifier.Text);
+            }
+
+            // Add ref if needed.
+            bool withRefKeyword = param.Modifiers.Any(e => e.IsKind(SyntaxKind.RefKeyword));
+            ArgumentSyntax newArgument = SF.Argument(newExpression);
+            if (withRefKeyword)
+                newArgument = newArgument.WithRefKindKeyword(SF.Token(SyntaxKind.RefKeyword));
+            implCallArguments.Add(newArgument);
+
+            if (i != newParamList.Count - 1)
+                implCallArguments.Add(SF.Token(SyntaxKind.CommaToken));
+        }
+
+
+        // Fix up return types
+        string? nativeTypeName = GetNativeTypeName(method.AttributeLists);
+        TypeSyntax returnType = method.ReturnType;
+        if (nativeTypeName is not null)
+            returnType = FixupParameterType(method.ReturnType, method.AttributeLists, ImGuiStructTypeKind.ForInterface, modifiers: out SyntaxTokenList modifiers);
+
+        ExpressionSyntax callExpression = SF.InvocationExpression(
+            expression: SF.MemberAccessExpression(
+                SyntaxKind.SimpleMemberAccessExpression,
+                SF.IdentifierName("ImGuiMethods"),
+                SF.IdentifierName(method.Identifier.Text)),
+            argumentList: SF.ArgumentList(SF.SeparatedList<ArgumentSyntax>(implCallArguments)));
+
+        /*
+        // Put return pointer of native call into wrapper if needed.
+        // IImGuiPayload GetDragDropPayload() => new ImGuiPayload(ImGuiMethods.GetDragDropPayload());
+        if (returnType.IsKind(SyntaxKind.IdentifierName))
+        {
+            IdentifierNameSyntax returnIdentifier = (IdentifierNameSyntax)returnType;
+            string identifierName = returnIdentifier.Identifier.ValueText;
+            if (!TypeInfo.CSharpNoPointerIdentifiers.Contains(identifierName) && !TypeInfo.KnownEnums.Contains(identifierName))
+            {
+                string implName = returnIdentifier.Identifier.ValueText.Substring(1);
+                callExpression = SF.ObjectCreationExpression(
+                    SF.IdentifierName(implName),
+                    SF.ArgumentList(SF.SeparatedList([SF.Argument(callExpression)])),
+                    null);
+            }
+        }
+        */
+
+        MethodDeclarationSyntax newMethod = SF.MethodDeclaration(
+                attributeLists: [],
+                modifiers: SF.TokenList(SF.Token(SyntaxKind.PublicKeyword)),
+                returnType,
+                explicitInterfaceSpecifier: null,
+                method.Identifier,
+                method.TypeParameterList,
+                SF.ParameterList(paramListSyntaxList),
+                method.ConstraintClauses,
+                body: null,
+                expressionBody: null);
+
+        // For functions that return strings, we create a body that checks the return value.
+        // We can't just use MarshalAs for returned strings, something to do with memory management.
+        if (returnType.IsKind(SyntaxKind.PredefinedType))
+        {
+            var predefinedType = (PredefinedTypeSyntax)returnType;
+            if (predefinedType.Keyword.ValueText == "string")
+            {
+                var body = SF.Block(SF.List([
+                    SF.LocalDeclarationStatement(
+                                    SF.VariableDeclaration(method.ReturnType)
+                                    .WithVariables(
+                                        SF.SingletonSeparatedList<VariableDeclaratorSyntax>(
+                                            SF.VariableDeclarator(
+                                                SF.Identifier("retStrPtr"))
+                                            .WithInitializer(SF.EqualsValueClause(callExpression))))),
+                                SF.ParseStatement("if (retStrPtr is null)"),
+                                SF.ParseStatement("    return null!;"),
+                                SF.ParseStatement("string retStr = Marshal.PtrToStringUTF8((nint)retStrPtr)!;"),
+                                SF.ParseStatement("return retStr;")
+                ]));
+                newMethod = newMethod.WithBody(body);
+            }
+            else
+            {
+                newMethod = newMethod.WithExpressionBody(SF.ArrowExpressionClause(callExpression))
+                    .WithSemicolonToken(method.SemicolonToken);
+            }
+        }
+        else if (returnType.IsKind(SyntaxKind.IdentifierName))
+        {
+            // Add a null check for methods that return a structure pointer.
+            IdentifierNameSyntax returnIdentifier = (IdentifierNameSyntax)returnType;
+            string identifierName = returnIdentifier.Identifier.ValueText;
+            if (!TypeInfo.CSharpNoPointerIdentifiers.Contains(identifierName) && !TypeInfo.KnownEnums.Contains(identifierName))
+            {
+                List<StatementSyntax> statements = [];
+                statements.Add(SF.LocalDeclarationStatement(
+                        SF.VariableDeclaration(SF.ParseTypeName("var"))
+                        .WithVariables(
+                            SF.SingletonSeparatedList<VariableDeclaratorSyntax>(
+                                SF.VariableDeclarator(
+                                    SF.Identifier("ret"))
+                                .WithInitializer(SF.EqualsValueClause(callExpression))))));
+
+                // If it's not a value type, include a null check
+                if (!TypeInfo.ManuallyDeclaredValueTypesAsInterfaces.Contains(identifierName.Substring(1)))
+                {
+                    statements.Add(SF.ParseStatement("if (ret is null)"));
+                    statements.Add(SF.ParseStatement("    return null!;"));
+                }
+
+                statements.Add(SF.ParseStatement($"return new {returnIdentifier.Identifier.ValueText.Substring(1)}(ret);"));
+
+                var body = SF.Block(SF.List(statements));
+                newMethod = newMethod.WithBody(body);
+            }
+            else if (TypeInfo.KnownEnums.Contains(identifierName))
+            {
+                // Cast enum result from call (int) to actual enum type.
+                newMethod = newMethod.WithExpressionBody(SF.ArrowExpressionClause(SF.CastExpression(SF.ParseTypeName(identifierName), callExpression)))
+                    .WithSemicolonToken(method.SemicolonToken);
+            }
+            else
+            {
+                newMethod = newMethod.WithExpressionBody(SF.ArrowExpressionClause(callExpression))
+                    .WithSemicolonToken(method.SemicolonToken);
+            }
+        }
+        else
+        {
+            newMethod = newMethod.WithExpressionBody(SF.ArrowExpressionClause(callExpression))
+                .WithSemicolonToken(method.SemicolonToken);
+        }
+
+        _implMemberList.Add(newMethod);
     }
 
     private PropertyDeclarationSyntax CreatePropertyWithImplementation(FieldDeclarationSyntax fieldDeclaration, VariableDeclarationSyntax variableDeclaration, 
@@ -864,64 +887,12 @@ public class ImGuiInterfaceGenerator
                     if (SkippedBindingMethods.Contains(method.Identifier.Text))
                         continue;
 
-                    var newParamList = new List<ParameterSyntax>();
-                    foreach (var param in method.ParameterList.Parameters)
-                    {
-                        // Skip arglist (it's fine to skip, according to CppSharp. Not like we need it anyway.)
-                        if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
-                            continue;
+                    AddBindingMethod(method, isBackend);
 
-                        TypeSyntax newType = FixupParameterType(param.Type, param.AttributeLists, ImGuiStructTypeKind.ForNativeStruct, pointersToNint: isBackend, modifiers: out SyntaxTokenList modifiers);
-                        newType = FixParameterTypeForFunctionCall(newType, ref modifiers);
-
-                        ParameterSyntax newParam = param.WithType(newType)
-                            .WithModifiers(modifiers)
-                            .WithAttributeLists([]);
-
-                        if (newParam.Type.IsKind(SyntaxKind.PredefinedType))
-                        {
-                            PredefinedTypeSyntax predef = (PredefinedTypeSyntax)newParam.Type;
-                            if (predef.Keyword.Text == "string")
-                                newParam = newParam.WithAttributeLists(SyntaxTreeUtils.GetMarshalAsAttribute(UnmanagedType.LPUTF8Str));
-                        }
-
-                        newParamList.Add(newParam);
-                    }
-
-                    // Remove NativeTypeName attributes.
-                    List<AttributeListSyntax> methodAttributes = method.AttributeLists.ToList();
-                    for (int i = methodAttributes.Count - 1; i >= 0; i--)
-                    {
-                        AttributeListSyntax? methodAttribute = methodAttributes[i];
-                        if (methodAttribute.Attributes.Any(e => e.Name.ToString() == "NativeTypeName"))
-                            methodAttributes.Remove(methodAttribute);
-                    }
-
-                    var paramListSyntaxList = new SeparatedSyntaxList<ParameterSyntax>();
-                    paramListSyntaxList = paramListSyntaxList.AddRange(newParamList);
-
-                    // Fixup return types
-                    string? nativeTypeName = GetNativeTypeName(method.AttributeLists);
-                    TypeSyntax returnType = method.ReturnType;
-                    if (nativeTypeName is not null)
-                    {
-                        returnType = FixupParameterType(method.ReturnType, method.AttributeLists, ImGuiStructTypeKind.ForNativeStruct, modifiers: out SyntaxTokenList modifiers,
-                            doNotRemapStrings: true); // <- Important. We need the runtime not to try marshal/free certain returned strings as that causes a crash
-                    }
-
-                    _bindingsMethodList.Add(
-                            SF.MethodDeclaration(
-                                attributeLists: SF.List(methodAttributes),
-                                modifiers: method.Modifiers,
-                                returnType,
-                                explicitInterfaceSpecifier: null!,
-                                method.Identifier,
-                                method.TypeParameterList!,
-                                SF.ParameterList(paramListSyntaxList),
-                                method.ConstraintClauses,
-                                body: null!,
-                                method.SemicolonToken)
-                        );
+                    // Add the same method, with string pointers left as is.
+                    // This allows consumers to pass pointers to avoid marshalling, or utf8 literals (ReadOnlySpan<byte>) that the compiler will compile into statics/constants
+                    if (MethodHasStringArguments(method))
+                        AddBindingMethod(method, isBackend, RemapStringPointerKind.Pointer);
                 }
 
                 // Add raw native structures
@@ -956,7 +927,9 @@ public class ImGuiInterfaceGenerator
                                 FieldDeclarationSyntax fieldDeclaration = (FieldDeclarationSyntax)structMember;
                                 VariableDeclarationSyntax variableDeclaration = fieldDeclaration.Declaration;
 
-                                TypeSyntax newType = FixupParameterType(variableDeclaration.Type, fieldDeclaration.AttributeLists, ImGuiStructTypeKind.ForNativeStruct, out SyntaxTokenList modifiers, doNotRemapStrings: true);
+                                TypeSyntax newType = FixupParameterType(variableDeclaration.Type, fieldDeclaration.AttributeLists, ImGuiStructTypeKind.ForNativeStruct, out SyntaxTokenList modifiers, 
+                                    RemapStringPointerKind.Pointer);
+
                                 SyntaxList<AttributeListSyntax> attributeLists = [];
                                 if (newType is PredefinedTypeSyntax predefinedType)
                                 {
@@ -1006,6 +979,96 @@ public class ImGuiInterfaceGenerator
         }
     }
 
+    private bool MethodHasStringArguments(MethodDeclarationSyntax method)
+    {
+        foreach (var param in method.ParameterList.Parameters)
+        {
+            if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
+                continue;
+
+            string? nativeTypeName = GetNativeTypeName(param.AttributeLists);
+            string currentParamType = param.Type.GetText().ToString().TrimEnd();
+            TypeSyntax? newType = TranslateTypeNameIntoCSharpType(currentParamType, nativeTypeName, RemapStringPointerKind.String);
+            if (newType is PredefinedTypeSyntax predefinedType && predefinedType.Keyword.Text == "string")
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Adds a method to the bindings list.
+    /// </summary>
+    /// <param name="method"></param>
+    /// <param name="isBackend"></param>
+    private void AddBindingMethod(MethodDeclarationSyntax method, bool isBackend, RemapStringPointerKind remapStringKind = RemapStringPointerKind.String)
+    {
+        var newParamList = new List<ParameterSyntax>();
+        foreach (var param in method.ParameterList.Parameters)
+        {
+            // Skip arglist (it's fine to skip, according to CppSharp. Not like we need it anyway.)
+            if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
+                continue;
+
+            TypeSyntax newType = FixupParameterType(param.Type, 
+                param.AttributeLists, 
+                ImGuiStructTypeKind.ForNativeStruct,
+                remapStringPointerKind: remapStringKind,
+                pointersToNint: isBackend,
+                modifiers: out SyntaxTokenList modifiers);
+
+            newType = FixParameterTypeForFunctionCall(newType, ref modifiers);
+
+            ParameterSyntax newParam = param.WithType(newType)
+                .WithModifiers(modifiers)
+                .WithAttributeLists([]);
+
+            if (newParam.Type.IsKind(SyntaxKind.PredefinedType))
+            {
+                PredefinedTypeSyntax predef = (PredefinedTypeSyntax)newParam.Type;
+                if (predef.Keyword.Text == "string")
+                    newParam = newParam.WithAttributeLists(SyntaxTreeUtils.GetMarshalAsAttribute(UnmanagedType.LPUTF8Str));
+            }
+
+            newParamList.Add(newParam);
+        }
+
+        // Remove NativeTypeName attributes.
+        List<AttributeListSyntax> methodAttributes = method.AttributeLists.ToList();
+        for (int i = methodAttributes.Count - 1; i >= 0; i--)
+        {
+            AttributeListSyntax? methodAttribute = methodAttributes[i];
+            if (methodAttribute.Attributes.Any(e => e.Name.ToString() == "NativeTypeName"))
+                methodAttributes.Remove(methodAttribute);
+        }
+
+        var paramListSyntaxList = new SeparatedSyntaxList<ParameterSyntax>();
+        paramListSyntaxList = paramListSyntaxList.AddRange(newParamList);
+
+        // Fixup return types
+        string? nativeTypeName = GetNativeTypeName(method.AttributeLists);
+        TypeSyntax returnType = method.ReturnType;
+        if (nativeTypeName is not null)
+        {
+            returnType = FixupParameterType(method.ReturnType, method.AttributeLists, ImGuiStructTypeKind.ForNativeStruct, modifiers: out SyntaxTokenList modifiers,
+                RemapStringPointerKind.Pointer); // <- Important. We need the runtime not to try marshal/free certain returned strings as that causes a crash
+        }
+
+        _bindingsMethodList.Add(
+                SF.MethodDeclaration(
+                    attributeLists: SF.List(methodAttributes),
+                    modifiers: method.Modifiers,
+                    returnType,
+                    explicitInterfaceSpecifier: null!,
+                    method.Identifier,
+                    method.TypeParameterList!,
+                    SF.ParameterList(paramListSyntaxList),
+                    method.ConstraintClauses,
+                    body: null!,
+                    method.SemicolonToken)
+            );
+    }
+
     private static TypeSyntax FixParameterTypeForFunctionCall(TypeSyntax type, ref SyntaxTokenList modifiers)
     {
         // Pass vectors as reference.
@@ -1034,7 +1097,7 @@ public class ImGuiInterfaceGenerator
                 FieldDeclarationSyntax nestedFieldDeclaration = (FieldDeclarationSyntax)nestedMember;
                 VariableDeclarationSyntax variableDeclaration = nestedFieldDeclaration.Declaration;
 
-                TypeSyntax newType = FixupParameterType(variableDeclaration.Type, nestedStruct.AttributeLists, ImGuiStructTypeKind.ForNativeStruct, out SyntaxTokenList modifiers, doNotRemapStrings: true);
+                TypeSyntax newType = FixupParameterType(variableDeclaration.Type, nestedStruct.AttributeLists, ImGuiStructTypeKind.ForNativeStruct, out SyntaxTokenList modifiers, remapStringPointerKind: RemapStringPointerKind.Pointer);
                 FieldDeclarationSyntax newDecl = nestedFieldDeclaration.WithDeclaration(variableDeclaration.WithType(newType))
                     .WithAttributeLists(AttributeListWithoutAttributeName(nestedFieldDeclaration.AttributeLists, "NativeTypeName"));
 
@@ -1089,7 +1152,7 @@ public class ImGuiInterfaceGenerator
     /// <param name="type"></param>
     /// <param name="attributeLists"></param>
     /// <param name="modifiers"></param>
-    /// <param name="doNotRemapStrings">Whether to not remap string pointers (char*) to string.</param>
+    /// <param name="remapStringPointerKind">How to remap string pointers (char*).</param>
     /// <param name="pointersToNint">Whether to convert any pointer structs to <see cref="nint"/> (mainly used for backends)</param>
     /// <param name="typeFixKind">Type context to fix the type to.</param>
     /// <param name="isArrayElement">Whether this is an inline array element. If so, RangeAccessor will be used.</param>
@@ -1097,7 +1160,7 @@ public class ImGuiInterfaceGenerator
     /// <exception cref="NotImplementedException"></exception>    
     private TypeSyntax FixupParameterType(TypeSyntax type, SyntaxList<AttributeListSyntax> attributeLists,
         ImGuiStructTypeKind typeFixKind,
-        out SyntaxTokenList modifiers, bool doNotRemapStrings = false, bool pointersToNint = false, bool isArrayElement = false)
+        out SyntaxTokenList modifiers, RemapStringPointerKind remapStringPointerKind = RemapStringPointerKind.String, bool pointersToNint = false, bool isArrayElement = false)
     {
         modifiers = [];
 
@@ -1167,7 +1230,7 @@ public class ImGuiInterfaceGenerator
             else
             {
                 string currentParamType = type.GetText().ToString().TrimEnd();
-                var translated = TranslateTypeNameIntoCSharpType(currentParamType, nativeTypeName, doNotRemapStrings, castEnumsToInt: typeFixKind == ImGuiStructTypeKind.ForNativeStruct);
+                var translated = TranslateTypeNameIntoCSharpType(currentParamType, nativeTypeName, remapStringPointerKind, castEnumsToInt: typeFixKind == ImGuiStructTypeKind.ForNativeStruct);
                 if (translated is not null)
                     return translated;
             }
@@ -1425,7 +1488,7 @@ public class ImGuiInterfaceGenerator
         for (int i = 0; i < functionPointerType.ParameterList.Parameters.Count; i++)
         {
             FunctionPointerParameterSyntax? functionPointerParam = functionPointerType.ParameterList.Parameters[i];
-            TypeSyntax? actualType = TranslateTypeNameIntoCSharpType(functionPointerParam.Type.GetText().ToString(), null, doNotRemapStrings: false);
+            TypeSyntax? actualType = TranslateTypeNameIntoCSharpType(functionPointerParam.Type.GetText().ToString(), null, RemapStringPointerKind.String);
 
             // If the parameter is a pointer, we convert it to nint.
             if (functionPointerParam.Type.IsKind(SyntaxKind.PointerType))
@@ -1467,7 +1530,7 @@ public class ImGuiInterfaceGenerator
         return typeName;
     }
 
-    private static TypeSyntax? TranslateTypeNameIntoCSharpType(string currentParamType, string? nativeTypeName, bool doNotRemapStrings, bool castEnumsToInt = false)
+    private static TypeSyntax? TranslateTypeNameIntoCSharpType(string currentParamType, string? nativeTypeName, RemapStringPointerKind remapStringKind, bool castEnumsToInt = false)
     {
         if (currentParamType == "byte" && nativeTypeName == "bool") // Remap byte to bool
         {
@@ -1477,9 +1540,12 @@ public class ImGuiInterfaceGenerator
         {
             return SF.ParseTypeName(wellKnownTypeName);
         }
-        else if (!doNotRemapStrings && nativeTypeName == "const char *" && currentParamType == "sbyte*") // Remap strings.
+        else if (nativeTypeName == "const char *" && currentParamType == "sbyte*") // Remap strings.
         {
-            return SF.PredefinedType(SF.Token(SyntaxKind.StringKeyword));
+            if (remapStringKind == RemapStringPointerKind.String)
+                return SF.PredefinedType(SF.Token(SyntaxKind.StringKeyword));
+            else if (remapStringKind == RemapStringPointerKind.ReadOnlySpan)
+                return SF.ParseTypeName("ReadOnlySpan<byte>");
         }
         else
         {
@@ -1568,5 +1634,23 @@ public class ImGuiInterfaceGenerator
         /// Creating native struct for native bindings.
         /// </summary>
         ForNativeStruct,
+    }
+
+    public enum RemapStringPointerKind
+    {
+        /// <summary>
+        /// String pointer is left as is.
+        /// </summary>
+        Pointer,
+
+        /// <summary>
+        /// String pointer is remapped to a string, marshalled
+        /// </summary>
+        String,
+
+        /// <summary>
+        /// string pointers are remapped to ReadOnlySpan (for no marshal purposes)
+        /// </summary>
+        ReadOnlySpan,
     }
 }

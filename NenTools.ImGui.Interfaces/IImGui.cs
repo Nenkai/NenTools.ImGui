@@ -91,9 +91,17 @@ public unsafe partial interface IImGui
     ///</summary>
     bool ShowStyleSelector(string label);
     ///<summary>
+    /// add style selector block (not a window), essentially a combo listing the default styles.<br/>
+    ///</summary>
+    bool ShowStyleSelector(ReadOnlySpan<byte> label);
+    ///<summary>
     /// add font selector block (not a window), essentially a combo listing the loaded fonts.<br/>
     ///</summary>
     void ShowFontSelector(string label);
+    ///<summary>
+    /// add font selector block (not a window), essentially a combo listing the loaded fonts.<br/>
+    ///</summary>
+    void ShowFontSelector(ReadOnlySpan<byte> label);
     ///<summary>
     /// add basic help/info block (not a window): how to manipulate ImGui as an end-user (mouse/keyboard controls).<br/>
     ///</summary>
@@ -131,6 +139,21 @@ public unsafe partial interface IImGui
     /// - Note that the bottom of window stack always contains a window called "Debug".<br/>
     ///</summary>
     bool Begin(string name, ref bool p_open, ImGuiWindowFlags flags);
+    ///<summary>
+    /// Windows<br/>
+    /// - Begin() = push window to the stack and start appending to it. End() = pop window from the stack.<br/>
+    /// - Passing 'bool* p_open != NULL' shows a window-closing widget in the upper-right corner of the window,<br/>
+    ///   which clicking will set the boolean to false when clicked.<br/>
+    /// - You may append multiple times to the same window during the same frame by calling Begin()/End() pairs multiple times.<br/>
+    ///   Some information such as 'flags' or 'p_open' will only be considered by the first call to Begin().<br/>
+    /// - Begin() return false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting<br/>
+    ///   anything to the window. Always call a matching End() for each Begin() call, regardless of its return value!<br/>
+    ///   [Important: due to legacy reason, Begin/End and BeginChild/EndChild are inconsistent with all other functions<br/>
+    ///    such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding<br/>
+    ///    BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]<br/>
+    /// - Note that the bottom of window stack always contains a window called "Debug".<br/>
+    ///</summary>
+    bool Begin(ReadOnlySpan<byte> name, ref bool p_open, ImGuiWindowFlags flags);
     void End();
     ///<summary>
     /// Child Windows<br/>
@@ -153,6 +176,27 @@ public unsafe partial interface IImGui
     ///    BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]<br/>
     ///</summary>
     bool BeginChild(string str_id, Vector2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags);
+    ///<summary>
+    /// Child Windows<br/>
+    /// - Use child windows to begin into a self-contained independent scrolling/clipping regions within a host window. Child windows can embed their own child.<br/>
+    /// - Before 1.90 (November 2023), the "ImGuiChildFlags child_flags = 0" parameter was "bool border = false".<br/>
+    ///   This API is backward compatible with old code, as we guarantee that ImGuiChildFlags_Borders == true.<br/>
+    ///   Consider updating your old code:<br/>
+    ///      BeginChild("Name", size, false)   -&gt; Begin("Name", size, 0); or Begin("Name", size, ImGuiChildFlags_None);<br/>
+    ///      BeginChild("Name", size, true)    -&gt; Begin("Name", size, ImGuiChildFlags_Borders);<br/>
+    /// - Manual sizing (each axis can use a different setting e.g. ImVec2(0.0f, 400.0f)):<br/>
+    ///     == 0.0f: use remaining parent window size for this axis.<br/>
+    ///      &gt; 0.0f: use specified size for this axis.<br/>
+    ///      &lt; 0.0f: right/bottom-align to specified distance from available content boundaries.<br/>
+    /// - Specifying ImGuiChildFlags_AutoResizeX or ImGuiChildFlags_AutoResizeY makes the sizing automatic based on child contents.<br/>
+    ///   Combining both ImGuiChildFlags_AutoResizeX _and_ ImGuiChildFlags_AutoResizeY defeats purpose of a scrolling region and is NOT recommended.<br/>
+    /// - BeginChild() returns false to indicate the window is collapsed or fully clipped, so you may early out and omit submitting<br/>
+    ///   anything to the window. Always call a matching EndChild() for each BeginChild() call, regardless of its return value.<br/>
+    ///   [Important: due to legacy reason, Begin/End and BeginChild/EndChild are inconsistent with all other functions<br/>
+    ///    such as BeginMenu/EndMenu, BeginPopup/EndPopup, etc. where the EndXXX call should only be called if the corresponding<br/>
+    ///    BeginXXX function returned true. Begin and BeginChild are the only odd ones out. Will be fixed in a future update.]<br/>
+    ///</summary>
+    bool BeginChild(ReadOnlySpan<byte> str_id, Vector2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags);
     bool BeginChildID(uint id, Vector2 size, ImGuiChildFlags child_flags, ImGuiWindowFlags window_flags);
     void EndChild();
     ///<summary>
@@ -261,17 +305,33 @@ public unsafe partial interface IImGui
     ///</summary>
     void SetWindowPosStr(string name, Vector2 pos, ImGuiCond cond);
     ///<summary>
+    /// set named window position.<br/>
+    ///</summary>
+    void SetWindowPosStr(ReadOnlySpan<byte> name, Vector2 pos, ImGuiCond cond);
+    ///<summary>
     /// set named window size. set axis to 0.0f to force an auto-fit on this axis.<br/>
     ///</summary>
     void SetWindowSizeStr(string name, Vector2 size, ImGuiCond cond);
+    ///<summary>
+    /// set named window size. set axis to 0.0f to force an auto-fit on this axis.<br/>
+    ///</summary>
+    void SetWindowSizeStr(ReadOnlySpan<byte> name, Vector2 size, ImGuiCond cond);
     ///<summary>
     /// set named window collapsed state<br/>
     ///</summary>
     void SetWindowCollapsedStr(string name, bool collapsed, ImGuiCond cond);
     ///<summary>
+    /// set named window collapsed state<br/>
+    ///</summary>
+    void SetWindowCollapsedStr(ReadOnlySpan<byte> name, bool collapsed, ImGuiCond cond);
+    ///<summary>
     /// set named window to be focused / top-most. use NULL to remove focus.<br/>
     ///</summary>
     void SetWindowFocusStr(string name);
+    ///<summary>
+    /// set named window to be focused / top-most. use NULL to remove focus.<br/>
+    ///</summary>
+    void SetWindowFocusStr(ReadOnlySpan<byte> name);
     ///<summary>
     /// get scrolling amount [0 .. GetScrollMaxX()]<br/>
     ///<br/>
@@ -578,8 +638,28 @@ public unsafe partial interface IImGui
     void PushID(string str_id);
     ///<summary>
     /// push string into the ID stack (will hash string).<br/>
+    ///<br/>
+    /// ID stack/scopes<br/>
+    /// Read the FAQ (docs/FAQ.md or http:dearimgui.com/faq) for more details about how ID are handled in dear imgui.<br/>
+    /// - Those questions are answered and impacted by understanding of the ID stack system:<br/>
+    ///   - "Q: Why is my widget not reacting when I click on it?"<br/>
+    ///   - "Q: How can I have widgets with an empty label?"<br/>
+    ///   - "Q: How can I have multiple widgets with the same label?"<br/>
+    /// - Short version: ID are hashes of the entire ID stack. If you are creating widgets in a loop you most likely<br/>
+    ///   want to push a unique identifier (e.g. object pointer, loop index) to uniquely differentiate them.<br/>
+    /// - You can also use the "Label##foobar" syntax within widget label to distinguish them from each others.<br/>
+    /// - In this header file we use the "label"/"name" terminology to denote a string that will be displayed + used as an ID,<br/>
+    ///   whereas "str_id" denote a string that is only used as an ID and not normally displayed.<br/>
+    ///</summary>
+    void PushID(ReadOnlySpan<byte> str_id);
+    ///<summary>
+    /// push string into the ID stack (will hash string).<br/>
     ///</summary>
     void PushIDStr(string str_id_begin, string str_id_end);
+    ///<summary>
+    /// push string into the ID stack (will hash string).<br/>
+    ///</summary>
+    void PushIDStr(ReadOnlySpan<byte> str_id_begin, ReadOnlySpan<byte> str_id_end);
     ///<summary>
     /// push pointer into the ID stack (will hash pointer).<br/>
     ///</summary>
@@ -596,7 +676,12 @@ public unsafe partial interface IImGui
     /// calculate unique ID (hash of whole ID stack + given parameter). e.g. if you want to query into ImGuiStorage yourself<br/>
     ///</summary>
     uint GetID(string str_id);
+    ///<summary>
+    /// calculate unique ID (hash of whole ID stack + given parameter). e.g. if you want to query into ImGuiStorage yourself<br/>
+    ///</summary>
+    uint GetID(ReadOnlySpan<byte> str_id);
     uint GetIDStr(string str_id_begin, string str_id_end);
+    uint GetIDStr(ReadOnlySpan<byte> str_id_begin, ReadOnlySpan<byte> str_id_end);
     uint GetIDPtr(void* ptr_id);
     uint GetIDInt(int int_id);
     ///<summary>
@@ -606,43 +691,87 @@ public unsafe partial interface IImGui
     ///</summary>
     void TextUnformatted(string text);
     ///<summary>
+    /// Implied text_end = NULL<br/>
+    ///<br/>
+    /// Widgets: Text<br/>
+    ///</summary>
+    void TextUnformatted(ReadOnlySpan<byte> text);
+    ///<summary>
     /// raw text without formatting. Roughly equivalent to Text("%s", text) but: A) doesn't require null terminated string if 'text_end' is specified, B) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.<br/>
     ///</summary>
     void TextUnformattedEx(string text, string text_end);
     ///<summary>
+    /// raw text without formatting. Roughly equivalent to Text("%s", text) but: A) doesn't require null terminated string if 'text_end' is specified, B) it's faster, no memory copy is done, no buffer size limits, recommended for long chunks of text.<br/>
+    ///</summary>
+    void TextUnformattedEx(ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end);
+    ///<summary>
     /// formatted text<br/>
     ///</summary>
     void Text(string fmt);
+    ///<summary>
+    /// formatted text<br/>
+    ///</summary>
+    void Text(ReadOnlySpan<byte> fmt);
     void TextV(string fmt, sbyte* args);
+    void TextV(ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// shortcut for PushStyleColor(ImGuiCol_Text, col); Text(fmt, ...); PopStyleColor();<br/>
     ///</summary>
     void TextColored(Vector4 col, string fmt);
+    ///<summary>
+    /// shortcut for PushStyleColor(ImGuiCol_Text, col); Text(fmt, ...); PopStyleColor();<br/>
+    ///</summary>
+    void TextColored(Vector4 col, ReadOnlySpan<byte> fmt);
     void TextColoredV(Vector4 col, string fmt, sbyte* args);
+    void TextColoredV(Vector4 col, ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// shortcut for PushStyleColor(ImGuiCol_Text, style.Colors[ImGuiCol_TextDisabled]); Text(fmt, ...); PopStyleColor();<br/>
     ///</summary>
     void TextDisabled(string fmt);
+    ///<summary>
+    /// shortcut for PushStyleColor(ImGuiCol_Text, style.Colors[ImGuiCol_TextDisabled]); Text(fmt, ...); PopStyleColor();<br/>
+    ///</summary>
+    void TextDisabled(ReadOnlySpan<byte> fmt);
     void TextDisabledV(string fmt, sbyte* args);
+    void TextDisabledV(ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// shortcut for PushTextWrapPos(0.0f); Text(fmt, ...); PopTextWrapPos();. Note that this won't work on an auto-resizing window if there's no other widgets to extend the window width, yoy may need to set a size using SetNextWindowSize().<br/>
     ///</summary>
     void TextWrapped(string fmt);
+    ///<summary>
+    /// shortcut for PushTextWrapPos(0.0f); Text(fmt, ...); PopTextWrapPos();. Note that this won't work on an auto-resizing window if there's no other widgets to extend the window width, yoy may need to set a size using SetNextWindowSize().<br/>
+    ///</summary>
+    void TextWrapped(ReadOnlySpan<byte> fmt);
     void TextWrappedV(string fmt, sbyte* args);
+    void TextWrappedV(ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// display text+label aligned the same way as value+label widgets<br/>
     ///</summary>
     void LabelText(string label, string fmt);
+    ///<summary>
+    /// display text+label aligned the same way as value+label widgets<br/>
+    ///</summary>
+    void LabelText(ReadOnlySpan<byte> label, ReadOnlySpan<byte> fmt);
     void LabelTextV(string label, string fmt, sbyte* args);
+    void LabelTextV(ReadOnlySpan<byte> label, ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// shortcut for Bullet()+Text()<br/>
     ///</summary>
     void BulletText(string fmt);
+    ///<summary>
+    /// shortcut for Bullet()+Text()<br/>
+    ///</summary>
+    void BulletText(ReadOnlySpan<byte> fmt);
     void BulletTextV(string fmt, sbyte* args);
+    void BulletTextV(ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// currently: formatted text with a horizontal line<br/>
     ///</summary>
     void SeparatorText(string label);
+    ///<summary>
+    /// currently: formatted text with a horizontal line<br/>
+    ///</summary>
+    void SeparatorText(ReadOnlySpan<byte> label);
     ///<summary>
     /// Implied size = ImVec2(0, 0)<br/>
     ///<br/>
@@ -652,33 +781,69 @@ public unsafe partial interface IImGui
     ///</summary>
     bool Button(string label);
     ///<summary>
+    /// Implied size = ImVec2(0, 0)<br/>
+    ///<br/>
+    /// Widgets: Main<br/>
+    /// - Most widgets return true when the value has been changed or when pressed/selected<br/>
+    /// - You may also use one of the many IsItemXXX functions (e.g. IsItemActive, IsItemHovered, etc.) to query widget state.<br/>
+    ///</summary>
+    bool Button(ReadOnlySpan<byte> label);
+    ///<summary>
     /// button<br/>
     ///</summary>
     bool ButtonEx(string label, Vector2 size);
+    ///<summary>
+    /// button<br/>
+    ///</summary>
+    bool ButtonEx(ReadOnlySpan<byte> label, Vector2 size);
     ///<summary>
     /// button with (FramePadding.y == 0) to easily embed within text<br/>
     ///</summary>
     bool SmallButton(string label);
     ///<summary>
+    /// button with (FramePadding.y == 0) to easily embed within text<br/>
+    ///</summary>
+    bool SmallButton(ReadOnlySpan<byte> label);
+    ///<summary>
     /// flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with IsItemActive, IsItemHovered, etc.)<br/>
     ///</summary>
     bool InvisibleButton(string str_id, Vector2 size, ImGuiButtonFlags flags);
     ///<summary>
+    /// flexible button behavior without the visuals, frequently useful to build custom behaviors using the public api (along with IsItemActive, IsItemHovered, etc.)<br/>
+    ///</summary>
+    bool InvisibleButton(ReadOnlySpan<byte> str_id, Vector2 size, ImGuiButtonFlags flags);
+    ///<summary>
     /// square button with an arrow shape<br/>
     ///</summary>
     bool ArrowButton(string str_id, int dir);
+    ///<summary>
+    /// square button with an arrow shape<br/>
+    ///</summary>
+    bool ArrowButton(ReadOnlySpan<byte> str_id, int dir);
     bool Checkbox(string label, ref bool v);
+    bool Checkbox(ReadOnlySpan<byte> label, ref bool v);
     bool CheckboxFlagsIntPtr(string label, ref int flags, int flags_value);
+    bool CheckboxFlagsIntPtr(ReadOnlySpan<byte> label, ref int flags, int flags_value);
     bool CheckboxFlagsUintPtr(string label, ref uint flags, uint flags_value);
+    bool CheckboxFlagsUintPtr(ReadOnlySpan<byte> label, ref uint flags, uint flags_value);
     ///<summary>
     /// use with e.g. if (RadioButton("one", my_value==1)) { my_value = 1; }<br/>
     ///</summary>
     bool RadioButton(string label, bool active);
     ///<summary>
+    /// use with e.g. if (RadioButton("one", my_value==1)) { my_value = 1; }<br/>
+    ///</summary>
+    bool RadioButton(ReadOnlySpan<byte> label, bool active);
+    ///<summary>
     /// shortcut to handle the above pattern when value is an integer<br/>
     ///</summary>
     bool RadioButtonIntPtr(string label, ref int v, int v_button);
+    ///<summary>
+    /// shortcut to handle the above pattern when value is an integer<br/>
+    ///</summary>
+    bool RadioButtonIntPtr(ReadOnlySpan<byte> label, ref int v, int v_button);
     void ProgressBar(float fraction, Vector2 size_arg, string overlay);
+    void ProgressBar(float fraction, Vector2 size_arg, ReadOnlySpan<byte> overlay);
     ///<summary>
     /// draw a small circle + keep the cursor on the same line. advance cursor x position by GetTreeNodeToLabelSpacing(), same distance that TreeNode() uses<br/>
     ///</summary>
@@ -688,13 +853,25 @@ public unsafe partial interface IImGui
     ///</summary>
     bool TextLink(string label);
     ///<summary>
+    /// hyperlink text button, return true when clicked<br/>
+    ///</summary>
+    bool TextLink(ReadOnlySpan<byte> label);
+    ///<summary>
     /// Implied url = NULL<br/>
     ///</summary>
     bool TextLinkOpenURL(string label);
     ///<summary>
+    /// Implied url = NULL<br/>
+    ///</summary>
+    bool TextLinkOpenURL(ReadOnlySpan<byte> label);
+    ///<summary>
     /// hyperlink text button, automatically open file/url when clicked<br/>
     ///</summary>
     bool TextLinkOpenURLEx(string label, string url);
+    ///<summary>
+    /// hyperlink text button, automatically open file/url when clicked<br/>
+    ///</summary>
+    bool TextLinkOpenURLEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> url);
     ///<summary>
     /// Implied uv0 = ImVec2(0, 0), uv1 = ImVec2(1, 1)<br/>
     ///<br/>
@@ -716,13 +893,24 @@ public unsafe partial interface IImGui
     /// Implied uv0 = ImVec2(0, 0), uv1 = ImVec2(1, 1), bg_col = ImVec4(0, 0, 0, 0), tint_col = ImVec4(1, 1, 1, 1)<br/>
     ///</summary>
     bool ImageButton(string str_id, IImTextureRef tex_ref, Vector2 image_size);
+    ///<summary>
+    /// Implied uv0 = ImVec2(0, 0), uv1 = ImVec2(1, 1), bg_col = ImVec4(0, 0, 0, 0), tint_col = ImVec4(1, 1, 1, 1)<br/>
+    ///</summary>
+    bool ImageButton(ReadOnlySpan<byte> str_id, IImTextureRef tex_ref, Vector2 image_size);
     bool ImageButtonEx(string str_id, IImTextureRef tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1, Vector4 bg_col, Vector4 tint_col);
+    bool ImageButtonEx(ReadOnlySpan<byte> str_id, IImTextureRef tex_ref, Vector2 image_size, Vector2 uv0, Vector2 uv1, Vector4 bg_col, Vector4 tint_col);
     ///<summary>
     /// Widgets: Combo Box (Dropdown)<br/>
     /// - The BeginCombo()/EndCombo() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() items.<br/>
     /// - The old Combo() api are helpers over BeginCombo()/EndCombo() which are kept available for convenience purpose. This is analogous to how ListBox are created.<br/>
     ///</summary>
     bool BeginCombo(string label, string preview_value, ImGuiComboFlags flags);
+    ///<summary>
+    /// Widgets: Combo Box (Dropdown)<br/>
+    /// - The BeginCombo()/EndCombo() api allows you to manage your contents and selection state however you want it, by creating e.g. Selectable() items.<br/>
+    /// - The old Combo() api are helpers over BeginCombo()/EndCombo() which are kept available for convenience purpose. This is analogous to how ListBox are created.<br/>
+    ///</summary>
+    bool BeginCombo(ReadOnlySpan<byte> label, ReadOnlySpan<byte> preview_value, ImGuiComboFlags flags);
     ///<summary>
     /// only call EndCombo() if BeginCombo() returns true!<br/>
     ///</summary>
@@ -731,20 +919,38 @@ public unsafe partial interface IImGui
     /// Implied popup_max_height_in_items = -1<br/>
     ///</summary>
     bool ComboChar(string label, ref int current_item, sbyte** items, int items_count);
+    ///<summary>
+    /// Implied popup_max_height_in_items = -1<br/>
+    ///</summary>
+    bool ComboChar(ReadOnlySpan<byte> label, ref int current_item, sbyte** items, int items_count);
     bool ComboCharEx(string label, ref int current_item, sbyte** items, int items_count, int popup_max_height_in_items);
+    bool ComboCharEx(ReadOnlySpan<byte> label, ref int current_item, sbyte** items, int items_count, int popup_max_height_in_items);
     ///<summary>
     /// Implied popup_max_height_in_items = -1<br/>
     ///</summary>
     bool Combo(string label, ref int current_item, string items_separated_by_zeros);
     ///<summary>
+    /// Implied popup_max_height_in_items = -1<br/>
+    ///</summary>
+    bool Combo(ReadOnlySpan<byte> label, ref int current_item, ReadOnlySpan<byte> items_separated_by_zeros);
+    ///<summary>
     /// Separate items with \0 within a string, end item-list with \0\0. e.g. "One\0Two\0Three\0"<br/>
     ///</summary>
     bool ComboEx(string label, ref int current_item, string items_separated_by_zeros, int popup_max_height_in_items);
     ///<summary>
+    /// Separate items with \0 within a string, end item-list with \0\0. e.g. "One\0Two\0Three\0"<br/>
+    ///</summary>
+    bool ComboEx(ReadOnlySpan<byte> label, ref int current_item, ReadOnlySpan<byte> items_separated_by_zeros, int popup_max_height_in_items);
+    ///<summary>
     /// Implied popup_max_height_in_items = -1<br/>
     ///</summary>
     bool ComboCallback(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count);
+    ///<summary>
+    /// Implied popup_max_height_in_items = -1<br/>
+    ///</summary>
+    bool ComboCallback(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count);
     bool ComboCallbackEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int popup_max_height_in_items);
+    bool ComboCallbackEx(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int popup_max_height_in_items);
     ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", flags = 0<br/>
     ///<br/>
@@ -763,67 +969,146 @@ public unsafe partial interface IImGui
     ///</summary>
     bool DragFloat(string label, ref float v);
     ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", flags = 0<br/>
+    ///<br/>
+    /// Widgets: Drag Sliders<br/>
+    /// - Ctrl+Click on any drag box to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.<br/>
+    /// - For all the Float2/Float3/Float4/Int2/Int3/Int4 versions of every function, note that a 'float v[X]' function argument is the same as 'float* v',<br/>
+    ///   the array syntax is just a way to document the number of elements that are expected to be accessible. You can pass address of your first element out of a contiguous set, e.g. &amp;myvector.x<br/>
+    /// - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -&gt; 1.234; "%5.2f secs" -&gt; 01.23 secs; "Biscuit: %.0f" -&gt; Biscuit: 1; etc.<br/>
+    /// - Format string may also be set to NULL or use the default format ("%f" or "%d").<br/>
+    /// - Speed are per-pixel of mouse movement (v_speed=0.2f: mouse needs to move by 5 pixels to increase value by 1). For keyboard/gamepad navigation, minimum speed is Max(v_speed, minimum_step_at_given_precision).<br/>
+    /// - Use v_min &lt; v_max to clamp edits to given limits. Note that Ctrl+Click manual input can override those limits if ImGuiSliderFlags_AlwaysClamp is not used.<br/>
+    /// - Use v_max = FLT_MAX / INT_MAX etc to avoid clamping to a maximum, same with v_min = -FLT_MAX / INT_MIN to avoid clamping to a minimum.<br/>
+    /// - We use the same sets of flags for DragXXX() and SliderXXX() functions as the features are the same and it makes it easier to swap them.<br/>
+    /// - Legacy: Pre-1.78 there are DragXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.<br/>
+    ///   If you get a warning converting a float to ImGuiSliderFlags, read https:github.com/ocornut/imgui/issues/3361<br/>
+    ///</summary>
+    bool DragFloat(ReadOnlySpan<byte> label, ref float v);
+    ///<summary>
     /// If v_min &gt;= v_max we have no bound<br/>
     ///</summary>
     bool DragFloatEx(string label, ref float v, float v_speed, float v_min, float v_max, string format, ImGuiSliderFlags flags);
     ///<summary>
+    /// If v_min &gt;= v_max we have no bound<br/>
+    ///</summary>
+    bool DragFloatEx(ReadOnlySpan<byte> label, ref float v, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", flags = 0<br/>
     ///</summary>
     bool DragFloat2(string label, ref float v);
+    ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool DragFloat2(ReadOnlySpan<byte> label, ref float v);
     bool DragFloat2Ex(string label, ref float v, float v_speed, float v_min, float v_max, string format, ImGuiSliderFlags flags);
+    bool DragFloat2Ex(ReadOnlySpan<byte> label, ref float v, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", flags = 0<br/>
     ///</summary>
     bool DragFloat3(string label, ref float v);
+    ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool DragFloat3(ReadOnlySpan<byte> label, ref float v);
     bool DragFloat3Ex(string label, ref float v, float v_speed, float v_min, float v_max, string format, ImGuiSliderFlags flags);
+    bool DragFloat3Ex(ReadOnlySpan<byte> label, ref float v, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", flags = 0<br/>
     ///</summary>
     bool DragFloat4(string label, ref float v);
+    ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool DragFloat4(ReadOnlySpan<byte> label, ref float v);
     bool DragFloat4Ex(string label, ref float v, float v_speed, float v_min, float v_max, string format, ImGuiSliderFlags flags);
+    bool DragFloat4Ex(ReadOnlySpan<byte> label, ref float v, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", format_max = NULL, flags = 0<br/>
     ///</summary>
     bool DragFloatRange2(string label, ref float v_current_min, ref float v_current_max);
+    ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0.0f, v_max = 0.0f, format = "%.3f", format_max = NULL, flags = 0<br/>
+    ///</summary>
+    bool DragFloatRange2(ReadOnlySpan<byte> label, ref float v_current_min, ref float v_current_max);
     bool DragFloatRange2Ex(string label, ref float v_current_min, ref float v_current_max, float v_speed, float v_min, float v_max, string format, string format_max, ImGuiSliderFlags flags);
+    bool DragFloatRange2Ex(ReadOnlySpan<byte> label, ref float v_current_min, ref float v_current_max, float v_speed, float v_min, float v_max, ReadOnlySpan<byte> format, ReadOnlySpan<byte> format_max, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", flags = 0<br/>
     ///</summary>
     bool DragInt(string label, ref int v);
     ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", flags = 0<br/>
+    ///</summary>
+    bool DragInt(ReadOnlySpan<byte> label, ref int v);
+    ///<summary>
     /// If v_min &gt;= v_max we have no bound<br/>
     ///</summary>
     bool DragIntEx(string label, ref int v, float v_speed, int v_min, int v_max, string format, ImGuiSliderFlags flags);
     ///<summary>
+    /// If v_min &gt;= v_max we have no bound<br/>
+    ///</summary>
+    bool DragIntEx(ReadOnlySpan<byte> label, ref int v, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", flags = 0<br/>
     ///</summary>
     bool DragInt2(string label, ref int v);
+    ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", flags = 0<br/>
+    ///</summary>
+    bool DragInt2(ReadOnlySpan<byte> label, ref int v);
     bool DragInt2Ex(string label, ref int v, float v_speed, int v_min, int v_max, string format, ImGuiSliderFlags flags);
+    bool DragInt2Ex(ReadOnlySpan<byte> label, ref int v, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", flags = 0<br/>
     ///</summary>
     bool DragInt3(string label, ref int v);
+    ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", flags = 0<br/>
+    ///</summary>
+    bool DragInt3(ReadOnlySpan<byte> label, ref int v);
     bool DragInt3Ex(string label, ref int v, float v_speed, int v_min, int v_max, string format, ImGuiSliderFlags flags);
+    bool DragInt3Ex(ReadOnlySpan<byte> label, ref int v, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", flags = 0<br/>
     ///</summary>
     bool DragInt4(string label, ref int v);
+    ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", flags = 0<br/>
+    ///</summary>
+    bool DragInt4(ReadOnlySpan<byte> label, ref int v);
     bool DragInt4Ex(string label, ref int v, float v_speed, int v_min, int v_max, string format, ImGuiSliderFlags flags);
+    bool DragInt4Ex(ReadOnlySpan<byte> label, ref int v, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", format_max = NULL, flags = 0<br/>
     ///</summary>
     bool DragIntRange2(string label, ref int v_current_min, ref int v_current_max);
+    ///<summary>
+    /// Implied v_speed = 1.0f, v_min = 0, v_max = 0, format = "%d", format_max = NULL, flags = 0<br/>
+    ///</summary>
+    bool DragIntRange2(ReadOnlySpan<byte> label, ref int v_current_min, ref int v_current_max);
     bool DragIntRange2Ex(string label, ref int v_current_min, ref int v_current_max, float v_speed, int v_min, int v_max, string format, string format_max, ImGuiSliderFlags flags);
+    bool DragIntRange2Ex(ReadOnlySpan<byte> label, ref int v_current_min, ref int v_current_max, float v_speed, int v_min, int v_max, ReadOnlySpan<byte> format, ReadOnlySpan<byte> format_max, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, p_min = NULL, p_max = NULL, format = NULL, flags = 0<br/>
     ///</summary>
     bool DragScalar(string label, ImGuiDataType data_type, void* p_data);
+    ///<summary>
+    /// Implied v_speed = 1.0f, p_min = NULL, p_max = NULL, format = NULL, flags = 0<br/>
+    ///</summary>
+    bool DragScalar(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data);
     bool DragScalarEx(string label, ImGuiDataType data_type, void* p_data, float v_speed, void* p_min, void* p_max, string format, ImGuiSliderFlags flags);
+    bool DragScalarEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, float v_speed, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_speed = 1.0f, p_min = NULL, p_max = NULL, format = NULL, flags = 0<br/>
     ///</summary>
     bool DragScalarN(string label, ImGuiDataType data_type, void* p_data, int components);
+    ///<summary>
+    /// Implied v_speed = 1.0f, p_min = NULL, p_max = NULL, format = NULL, flags = 0<br/>
+    ///</summary>
+    bool DragScalarN(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components);
     bool DragScalarNEx(string label, ImGuiDataType data_type, void* p_data, int components, float v_speed, void* p_min, void* p_max, string format, ImGuiSliderFlags flags);
+    bool DragScalarNEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components, float v_speed, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%.3f", flags = 0<br/>
     ///<br/>
@@ -836,74 +1121,154 @@ public unsafe partial interface IImGui
     ///</summary>
     bool SliderFloat(string label, ref float v, float v_min, float v_max);
     ///<summary>
+    /// Implied format = "%.3f", flags = 0<br/>
+    ///<br/>
+    /// Widgets: Regular Sliders<br/>
+    /// - Ctrl+Click on any slider to turn them into an input box. Manually input values aren't clamped by default and can go off-bounds. Use ImGuiSliderFlags_AlwaysClamp to always clamp.<br/>
+    /// - Adjust format string to decorate the value with a prefix, a suffix, or adapt the editing and display precision e.g. "%.3f" -&gt; 1.234; "%5.2f secs" -&gt; 01.23 secs; "Biscuit: %.0f" -&gt; Biscuit: 1; etc.<br/>
+    /// - Format string may also be set to NULL or use the default format ("%f" or "%d").<br/>
+    /// - Legacy: Pre-1.78 there are SliderXXX() function signatures that take a final `float power=1.0f' argument instead of the `ImGuiSliderFlags flags=0' argument.<br/>
+    ///   If you get a warning converting a float to ImGuiSliderFlags, read https:github.com/ocornut/imgui/issues/3361<br/>
+    ///</summary>
+    bool SliderFloat(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max);
+    ///<summary>
     /// adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.<br/>
     ///</summary>
     bool SliderFloatEx(string label, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags);
     ///<summary>
+    /// adjust format to decorate the value with a prefix or a suffix for in-slider labels or unit display.<br/>
+    ///</summary>
+    bool SliderFloatEx(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    ///<summary>
     /// Implied format = "%.3f", flags = 0<br/>
     ///</summary>
     bool SliderFloat2(string label, ref float v, float v_min, float v_max);
+    ///<summary>
+    /// Implied format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool SliderFloat2(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max);
     bool SliderFloat2Ex(string label, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags);
+    bool SliderFloat2Ex(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%.3f", flags = 0<br/>
     ///</summary>
     bool SliderFloat3(string label, ref float v, float v_min, float v_max);
+    ///<summary>
+    /// Implied format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool SliderFloat3(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max);
     bool SliderFloat3Ex(string label, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags);
+    bool SliderFloat3Ex(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%.3f", flags = 0<br/>
     ///</summary>
     bool SliderFloat4(string label, ref float v, float v_min, float v_max);
+    ///<summary>
+    /// Implied format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool SliderFloat4(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max);
     bool SliderFloat4Ex(string label, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags);
+    bool SliderFloat4Ex(ReadOnlySpan<byte> label, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied v_degrees_min = -360.0f, v_degrees_max = +360.0f, format = "%.0f deg", flags = 0<br/>
     ///</summary>
     bool SliderAngle(string label, ref float v_rad);
+    ///<summary>
+    /// Implied v_degrees_min = -360.0f, v_degrees_max = +360.0f, format = "%.0f deg", flags = 0<br/>
+    ///</summary>
+    bool SliderAngle(ReadOnlySpan<byte> label, ref float v_rad);
     bool SliderAngleEx(string label, ref float v_rad, float v_degrees_min, float v_degrees_max, string format, ImGuiSliderFlags flags);
+    bool SliderAngleEx(ReadOnlySpan<byte> label, ref float v_rad, float v_degrees_min, float v_degrees_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%d", flags = 0<br/>
     ///</summary>
     bool SliderInt(string label, ref int v, int v_min, int v_max);
+    ///<summary>
+    /// Implied format = "%d", flags = 0<br/>
+    ///</summary>
+    bool SliderInt(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max);
     bool SliderIntEx(string label, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags);
+    bool SliderIntEx(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%d", flags = 0<br/>
     ///</summary>
     bool SliderInt2(string label, ref int v, int v_min, int v_max);
+    ///<summary>
+    /// Implied format = "%d", flags = 0<br/>
+    ///</summary>
+    bool SliderInt2(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max);
     bool SliderInt2Ex(string label, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags);
+    bool SliderInt2Ex(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%d", flags = 0<br/>
     ///</summary>
     bool SliderInt3(string label, ref int v, int v_min, int v_max);
+    ///<summary>
+    /// Implied format = "%d", flags = 0<br/>
+    ///</summary>
+    bool SliderInt3(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max);
     bool SliderInt3Ex(string label, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags);
+    bool SliderInt3Ex(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%d", flags = 0<br/>
     ///</summary>
     bool SliderInt4(string label, ref int v, int v_min, int v_max);
+    ///<summary>
+    /// Implied format = "%d", flags = 0<br/>
+    ///</summary>
+    bool SliderInt4(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max);
     bool SliderInt4Ex(string label, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags);
+    bool SliderInt4Ex(ReadOnlySpan<byte> label, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = NULL, flags = 0<br/>
     ///</summary>
     bool SliderScalar(string label, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max);
+    ///<summary>
+    /// Implied format = NULL, flags = 0<br/>
+    ///</summary>
+    bool SliderScalar(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max);
     bool SliderScalarEx(string label, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max, string format, ImGuiSliderFlags flags);
+    bool SliderScalarEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = NULL, flags = 0<br/>
     ///</summary>
     bool SliderScalarN(string label, ImGuiDataType data_type, void* p_data, int components, void* p_min, void* p_max);
+    ///<summary>
+    /// Implied format = NULL, flags = 0<br/>
+    ///</summary>
+    bool SliderScalarN(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components, void* p_min, void* p_max);
     bool SliderScalarNEx(string label, ImGuiDataType data_type, void* p_data, int components, void* p_min, void* p_max, string format, ImGuiSliderFlags flags);
+    bool SliderScalarNEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%.3f", flags = 0<br/>
     ///</summary>
     bool VSliderFloat(string label, Vector2 size, ref float v, float v_min, float v_max);
+    ///<summary>
+    /// Implied format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool VSliderFloat(ReadOnlySpan<byte> label, Vector2 size, ref float v, float v_min, float v_max);
     bool VSliderFloatEx(string label, Vector2 size, ref float v, float v_min, float v_max, string format, ImGuiSliderFlags flags);
+    bool VSliderFloatEx(ReadOnlySpan<byte> label, Vector2 size, ref float v, float v_min, float v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = "%d", flags = 0<br/>
     ///</summary>
     bool VSliderInt(string label, Vector2 size, ref int v, int v_min, int v_max);
+    ///<summary>
+    /// Implied format = "%d", flags = 0<br/>
+    ///</summary>
+    bool VSliderInt(ReadOnlySpan<byte> label, Vector2 size, ref int v, int v_min, int v_max);
     bool VSliderIntEx(string label, Vector2 size, ref int v, int v_min, int v_max, string format, ImGuiSliderFlags flags);
+    bool VSliderIntEx(ReadOnlySpan<byte> label, Vector2 size, ref int v, int v_min, int v_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied format = NULL, flags = 0<br/>
     ///</summary>
     bool VSliderScalar(string label, Vector2 size, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max);
+    ///<summary>
+    /// Implied format = NULL, flags = 0<br/>
+    ///</summary>
+    bool VSliderScalar(ReadOnlySpan<byte> label, Vector2 size, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max);
     bool VSliderScalarEx(string label, Vector2 size, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max, string format, ImGuiSliderFlags flags);
+    bool VSliderScalarEx(ReadOnlySpan<byte> label, Vector2 size, ImGuiDataType data_type, void* p_data, void* p_min, void* p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
     ///<summary>
     /// Implied callback = NULL, user_data = NULL<br/>
     ///<br/>
@@ -912,77 +1277,156 @@ public unsafe partial interface IImGui
     /// - Most of the ImGuiInputTextFlags flags are only useful for InputText() and not for InputFloatX, InputIntX, InputDouble etc.<br/>
     ///</summary>
     bool InputText(string label, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags);
+    ///<summary>
+    /// Implied callback = NULL, user_data = NULL<br/>
+    ///<br/>
+    /// Widgets: Input with Keyboard<br/>
+    /// - If you want to use InputText() with std::string or any custom dynamic string type, use the wrapper in misc/cpp/imgui_stdlib.h/.cpp!<br/>
+    /// - Most of the ImGuiInputTextFlags flags are only useful for InputText() and not for InputFloatX, InputIntX, InputDouble etc.<br/>
+    ///</summary>
+    bool InputText(ReadOnlySpan<byte> label, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags);
     bool InputTextEx(string label, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+    bool InputTextEx(ReadOnlySpan<byte> label, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
     ///<summary>
     /// Implied size = ImVec2(0, 0), flags = 0, callback = NULL, user_data = NULL<br/>
     ///</summary>
     bool InputTextMultiline(string label, sbyte* buf, nuint buf_size);
+    ///<summary>
+    /// Implied size = ImVec2(0, 0), flags = 0, callback = NULL, user_data = NULL<br/>
+    ///</summary>
+    bool InputTextMultiline(ReadOnlySpan<byte> label, sbyte* buf, nuint buf_size);
     bool InputTextMultilineEx(string label, sbyte* buf, nuint buf_size, Vector2 size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+    bool InputTextMultilineEx(ReadOnlySpan<byte> label, sbyte* buf, nuint buf_size, Vector2 size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
     ///<summary>
     /// Implied callback = NULL, user_data = NULL<br/>
     ///</summary>
     bool InputTextWithHint(string label, string hint, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags);
+    ///<summary>
+    /// Implied callback = NULL, user_data = NULL<br/>
+    ///</summary>
+    bool InputTextWithHint(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags);
     bool InputTextWithHintEx(string label, string hint, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+    bool InputTextWithHintEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, sbyte* buf, nuint buf_size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
     ///<summary>
     /// Implied step = 0.0f, step_fast = 0.0f, format = "%.3f", flags = 0<br/>
     ///</summary>
     bool InputFloat(string label, ref float v);
+    ///<summary>
+    /// Implied step = 0.0f, step_fast = 0.0f, format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool InputFloat(ReadOnlySpan<byte> label, ref float v);
     bool InputFloatEx(string label, ref float v, float step, float step_fast, string format, ImGuiInputTextFlags flags);
+    bool InputFloatEx(ReadOnlySpan<byte> label, ref float v, float step, float step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     ///<summary>
     /// Implied format = "%.3f", flags = 0<br/>
     ///</summary>
     bool InputFloat2(string label, ref float v);
+    ///<summary>
+    /// Implied format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool InputFloat2(ReadOnlySpan<byte> label, ref float v);
     bool InputFloat2Ex(string label, ref float v, string format, ImGuiInputTextFlags flags);
+    bool InputFloat2Ex(ReadOnlySpan<byte> label, ref float v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     ///<summary>
     /// Implied format = "%.3f", flags = 0<br/>
     ///</summary>
     bool InputFloat3(string label, ref float v);
+    ///<summary>
+    /// Implied format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool InputFloat3(ReadOnlySpan<byte> label, ref float v);
     bool InputFloat3Ex(string label, ref float v, string format, ImGuiInputTextFlags flags);
+    bool InputFloat3Ex(ReadOnlySpan<byte> label, ref float v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     ///<summary>
     /// Implied format = "%.3f", flags = 0<br/>
     ///</summary>
     bool InputFloat4(string label, ref float v);
+    ///<summary>
+    /// Implied format = "%.3f", flags = 0<br/>
+    ///</summary>
+    bool InputFloat4(ReadOnlySpan<byte> label, ref float v);
     bool InputFloat4Ex(string label, ref float v, string format, ImGuiInputTextFlags flags);
+    bool InputFloat4Ex(ReadOnlySpan<byte> label, ref float v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     ///<summary>
     /// Implied step = 1, step_fast = 100, flags = 0<br/>
     ///</summary>
     bool InputInt(string label, ref int v);
+    ///<summary>
+    /// Implied step = 1, step_fast = 100, flags = 0<br/>
+    ///</summary>
+    bool InputInt(ReadOnlySpan<byte> label, ref int v);
     bool InputIntEx(string label, ref int v, int step, int step_fast, ImGuiInputTextFlags flags);
+    bool InputIntEx(ReadOnlySpan<byte> label, ref int v, int step, int step_fast, ImGuiInputTextFlags flags);
     bool InputInt2(string label, ref int v, ImGuiInputTextFlags flags);
+    bool InputInt2(ReadOnlySpan<byte> label, ref int v, ImGuiInputTextFlags flags);
     bool InputInt3(string label, ref int v, ImGuiInputTextFlags flags);
+    bool InputInt3(ReadOnlySpan<byte> label, ref int v, ImGuiInputTextFlags flags);
     bool InputInt4(string label, ref int v, ImGuiInputTextFlags flags);
+    bool InputInt4(ReadOnlySpan<byte> label, ref int v, ImGuiInputTextFlags flags);
     ///<summary>
     /// Implied step = 0.0, step_fast = 0.0, format = "%.6f", flags = 0<br/>
     ///</summary>
     bool InputDouble(string label, ref double v);
+    ///<summary>
+    /// Implied step = 0.0, step_fast = 0.0, format = "%.6f", flags = 0<br/>
+    ///</summary>
+    bool InputDouble(ReadOnlySpan<byte> label, ref double v);
     bool InputDoubleEx(string label, ref double v, double step, double step_fast, string format, ImGuiInputTextFlags flags);
+    bool InputDoubleEx(ReadOnlySpan<byte> label, ref double v, double step, double step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     ///<summary>
     /// Implied p_step = NULL, p_step_fast = NULL, format = NULL, flags = 0<br/>
     ///</summary>
     bool InputScalar(string label, ImGuiDataType data_type, void* p_data);
+    ///<summary>
+    /// Implied p_step = NULL, p_step_fast = NULL, format = NULL, flags = 0<br/>
+    ///</summary>
+    bool InputScalar(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data);
     bool InputScalarEx(string label, ImGuiDataType data_type, void* p_data, void* p_step, void* p_step_fast, string format, ImGuiInputTextFlags flags);
+    bool InputScalarEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, void* p_step, void* p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     ///<summary>
     /// Implied p_step = NULL, p_step_fast = NULL, format = NULL, flags = 0<br/>
     ///</summary>
     bool InputScalarN(string label, ImGuiDataType data_type, void* p_data, int components);
+    ///<summary>
+    /// Implied p_step = NULL, p_step_fast = NULL, format = NULL, flags = 0<br/>
+    ///</summary>
+    bool InputScalarN(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components);
     bool InputScalarNEx(string label, ImGuiDataType data_type, void* p_data, int components, void* p_step, void* p_step_fast, string format, ImGuiInputTextFlags flags);
+    bool InputScalarNEx(ReadOnlySpan<byte> label, ImGuiDataType data_type, void* p_data, int components, void* p_step, void* p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     ///<summary>
     /// Widgets: Color Editor/Picker (tip: the ColorEdit* functions have a little color square that can be left-clicked to open a picker, and right-clicked to open an option menu.)<br/>
     /// - Note that in C++ a 'float v[X]' function argument is the _same_ as 'float* v', the array syntax is just a way to document the number of elements that are expected to be accessible.<br/>
     /// - You can pass the address of a first float element out of a contiguous structure, e.g. &amp;myvector.x<br/>
     ///</summary>
     bool ColorEdit3(string label, ref float col, ImGuiColorEditFlags flags);
+    ///<summary>
+    /// Widgets: Color Editor/Picker (tip: the ColorEdit* functions have a little color square that can be left-clicked to open a picker, and right-clicked to open an option menu.)<br/>
+    /// - Note that in C++ a 'float v[X]' function argument is the _same_ as 'float* v', the array syntax is just a way to document the number of elements that are expected to be accessible.<br/>
+    /// - You can pass the address of a first float element out of a contiguous structure, e.g. &amp;myvector.x<br/>
+    ///</summary>
+    bool ColorEdit3(ReadOnlySpan<byte> label, ref float col, ImGuiColorEditFlags flags);
     bool ColorEdit4(string label, ref float col, ImGuiColorEditFlags flags);
+    bool ColorEdit4(ReadOnlySpan<byte> label, ref float col, ImGuiColorEditFlags flags);
     bool ColorPicker3(string label, ref float col, ImGuiColorEditFlags flags);
+    bool ColorPicker3(ReadOnlySpan<byte> label, ref float col, ImGuiColorEditFlags flags);
     bool ColorPicker4(string label, ref float col, ImGuiColorEditFlags flags, ref float ref_col);
+    bool ColorPicker4(ReadOnlySpan<byte> label, ref float col, ImGuiColorEditFlags flags, ref float ref_col);
     ///<summary>
     /// Implied size = ImVec2(0, 0)<br/>
     ///</summary>
     bool ColorButton(string desc_id, Vector4 col, ImGuiColorEditFlags flags);
     ///<summary>
+    /// Implied size = ImVec2(0, 0)<br/>
+    ///</summary>
+    bool ColorButton(ReadOnlySpan<byte> desc_id, Vector4 col, ImGuiColorEditFlags flags);
+    ///<summary>
     /// display a color square/button, hover for details, return true when pressed.<br/>
     ///</summary>
     bool ColorButtonEx(string desc_id, Vector4 col, ImGuiColorEditFlags flags, Vector2 size);
+    ///<summary>
+    /// display a color square/button, hover for details, return true when pressed.<br/>
+    ///</summary>
+    bool ColorButtonEx(ReadOnlySpan<byte> desc_id, Vector4 col, ImGuiColorEditFlags flags, Vector2 size);
     ///<summary>
     /// initialize current options (generally on application startup) if you want to select a default format, picker type, etc. User will be able to change many settings, unless you pass the _NoOptions flag to your calls.<br/>
     ///</summary>
@@ -993,24 +1437,48 @@ public unsafe partial interface IImGui
     ///</summary>
     bool TreeNode(string label);
     ///<summary>
+    /// Widgets: Trees<br/>
+    /// - TreeNode functions return true when the node is open, in which case you need to also call TreePop() when you are finished displaying the tree node contents.<br/>
+    ///</summary>
+    bool TreeNode(ReadOnlySpan<byte> label);
+    ///<summary>
     /// helper variation to easily decorrelate the id from the displayed string. Read the FAQ about why and how to use ID. to align arbitrary text at the same level as a TreeNode() you can use Bullet().<br/>
     ///</summary>
     bool TreeNodeStr(string str_id, string fmt);
     ///<summary>
+    /// helper variation to easily decorrelate the id from the displayed string. Read the FAQ about why and how to use ID. to align arbitrary text at the same level as a TreeNode() you can use Bullet().<br/>
+    ///</summary>
+    bool TreeNodeStr(ReadOnlySpan<byte> str_id, ReadOnlySpan<byte> fmt);
+    ///<summary>
     /// "<br/>
     ///</summary>
     bool TreeNodePtr(void* ptr_id, string fmt);
+    ///<summary>
+    /// "<br/>
+    ///</summary>
+    bool TreeNodePtr(void* ptr_id, ReadOnlySpan<byte> fmt);
     bool TreeNodeV(string str_id, string fmt, sbyte* args);
+    bool TreeNodeV(ReadOnlySpan<byte> str_id, ReadOnlySpan<byte> fmt, sbyte* args);
     bool TreeNodeVPtr(void* ptr_id, string fmt, sbyte* args);
+    bool TreeNodeVPtr(void* ptr_id, ReadOnlySpan<byte> fmt, sbyte* args);
     bool TreeNodeEx(string label, ImGuiTreeNodeFlags flags);
+    bool TreeNodeEx(ReadOnlySpan<byte> label, ImGuiTreeNodeFlags flags);
     bool TreeNodeExStr(string str_id, ImGuiTreeNodeFlags flags, string fmt);
+    bool TreeNodeExStr(ReadOnlySpan<byte> str_id, ImGuiTreeNodeFlags flags, ReadOnlySpan<byte> fmt);
     bool TreeNodeExPtr(void* ptr_id, ImGuiTreeNodeFlags flags, string fmt);
+    bool TreeNodeExPtr(void* ptr_id, ImGuiTreeNodeFlags flags, ReadOnlySpan<byte> fmt);
     bool TreeNodeExV(string str_id, ImGuiTreeNodeFlags flags, string fmt, sbyte* args);
+    bool TreeNodeExV(ReadOnlySpan<byte> str_id, ImGuiTreeNodeFlags flags, ReadOnlySpan<byte> fmt, sbyte* args);
     bool TreeNodeExVPtr(void* ptr_id, ImGuiTreeNodeFlags flags, string fmt, sbyte* args);
+    bool TreeNodeExVPtr(void* ptr_id, ImGuiTreeNodeFlags flags, ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// ~ Indent()+PushID(). Already called by TreeNode() when returning true, but you can call TreePush/TreePop yourself if desired.<br/>
     ///</summary>
     void TreePush(string str_id);
+    ///<summary>
+    /// ~ Indent()+PushID(). Already called by TreeNode() when returning true, but you can call TreePush/TreePop yourself if desired.<br/>
+    ///</summary>
+    void TreePush(ReadOnlySpan<byte> str_id);
     ///<summary>
     /// "<br/>
     ///</summary>
@@ -1028,9 +1496,17 @@ public unsafe partial interface IImGui
     ///</summary>
     bool CollapsingHeader(string label, ImGuiTreeNodeFlags flags);
     ///<summary>
+    /// if returning 'true' the header is open. doesn't indent nor push on ID stack. user doesn't have to call TreePop().<br/>
+    ///</summary>
+    bool CollapsingHeader(ReadOnlySpan<byte> label, ImGuiTreeNodeFlags flags);
+    ///<summary>
     /// when 'p_visible != NULL': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.<br/>
     ///</summary>
     bool CollapsingHeaderBoolPtr(string label, ref bool p_visible, ImGuiTreeNodeFlags flags);
+    ///<summary>
+    /// when 'p_visible != NULL': if '*p_visible==true' display an additional small close button on upper right of the header which will set the bool to false when clicked, if '*p_visible==false' don't display the header.<br/>
+    ///</summary>
+    bool CollapsingHeaderBoolPtr(ReadOnlySpan<byte> label, ref bool p_visible, ImGuiTreeNodeFlags flags);
     ///<summary>
     /// set next TreeNode/CollapsingHeader open state.<br/>
     ///</summary>
@@ -1048,17 +1524,37 @@ public unsafe partial interface IImGui
     ///</summary>
     bool Selectable(string label);
     ///<summary>
+    /// Implied selected = false, flags = 0, size = ImVec2(0, 0)<br/>
+    ///<br/>
+    /// Widgets: Selectables<br/>
+    /// - A selectable highlights when hovered, and can display another color when selected.<br/>
+    /// - Neighbors selectable extend their highlight bounds in order to leave no gap between them. This is so a series of selected Selectable appear contiguous.<br/>
+    ///</summary>
+    bool Selectable(ReadOnlySpan<byte> label);
+    ///<summary>
     /// "bool selected" carry the selection state (read-only). Selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x&gt;0.0: specify width. size.y==0.0: use label height, size.y&gt;0.0: specify height<br/>
     ///</summary>
     bool SelectableEx(string label, bool selected, ImGuiSelectableFlags flags, Vector2 size);
+    ///<summary>
+    /// "bool selected" carry the selection state (read-only). Selectable() is clicked is returns true so you can modify your selection state. size.x==0.0: use remaining width, size.x&gt;0.0: specify width. size.y==0.0: use label height, size.y&gt;0.0: specify height<br/>
+    ///</summary>
+    bool SelectableEx(ReadOnlySpan<byte> label, bool selected, ImGuiSelectableFlags flags, Vector2 size);
     ///<summary>
     /// Implied size = ImVec2(0, 0)<br/>
     ///</summary>
     bool SelectableBoolPtr(string label, ref bool p_selected, ImGuiSelectableFlags flags);
     ///<summary>
+    /// Implied size = ImVec2(0, 0)<br/>
+    ///</summary>
+    bool SelectableBoolPtr(ReadOnlySpan<byte> label, ref bool p_selected, ImGuiSelectableFlags flags);
+    ///<summary>
     /// "bool* p_selected" point to the selection state (read-write), as a convenient helper.<br/>
     ///</summary>
     bool SelectableBoolPtrEx(string label, ref bool p_selected, ImGuiSelectableFlags flags, Vector2 size);
+    ///<summary>
+    /// "bool* p_selected" point to the selection state (read-write), as a convenient helper.<br/>
+    ///</summary>
+    bool SelectableBoolPtrEx(ReadOnlySpan<byte> label, ref bool p_selected, ImGuiSelectableFlags flags, Vector2 size);
     ///<summary>
     /// Implied selection_size = -1, items_count = -1<br/>
     ///<br/>
@@ -1091,15 +1587,33 @@ public unsafe partial interface IImGui
     ///</summary>
     bool BeginListBox(string label, Vector2 size);
     ///<summary>
+    /// open a framed scrolling region<br/>
+    ///<br/>
+    /// Widgets: List Boxes<br/>
+    /// - This is essentially a thin wrapper to using BeginChild/EndChild with the ImGuiChildFlags_FrameStyle flag for stylistic changes + displaying a label.<br/>
+    /// - If you don't need a label you can probably simply use BeginChild() with the ImGuiChildFlags_FrameStyle flag for the same result.<br/>
+    /// - You can submit contents and manage your selection state however you want it, by creating e.g. Selectable() or any other items.<br/>
+    /// - The simplified/old ListBox() api are helpers over BeginListBox()/EndListBox() which are kept available for convenience purpose. This is analogous to how Combos are created.<br/>
+    /// - Choose frame width:   size.x &gt; 0.0f: custom  /  size.x &lt; 0.0f or -FLT_MIN: right-align   /  size.x = 0.0f (default): use current ItemWidth<br/>
+    /// - Choose frame height:  size.y &gt; 0.0f: custom  /  size.y &lt; 0.0f or -FLT_MIN: bottom-align  /  size.y = 0.0f (default): arbitrary default height which can fit ~7 items<br/>
+    ///</summary>
+    bool BeginListBox(ReadOnlySpan<byte> label, Vector2 size);
+    ///<summary>
     /// only call EndListBox() if BeginListBox() returned true!<br/>
     ///</summary>
     void EndListBox();
     bool ListBox(string label, ref int current_item, sbyte** items, int items_count, int height_in_items);
+    bool ListBox(ReadOnlySpan<byte> label, ref int current_item, sbyte** items, int items_count, int height_in_items);
     ///<summary>
     /// Implied height_in_items = -1<br/>
     ///</summary>
     bool ListBoxCallback(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count);
+    ///<summary>
+    /// Implied height_in_items = -1<br/>
+    ///</summary>
+    bool ListBoxCallback(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count);
     bool ListBoxCallbackEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int height_in_items);
+    bool ListBoxCallbackEx(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint> getter, void* user_data, int items_count, int height_in_items);
     ///<summary>
     /// Implied values_offset = 0, overlay_text = NULL, scale_min = FLT_MAX, scale_max = FLT_MAX, graph_size = ImVec2(0, 0), stride = sizeof(float)<br/>
     ///<br/>
@@ -1107,22 +1621,45 @@ public unsafe partial interface IImGui
     /// - Consider using ImPlot (https:github.com/epezent/implot) which is much better!<br/>
     ///</summary>
     void PlotLines(string label, ref float values, int values_count);
+    ///<summary>
+    /// Implied values_offset = 0, overlay_text = NULL, scale_min = FLT_MAX, scale_max = FLT_MAX, graph_size = ImVec2(0, 0), stride = sizeof(float)<br/>
+    ///<br/>
+    /// Widgets: Data Plotting<br/>
+    /// - Consider using ImPlot (https:github.com/epezent/implot) which is much better!<br/>
+    ///</summary>
+    void PlotLines(ReadOnlySpan<byte> label, ref float values, int values_count);
     void PlotLinesEx(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride);
+    void PlotLinesEx(ReadOnlySpan<byte> label, ref float values, int values_count, int values_offset, ReadOnlySpan<byte> overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride);
     ///<summary>
     /// Implied values_offset = 0, overlay_text = NULL, scale_min = FLT_MAX, scale_max = FLT_MAX, graph_size = ImVec2(0, 0)<br/>
     ///</summary>
     void PlotLinesCallback(string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count);
+    ///<summary>
+    /// Implied values_offset = 0, overlay_text = NULL, scale_min = FLT_MAX, scale_max = FLT_MAX, graph_size = ImVec2(0, 0)<br/>
+    ///</summary>
+    void PlotLinesCallback(ReadOnlySpan<byte> label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count);
     void PlotLinesCallbackEx(string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size);
+    void PlotLinesCallbackEx(ReadOnlySpan<byte> label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, ReadOnlySpan<byte> overlay_text, float scale_min, float scale_max, Vector2 graph_size);
     ///<summary>
     /// Implied values_offset = 0, overlay_text = NULL, scale_min = FLT_MAX, scale_max = FLT_MAX, graph_size = ImVec2(0, 0), stride = sizeof(float)<br/>
     ///</summary>
     void PlotHistogram(string label, ref float values, int values_count);
+    ///<summary>
+    /// Implied values_offset = 0, overlay_text = NULL, scale_min = FLT_MAX, scale_max = FLT_MAX, graph_size = ImVec2(0, 0), stride = sizeof(float)<br/>
+    ///</summary>
+    void PlotHistogram(ReadOnlySpan<byte> label, ref float values, int values_count);
     void PlotHistogramEx(string label, ref float values, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride);
+    void PlotHistogramEx(ReadOnlySpan<byte> label, ref float values, int values_count, int values_offset, ReadOnlySpan<byte> overlay_text, float scale_min, float scale_max, Vector2 graph_size, int stride);
     ///<summary>
     /// Implied values_offset = 0, overlay_text = NULL, scale_min = FLT_MAX, scale_max = FLT_MAX, graph_size = ImVec2(0, 0)<br/>
     ///</summary>
     void PlotHistogramCallback(string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count);
+    ///<summary>
+    /// Implied values_offset = 0, overlay_text = NULL, scale_min = FLT_MAX, scale_max = FLT_MAX, graph_size = ImVec2(0, 0)<br/>
+    ///</summary>
+    void PlotHistogramCallback(ReadOnlySpan<byte> label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count);
     void PlotHistogramCallbackEx(string label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, string overlay_text, float scale_min, float scale_max, Vector2 graph_size);
+    void PlotHistogramCallbackEx(ReadOnlySpan<byte> label, delegate* unmanaged[Cdecl]<nint, int, float> values_getter, void* data, int values_count, int values_offset, ReadOnlySpan<byte> overlay_text, float scale_min, float scale_max, Vector2 graph_size);
     ///<summary>
     /// append to menu-bar of current window (requires ImGuiWindowFlags_MenuBar flag set on parent window).<br/>
     ///<br/>
@@ -1150,9 +1687,17 @@ public unsafe partial interface IImGui
     ///</summary>
     bool BeginMenu(string label);
     ///<summary>
+    /// Implied enabled = true<br/>
+    ///</summary>
+    bool BeginMenu(ReadOnlySpan<byte> label);
+    ///<summary>
     /// create a sub-menu entry. only call EndMenu() if this returns true!<br/>
     ///</summary>
     bool BeginMenuEx(string label, bool enabled);
+    ///<summary>
+    /// create a sub-menu entry. only call EndMenu() if this returns true!<br/>
+    ///</summary>
+    bool BeginMenuEx(ReadOnlySpan<byte> label, bool enabled);
     ///<summary>
     /// only call EndMenu() if BeginMenu() returns true!<br/>
     ///</summary>
@@ -1162,13 +1707,25 @@ public unsafe partial interface IImGui
     ///</summary>
     bool MenuItem(string label);
     ///<summary>
+    /// Implied shortcut = NULL, selected = false, enabled = true<br/>
+    ///</summary>
+    bool MenuItem(ReadOnlySpan<byte> label);
+    ///<summary>
     /// return true when activated.<br/>
     ///</summary>
     bool MenuItemEx(string label, string shortcut, bool selected, bool enabled);
     ///<summary>
+    /// return true when activated.<br/>
+    ///</summary>
+    bool MenuItemEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> shortcut, bool selected, bool enabled);
+    ///<summary>
     /// return true when activated + toggle (*p_selected) if p_selected != NULL<br/>
     ///</summary>
     bool MenuItemBoolPtr(string label, string shortcut, ref bool p_selected, bool enabled);
+    ///<summary>
+    /// return true when activated + toggle (*p_selected) if p_selected != NULL<br/>
+    ///</summary>
+    bool MenuItemBoolPtr(ReadOnlySpan<byte> label, ReadOnlySpan<byte> shortcut, ref bool p_selected, bool enabled);
     ///<summary>
     /// begin/append a tooltip window.<br/>
     ///<br/>
@@ -1186,7 +1743,12 @@ public unsafe partial interface IImGui
     /// set a text-only tooltip. Often used after a ImGui::IsItemHovered() check. Override any previous call to SetTooltip().<br/>
     ///</summary>
     void SetTooltip(string fmt);
+    ///<summary>
+    /// set a text-only tooltip. Often used after a ImGui::IsItemHovered() check. Override any previous call to SetTooltip().<br/>
+    ///</summary>
+    void SetTooltip(ReadOnlySpan<byte> fmt);
     void SetTooltipV(string fmt, sbyte* args);
+    void SetTooltipV(ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// begin/append a tooltip window if preceding item was hovered.<br/>
     ///<br/>
@@ -1200,7 +1762,12 @@ public unsafe partial interface IImGui
     /// set a text-only tooltip if preceding item was hovered. override any previous call to SetTooltip().<br/>
     ///</summary>
     void SetItemTooltip(string fmt);
+    ///<summary>
+    /// set a text-only tooltip if preceding item was hovered. override any previous call to SetTooltip().<br/>
+    ///</summary>
+    void SetItemTooltip(ReadOnlySpan<byte> fmt);
     void SetItemTooltipV(string fmt, sbyte* args);
+    void SetItemTooltipV(ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// return true if the popup is open, and you can start outputting to it.<br/>
     ///<br/>
@@ -1217,9 +1784,28 @@ public unsafe partial interface IImGui
     ///</summary>
     bool BeginPopup(string str_id, ImGuiWindowFlags flags);
     ///<summary>
+    /// return true if the popup is open, and you can start outputting to it.<br/>
+    ///<br/>
+    /// Popups, Modals<br/>
+    ///  - They block normal mouse hovering detection (and therefore most mouse interactions) behind them.<br/>
+    ///  - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.<br/>
+    ///  - Their visibility state (~bool) is held internally instead of being held by the programmer as we are used to with regular Begin*() calls.<br/>
+    ///  - The 3 properties above are related: we need to retain popup visibility state in the library because popups may be closed as any time.<br/>
+    ///  - You can bypass the hovering restriction by using ImGuiHoveredFlags_AllowWhenBlockedByPopup when calling IsItemHovered() or IsWindowHovered().<br/>
+    ///  - IMPORTANT: Popup identifiers are relative to the current ID stack, so OpenPopup and BeginPopup generally needs to be at the same level of the stack.<br/>
+    ///    This is sometimes leading to confusing mistakes. May rework this in the future.<br/>
+    ///  - BeginPopup(): query popup state, if open start appending into the window. Call EndPopup() afterwards if returned true. ImGuiWindowFlags are forwarded to the window.<br/>
+    ///  - BeginPopupModal(): block every interaction behind the window, cannot be closed by user, add a dimming background, has a title bar.<br/>
+    ///</summary>
+    bool BeginPopup(ReadOnlySpan<byte> str_id, ImGuiWindowFlags flags);
+    ///<summary>
     /// return true if the modal is open, and you can start outputting to it.<br/>
     ///</summary>
     bool BeginPopupModal(string name, ref bool p_open, ImGuiWindowFlags flags);
+    ///<summary>
+    /// return true if the modal is open, and you can start outputting to it.<br/>
+    ///</summary>
+    bool BeginPopupModal(ReadOnlySpan<byte> name, ref bool p_open, ImGuiWindowFlags flags);
     ///<summary>
     /// only call EndPopup() if BeginPopupXXX() returns true!<br/>
     ///</summary>
@@ -1238,6 +1824,19 @@ public unsafe partial interface IImGui
     ///</summary>
     void OpenPopup(string str_id, ImGuiPopupFlags popup_flags);
     ///<summary>
+    /// call to mark popup as open (don't call every frame!).<br/>
+    ///<br/>
+    /// Popups: open/close functions<br/>
+    ///  - OpenPopup(): set popup state to open. ImGuiPopupFlags are available for opening options.<br/>
+    ///  - If not modal: they can be closed by clicking anywhere outside them, or by pressing ESCAPE.<br/>
+    ///  - CloseCurrentPopup(): use inside the BeginPopup()/EndPopup() scope to close manually.<br/>
+    ///  - CloseCurrentPopup() is called by default by Selectable()/MenuItem() when activated (FIXME: need some options).<br/>
+    ///  - Use ImGuiPopupFlags_NoOpenOverExistingPopup to avoid opening a popup if there's already one at the same level. This is equivalent to e.g. testing for !IsAnyPopupOpen() prior to OpenPopup().<br/>
+    ///  - Use IsWindowAppearing() after BeginPopup() to tell if a window just opened.<br/>
+    ///  - IMPORTANT: Notice that for OpenPopupOnItemClick() we exceptionally default flags to 1 (== ImGuiPopupFlags_MouseButtonRight) for backward compatibility with older API taking 'int mouse_button = 1' parameter<br/>
+    ///</summary>
+    void OpenPopup(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags);
+    ///<summary>
     /// id overload to facilitate calling from nested stacks<br/>
     ///</summary>
     void OpenPopupID(uint id, ImGuiPopupFlags popup_flags);
@@ -1245,6 +1844,10 @@ public unsafe partial interface IImGui
     /// helper to open popup when clicked on last item. Default to ImGuiPopupFlags_MouseButtonRight == 1. (note: actually triggers on the mouse _released_ event to be consistent with popup behaviors)<br/>
     ///</summary>
     void OpenPopupOnItemClick(string str_id, ImGuiPopupFlags popup_flags);
+    ///<summary>
+    /// helper to open popup when clicked on last item. Default to ImGuiPopupFlags_MouseButtonRight == 1. (note: actually triggers on the mouse _released_ event to be consistent with popup behaviors)<br/>
+    ///</summary>
+    void OpenPopupOnItemClick(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags);
     ///<summary>
     /// manually close the popup we have begin-ed into.<br/>
     ///</summary>
@@ -1264,6 +1867,10 @@ public unsafe partial interface IImGui
     ///</summary>
     bool BeginPopupContextItemEx(string str_id, ImGuiPopupFlags popup_flags);
     ///<summary>
+    /// open+begin popup when clicked on last item. Use str_id==NULL to associate the popup to previous item. If you want to use that on a non-interactive item such as Text() you need to pass in an explicit ID here. read comments in .cpp!<br/>
+    ///</summary>
+    bool BeginPopupContextItemEx(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags);
+    ///<summary>
     /// Implied str_id = NULL, popup_flags = 1<br/>
     ///</summary>
     bool BeginPopupContextWindow();
@@ -1271,6 +1878,10 @@ public unsafe partial interface IImGui
     /// open+begin popup when clicked on current window.<br/>
     ///</summary>
     bool BeginPopupContextWindowEx(string str_id, ImGuiPopupFlags popup_flags);
+    ///<summary>
+    /// open+begin popup when clicked on current window.<br/>
+    ///</summary>
+    bool BeginPopupContextWindowEx(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags);
     ///<summary>
     /// Implied str_id = NULL, popup_flags = 1<br/>
     ///</summary>
@@ -1280,6 +1891,10 @@ public unsafe partial interface IImGui
     ///</summary>
     bool BeginPopupContextVoidEx(string str_id, ImGuiPopupFlags popup_flags);
     ///<summary>
+    /// open+begin popup when clicked in void (where there are no windows).<br/>
+    ///</summary>
+    bool BeginPopupContextVoidEx(ReadOnlySpan<byte> str_id, ImGuiPopupFlags popup_flags);
+    ///<summary>
     /// return true if the popup is open.<br/>
     ///<br/>
     /// Popups: query functions<br/>
@@ -1288,6 +1903,15 @@ public unsafe partial interface IImGui
     ///  - IsPopupOpen() with ImGuiPopupFlags_AnyPopupId + ImGuiPopupFlags_AnyPopupLevel: return true if any popup is open.<br/>
     ///</summary>
     bool IsPopupOpen(string str_id, ImGuiPopupFlags flags);
+    ///<summary>
+    /// return true if the popup is open.<br/>
+    ///<br/>
+    /// Popups: query functions<br/>
+    ///  - IsPopupOpen(): return true if the popup is open at the current BeginPopup() level of the popup stack.<br/>
+    ///  - IsPopupOpen() with ImGuiPopupFlags_AnyPopupId: return true if any popup is open at the current BeginPopup() level of the popup stack.<br/>
+    ///  - IsPopupOpen() with ImGuiPopupFlags_AnyPopupId + ImGuiPopupFlags_AnyPopupLevel: return true if any popup is open.<br/>
+    ///</summary>
+    bool IsPopupOpen(ReadOnlySpan<byte> str_id, ImGuiPopupFlags flags);
     ///<summary>
     /// Implied outer_size = ImVec2(0.0f, 0.0f), inner_width = 0.0f<br/>
     ///<br/>
@@ -1314,7 +1938,34 @@ public unsafe partial interface IImGui
     /// - 5. Call EndTable()<br/>
     ///</summary>
     bool BeginTable(string str_id, int columns, ImGuiTableFlags flags);
+    ///<summary>
+    /// Implied outer_size = ImVec2(0.0f, 0.0f), inner_width = 0.0f<br/>
+    ///<br/>
+    /// Tables<br/>
+    /// - Full-featured replacement for old Columns API.<br/>
+    /// - See Demo-&gt;Tables for demo code. See top of imgui_tables.cpp for general commentary.<br/>
+    /// - See ImGuiTableFlags_ and ImGuiTableColumnFlags_ enums for a description of available flags.<br/>
+    /// The typical call flow is:<br/>
+    /// - 1. Call BeginTable(), early out if returning false.<br/>
+    /// - 2. Optionally call TableSetupColumn() to submit column name/flags/defaults.<br/>
+    /// - 3. Optionally call TableSetupScrollFreeze() to request scroll freezing of columns/rows.<br/>
+    /// - 4. Optionally call TableHeadersRow() to submit a header row. Names are pulled from TableSetupColumn() data.<br/>
+    /// - 5. Populate contents:<br/>
+    ///    - In most situations you can use TableNextRow() + TableSetColumnIndex(N) to start appending into a column.<br/>
+    ///    - If you are using tables as a sort of grid, where every column is holding the same type of contents,<br/>
+    ///      you may prefer using TableNextColumn() instead of TableNextRow() + TableSetColumnIndex().<br/>
+    ///      TableNextColumn() will automatically wrap-around into the next row if needed.<br/>
+    ///    - IMPORTANT: Comparatively to the old Columns() API, we need to call TableNextColumn() for the first column!<br/>
+    ///    - Summary of possible call flow:<br/>
+    ///        - TableNextRow() -&gt; TableSetColumnIndex(0) -&gt; Text("Hello 0") -&gt; TableSetColumnIndex(1) -&gt; Text("Hello 1")   OK<br/>
+    ///        - TableNextRow() -&gt; TableNextColumn()      -&gt; Text("Hello 0") -&gt; TableNextColumn()      -&gt; Text("Hello 1")   OK<br/>
+    ///        -                   TableNextColumn()      -&gt; Text("Hello 0") -&gt; TableNextColumn()      -&gt; Text("Hello 1")   OK: TableNextColumn() automatically gets to next row!<br/>
+    ///        - TableNextRow()                           -&gt; Text("Hello 0")                                                Not OK! Missing TableSetColumnIndex() or TableNextColumn()! Text will not appear!<br/>
+    /// - 5. Call EndTable()<br/>
+    ///</summary>
+    bool BeginTable(ReadOnlySpan<byte> str_id, int columns, ImGuiTableFlags flags);
     bool BeginTableEx(string str_id, int columns, ImGuiTableFlags flags, Vector2 outer_size, float inner_width);
+    bool BeginTableEx(ReadOnlySpan<byte> str_id, int columns, ImGuiTableFlags flags, Vector2 outer_size, float inner_width);
     ///<summary>
     /// only call EndTable() if BeginTable() returns true!<br/>
     ///</summary>
@@ -1348,7 +1999,21 @@ public unsafe partial interface IImGui
     /// - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled.<br/>
     ///</summary>
     void TableSetupColumn(string label, ImGuiTableColumnFlags flags);
+    ///<summary>
+    /// Implied init_width_or_weight = 0.0f, user_id = 0<br/>
+    ///<br/>
+    /// Tables: Headers &amp; Columns declaration<br/>
+    /// - Use TableSetupColumn() to specify label, resizing policy, default width/weight, id, various other flags etc.<br/>
+    /// - Use TableHeadersRow() to create a header row and automatically submit a TableHeader() for each column.<br/>
+    ///   Headers are required to perform: reordering, sorting, and opening the context menu.<br/>
+    ///   The context menu can also be made available in columns body using ImGuiTableFlags_ContextMenuInBody.<br/>
+    /// - You may manually submit headers using TableNextRow() + TableHeader() calls, but this is only useful in<br/>
+    ///   some advanced use cases (e.g. adding custom widgets in header row).<br/>
+    /// - Use TableSetupScrollFreeze() to lock columns/rows so they stay visible when scrolled.<br/>
+    ///</summary>
+    void TableSetupColumn(ReadOnlySpan<byte> label, ImGuiTableColumnFlags flags);
     void TableSetupColumnEx(string label, ImGuiTableColumnFlags flags, float init_width_or_weight, uint user_id);
+    void TableSetupColumnEx(ReadOnlySpan<byte> label, ImGuiTableColumnFlags flags, float init_width_or_weight, uint user_id);
     ///<summary>
     /// lock columns/rows so they stay visible when scrolled.<br/>
     ///</summary>
@@ -1357,6 +2022,10 @@ public unsafe partial interface IImGui
     /// submit one header cell manually (rarely used)<br/>
     ///</summary>
     void TableHeader(string label);
+    ///<summary>
+    /// submit one header cell manually (rarely used)<br/>
+    ///</summary>
+    void TableHeader(ReadOnlySpan<byte> label);
     ///<summary>
     /// submit a row with headers cells based on data provided to TableSetupColumn() + submit context menu<br/>
     ///</summary>
@@ -1416,6 +2085,7 @@ public unsafe partial interface IImGui
     ///</summary>
     void Columns();
     void ColumnsEx(int count, string id, bool borders);
+    void ColumnsEx(int count, ReadOnlySpan<byte> id, bool borders);
     ///<summary>
     /// next column, defaults to current row or next row if the current row is finished<br/>
     ///</summary>
@@ -1449,6 +2119,13 @@ public unsafe partial interface IImGui
     ///</summary>
     bool BeginTabBar(string str_id, ImGuiTabBarFlags flags);
     ///<summary>
+    /// create and append into a TabBar<br/>
+    ///<br/>
+    /// Tab Bars, Tabs<br/>
+    /// - Note: Tabs are automatically created by the docking system (when in 'docking' branch). Use this to create tab bars/tabs yourself.<br/>
+    ///</summary>
+    bool BeginTabBar(ReadOnlySpan<byte> str_id, ImGuiTabBarFlags flags);
+    ///<summary>
     /// only call EndTabBar() if BeginTabBar() returns true!<br/>
     ///</summary>
     void EndTabBar();
@@ -1456,6 +2133,10 @@ public unsafe partial interface IImGui
     /// create a Tab. Returns true if the Tab is selected.<br/>
     ///</summary>
     bool BeginTabItem(string label, ref bool p_open, ImGuiTabItemFlags flags);
+    ///<summary>
+    /// create a Tab. Returns true if the Tab is selected.<br/>
+    ///</summary>
+    bool BeginTabItem(ReadOnlySpan<byte> label, ref bool p_open, ImGuiTabItemFlags flags);
     ///<summary>
     /// only call EndTabItem() if BeginTabItem() returns true!<br/>
     ///</summary>
@@ -1465,9 +2146,17 @@ public unsafe partial interface IImGui
     ///</summary>
     bool TabItemButton(string label, ImGuiTabItemFlags flags);
     ///<summary>
+    /// create a Tab behaving like a button. return true when clicked. cannot be selected in the tab bar.<br/>
+    ///</summary>
+    bool TabItemButton(ReadOnlySpan<byte> label, ImGuiTabItemFlags flags);
+    ///<summary>
     /// notify TabBar or Docking system of a closed tab/window ahead (useful to reduce visual flicker on reorderable tab bars). For tab-bar: call after BeginTabBar() and before Tab submissions. Otherwise call with a window name.<br/>
     ///</summary>
     void SetTabItemClosed(string tab_or_docked_window_label);
+    ///<summary>
+    /// notify TabBar or Docking system of a closed tab/window ahead (useful to reduce visual flicker on reorderable tab bars). For tab-bar: call after BeginTabBar() and before Tab submissions. Otherwise call with a window name.<br/>
+    ///</summary>
+    void SetTabItemClosed(ReadOnlySpan<byte> tab_or_docked_window_label);
     ///<summary>
     /// Implied size = ImVec2(0, 0), flags = 0, window_class = NULL<br/>
     ///<br/>
@@ -1523,6 +2212,10 @@ public unsafe partial interface IImGui
     ///</summary>
     void LogToFile(int auto_open_depth, string filename);
     ///<summary>
+    /// start logging to file<br/>
+    ///</summary>
+    void LogToFile(int auto_open_depth, ReadOnlySpan<byte> filename);
+    ///<summary>
     /// start logging to OS clipboard<br/>
     ///</summary>
     void LogToClipboard(int auto_open_depth);
@@ -1538,7 +2231,12 @@ public unsafe partial interface IImGui
     /// pass text data straight to log (without being displayed)<br/>
     ///</summary>
     void LogText(string fmt);
+    ///<summary>
+    /// pass text data straight to log (without being displayed)<br/>
+    ///</summary>
+    void LogText(ReadOnlySpan<byte> fmt);
     void LogTextV(string fmt, sbyte* args);
+    void LogTextV(ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// call after submitting an item which may be dragged. when this return true, you can call SetDragDropPayload() + EndDragDropSource()<br/>
     ///<br/>
@@ -1554,6 +2252,10 @@ public unsafe partial interface IImGui
     ///</summary>
     bool SetDragDropPayload(string type, void* data, nuint sz, ImGuiCond cond);
     ///<summary>
+    /// type is a user defined string of maximum 32 characters. Strings starting with '_' are reserved for dear imgui internal types. Data is copied and held by imgui. Return true when payload has been accepted.<br/>
+    ///</summary>
+    bool SetDragDropPayload(ReadOnlySpan<byte> type, void* data, nuint sz, ImGuiCond cond);
+    ///<summary>
     /// only call EndDragDropSource() if BeginDragDropSource() returns true!<br/>
     ///</summary>
     void EndDragDropSource();
@@ -1565,6 +2267,10 @@ public unsafe partial interface IImGui
     /// accept contents of a given type. If ImGuiDragDropFlags_AcceptBeforeDelivery is set you can peek into the payload before the mouse button is released.<br/>
     ///</summary>
     IImGuiPayload AcceptDragDropPayload(string type, ImGuiDragDropFlags flags);
+    ///<summary>
+    /// accept contents of a given type. If ImGuiDragDropFlags_AcceptBeforeDelivery is set you can peek into the payload before the mouse button is released.<br/>
+    ///</summary>
+    IImGuiPayload AcceptDragDropPayload(ReadOnlySpan<byte> type, ImGuiDragDropFlags flags);
     ///<summary>
     /// only call EndDragDropTarget() if BeginDragDropTarget() returns true!<br/>
     ///</summary>
@@ -1754,7 +2460,14 @@ public unsafe partial interface IImGui
     /// Text Utilities<br/>
     ///</summary>
     Vector2 CalcTextSize(string text);
+    ///<summary>
+    /// Implied text_end = NULL, hide_text_after_double_hash = false, wrap_width = -1.0f<br/>
+    ///<br/>
+    /// Text Utilities<br/>
+    ///</summary>
+    Vector2 CalcTextSize(ReadOnlySpan<byte> text);
     Vector2 CalcTextSizeEx(string text, string text_end, bool hide_text_after_double_hash, float wrap_width);
+    Vector2 CalcTextSizeEx(ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end, bool hide_text_after_double_hash, float wrap_width);
     ///<summary>
     /// Color Utilities<br/>
     ///</summary>
@@ -1920,6 +2633,7 @@ public unsafe partial interface IImGui
     ///</summary>
     string GetClipboardText();
     void SetClipboardText(string text);
+    void SetClipboardText(ReadOnlySpan<byte> text);
     ///<summary>
     /// call after CreateContext() and before the first call to NewFrame(). NewFrame() automatically calls LoadIniSettingsFromDisk(io.IniFilename).<br/>
     ///<br/>
@@ -1930,14 +2644,32 @@ public unsafe partial interface IImGui
     ///</summary>
     void LoadIniSettingsFromDisk(string ini_filename);
     ///<summary>
+    /// call after CreateContext() and before the first call to NewFrame(). NewFrame() automatically calls LoadIniSettingsFromDisk(io.IniFilename).<br/>
+    ///<br/>
+    /// Settings/.Ini Utilities<br/>
+    /// - The disk functions are automatically called if io.IniFilename != NULL (default is "imgui.ini").<br/>
+    /// - Set io.IniFilename to NULL to load/save manually. Read io.WantSaveIniSettings description about handling .ini saving manually.<br/>
+    /// - Important: default value "imgui.ini" is relative to current working dir! Most apps will want to lock this to an absolute path (e.g. same path as executables).<br/>
+    ///</summary>
+    void LoadIniSettingsFromDisk(ReadOnlySpan<byte> ini_filename);
+    ///<summary>
     /// this is automatically called (if io.IniFilename is not empty) a few seconds after any modification that should be reflected in the .ini file (and also by DestroyContext).<br/>
     ///</summary>
     void SaveIniSettingsToDisk(string ini_filename);
+    ///<summary>
+    /// this is automatically called (if io.IniFilename is not empty) a few seconds after any modification that should be reflected in the .ini file (and also by DestroyContext).<br/>
+    ///</summary>
+    void SaveIniSettingsToDisk(ReadOnlySpan<byte> ini_filename);
     ///<summary>
     /// Debug Utilities<br/>
     /// - Your main debugging friend is the ShowMetricsWindow() function, which is also accessible from Demo-&gt;Tools-&gt;Metrics Debugger<br/>
     ///</summary>
     void DebugTextEncoding(string text);
+    ///<summary>
+    /// Debug Utilities<br/>
+    /// - Your main debugging friend is the ShowMetricsWindow() function, which is also accessible from Demo-&gt;Tools-&gt;Metrics Debugger<br/>
+    ///</summary>
+    void DebugTextEncoding(ReadOnlySpan<byte> text);
     void DebugFlashStyleColor(ImGuiCol idx);
     void DebugStartItemPicker();
     ///<summary>
@@ -1945,10 +2677,19 @@ public unsafe partial interface IImGui
     ///</summary>
     bool DebugCheckVersionAndDataLayout(string version_str, nuint sz_io, nuint sz_style, nuint sz_vec2, nuint sz_vec4, nuint sz_drawvert, nuint sz_drawidx);
     ///<summary>
+    /// This is called by IMGUI_CHECKVERSION() macro.<br/>
+    ///</summary>
+    bool DebugCheckVersionAndDataLayout(ReadOnlySpan<byte> version_str, nuint sz_io, nuint sz_style, nuint sz_vec2, nuint sz_vec4, nuint sz_drawvert, nuint sz_drawidx);
+    ///<summary>
     /// Call via IMGUI_DEBUG_LOG() for maximum stripping in caller code!<br/>
     ///</summary>
     void DebugLog(string fmt);
+    ///<summary>
+    /// Call via IMGUI_DEBUG_LOG() for maximum stripping in caller code!<br/>
+    ///</summary>
+    void DebugLog(ReadOnlySpan<byte> fmt);
     void DebugLogV(string fmt, sbyte* args);
+    void DebugLogV(ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// Memory Allocators<br/>
     /// - Those functions are not reliant on the current context.<br/>
@@ -2062,6 +2803,10 @@ public unsafe partial interface IImGui
     ///</summary>
     void ImGuiIO_AddInputCharactersUTF8(IImGuiIO self, string str);
     ///<summary>
+    /// Queue a new characters input from a UTF-8 string<br/>
+    ///</summary>
+    void ImGuiIO_AddInputCharactersUTF8(IImGuiIO self, ReadOnlySpan<byte> str);
+    ///<summary>
     /// Implied native_legacy_index = -1<br/>
     ///</summary>
     void ImGuiIO_SetKeyEventNativeData(IImGuiIO self, ImGuiKey key, int native_keycode, int native_scancode);
@@ -2087,11 +2832,13 @@ public unsafe partial interface IImGui
     void ImGuiIO_ClearInputMouse(IImGuiIO self);
     void ImGuiInputTextCallbackData_DeleteChars(IImGuiInputTextCallbackData self, int pos, int bytes_count);
     void ImGuiInputTextCallbackData_InsertChars(IImGuiInputTextCallbackData self, int pos, string text, string text_end);
+    void ImGuiInputTextCallbackData_InsertChars(IImGuiInputTextCallbackData self, int pos, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end);
     void ImGuiInputTextCallbackData_SelectAll(IImGuiInputTextCallbackData self);
     void ImGuiInputTextCallbackData_ClearSelection(IImGuiInputTextCallbackData self);
     bool ImGuiInputTextCallbackData_HasSelection(IImGuiInputTextCallbackData self);
     void ImGuiPayload_Clear(IImGuiPayload self);
     bool ImGuiPayload_IsDataType(IImGuiPayload self, string type);
+    bool ImGuiPayload_IsDataType(IImGuiPayload self, ReadOnlySpan<byte> type);
     bool ImGuiPayload_IsPreview(IImGuiPayload self);
     bool ImGuiPayload_IsDelivery(IImGuiPayload self);
     bool ImGuiTextFilter_ImGuiTextRange_empty(IImGuiTextFilter_ImGuiTextRange self);
@@ -2099,7 +2846,12 @@ public unsafe partial interface IImGui
     /// Helper calling InputText+Build<br/>
     ///</summary>
     bool ImGuiTextFilter_Draw(IImGuiTextFilter self, string label, float width);
+    ///<summary>
+    /// Helper calling InputText+Build<br/>
+    ///</summary>
+    bool ImGuiTextFilter_Draw(IImGuiTextFilter self, ReadOnlySpan<byte> label, float width);
     bool ImGuiTextFilter_PassFilter(IImGuiTextFilter self, string text, string text_end);
+    bool ImGuiTextFilter_PassFilter(IImGuiTextFilter self, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end);
     void ImGuiTextFilter_Build(IImGuiTextFilter self);
     void ImGuiTextFilter_Clear(IImGuiTextFilter self);
     bool ImGuiTextFilter_IsActive(IImGuiTextFilter self);
@@ -2118,8 +2870,11 @@ public unsafe partial interface IImGui
     void ImGuiTextBuffer_reserve(IImGuiTextBuffer self, int capacity);
     string ImGuiTextBuffer_c_str(IImGuiTextBuffer self);
     void ImGuiTextBuffer_append(IImGuiTextBuffer self, string str, string str_end);
+    void ImGuiTextBuffer_append(IImGuiTextBuffer self, ReadOnlySpan<byte> str, ReadOnlySpan<byte> str_end);
     void ImGuiTextBuffer_appendf(IImGuiTextBuffer self, string fmt);
+    void ImGuiTextBuffer_appendf(IImGuiTextBuffer self, ReadOnlySpan<byte> fmt);
     void ImGuiTextBuffer_appendfv(IImGuiTextBuffer self, string fmt, sbyte* args);
+    void ImGuiTextBuffer_appendfv(IImGuiTextBuffer self, ReadOnlySpan<byte> fmt, sbyte* args);
     ///<summary>
     /// - Get***() functions find pair, never add/allocate. Pairs are sorted so a query is O(log N)<br/>
     /// - Set***() functions find pair, insertion on demand if missing.<br/>
@@ -2309,12 +3064,22 @@ public unsafe partial interface IImGui
     /// Implied text_end = NULL<br/>
     ///</summary>
     void ImDrawList_AddText(IImDrawList self, Vector2 pos, uint col, string text_begin);
+    ///<summary>
+    /// Implied text_end = NULL<br/>
+    ///</summary>
+    void ImDrawList_AddText(IImDrawList self, Vector2 pos, uint col, ReadOnlySpan<byte> text_begin);
     void ImDrawList_AddTextEx(IImDrawList self, Vector2 pos, uint col, string text_begin, string text_end);
+    void ImDrawList_AddTextEx(IImDrawList self, Vector2 pos, uint col, ReadOnlySpan<byte> text_begin, ReadOnlySpan<byte> text_end);
     ///<summary>
     /// Implied text_end = NULL, wrap_width = 0.0f, cpu_fine_clip_rect = NULL<br/>
     ///</summary>
     void ImDrawList_AddTextImFontPtr(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, string text_begin);
+    ///<summary>
+    /// Implied text_end = NULL, wrap_width = 0.0f, cpu_fine_clip_rect = NULL<br/>
+    ///</summary>
+    void ImDrawList_AddTextImFontPtr(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, ReadOnlySpan<byte> text_begin);
     void ImDrawList_AddTextImFontPtrEx(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, string text_begin, string text_end, float wrap_width, Vector4 cpu_fine_clip_rect);
+    void ImDrawList_AddTextImFontPtrEx(IImDrawList self, IImFont font, float font_size, Vector2 pos, uint col, ReadOnlySpan<byte> text_begin, ReadOnlySpan<byte> text_end, float wrap_width, Vector4 cpu_fine_clip_rect);
     ///<summary>
     /// Cubic Bezier (4 control points)<br/>
     ///</summary>
@@ -2504,12 +3269,17 @@ public unsafe partial interface IImGui
     ///</summary>
     void ImFontGlyphRangesBuilder_AddText(IImFontGlyphRangesBuilder self, string text, string text_end);
     ///<summary>
+    /// Add string (each character of the UTF-8 string are added)<br/>
+    ///</summary>
+    void ImFontGlyphRangesBuilder_AddText(IImFontGlyphRangesBuilder self, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end);
+    ///<summary>
     /// Add ranges, e.g. builder.AddRanges(ImFontAtlas::GetGlyphRangesDefault()) to force add all of ASCII/Latin+Ext<br/>
     ///</summary>
     void ImFontGlyphRangesBuilder_AddRanges(IImFontGlyphRangesBuilder self, ref uint ranges);
     IImFont ImFontAtlas_AddFont(IImFontAtlas self, IImFontConfig font_cfg);
     IImFont ImFontAtlas_AddFontDefault(IImFontAtlas self, IImFontConfig font_cfg);
     IImFont ImFontAtlas_AddFontFromFileTTF(IImFontAtlas self, string filename, float size_pixels, IImFontConfig font_cfg, ref uint glyph_ranges);
+    IImFont ImFontAtlas_AddFontFromFileTTF(IImFontAtlas self, ReadOnlySpan<byte> filename, float size_pixels, IImFontConfig font_cfg, ref uint glyph_ranges);
     ///<summary>
     /// Note: Transfer ownership of 'ttf_data' to ImFontAtlas! Will be deleted after destruction of the atlas. Set font_cfg-&gt;FontDataOwnedByAtlas=false to keep ownership of your data and it won't be freed.<br/>
     ///</summary>
@@ -2522,6 +3292,10 @@ public unsafe partial interface IImGui
     /// 'compressed_font_data_base85' still owned by caller. Compress with binary_to_compressed_c.cpp with -base85 parameter.<br/>
     ///</summary>
     IImFont ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(IImFontAtlas self, string compressed_font_data_base85, float size_pixels, IImFontConfig font_cfg, ref uint glyph_ranges);
+    ///<summary>
+    /// 'compressed_font_data_base85' still owned by caller. Compress with binary_to_compressed_c.cpp with -base85 parameter.<br/>
+    ///</summary>
+    IImFont ImFontAtlas_AddFontFromMemoryCompressedBase85TTF(IImFontAtlas self, ReadOnlySpan<byte> compressed_font_data_base85, float size_pixels, IImFontConfig font_cfg, ref uint glyph_ranges);
     void ImFontAtlas_RemoveFont(IImFontAtlas self, IImFont font);
     ///<summary>
     /// Clear everything (input fonts, output glyphs/textures).<br/>
@@ -2708,15 +3482,23 @@ public unsafe partial interface IImGui
     /// Implied text_end = NULL, out_remaining = NULL<br/>
     ///</summary>
     Vector2 ImFont_CalcTextSizeA(IImFont self, float size, float max_width, float wrap_width, string text_begin);
+    ///<summary>
+    /// Implied text_end = NULL, out_remaining = NULL<br/>
+    ///</summary>
+    Vector2 ImFont_CalcTextSizeA(IImFont self, float size, float max_width, float wrap_width, ReadOnlySpan<byte> text_begin);
     Vector2 ImFont_CalcTextSizeAEx(IImFont self, float size, float max_width, float wrap_width, string text_begin, string text_end, sbyte** out_remaining);
+    Vector2 ImFont_CalcTextSizeAEx(IImFont self, float size, float max_width, float wrap_width, ReadOnlySpan<byte> text_begin, ReadOnlySpan<byte> text_end, sbyte** out_remaining);
     string ImFont_CalcWordWrapPosition(IImFont self, float size, string text, string text_end, float wrap_width);
+    string ImFont_CalcWordWrapPosition(IImFont self, float size, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end, float wrap_width);
     ///<summary>
     /// Implied cpu_fine_clip = NULL<br/>
     ///</summary>
     void ImFont_RenderChar(IImFont self, IImDrawList draw_list, float size, Vector2 pos, uint col, uint c);
     void ImFont_RenderCharEx(IImFont self, IImDrawList draw_list, float size, Vector2 pos, uint col, uint c, Vector4 cpu_fine_clip);
     void ImFont_RenderText(IImFont self, IImDrawList draw_list, float size, Vector2 pos, uint col, Vector4 clip_rect, string text_begin, string text_end, float wrap_width, int flags);
+    void ImFont_RenderText(IImFont self, IImDrawList draw_list, float size, Vector2 pos, uint col, Vector4 clip_rect, ReadOnlySpan<byte> text_begin, ReadOnlySpan<byte> text_end, float wrap_width, int flags);
     string ImFont_CalcWordWrapPositionA(IImFont self, float scale, string text, string text_end, float wrap_width);
+    string ImFont_CalcWordWrapPositionA(IImFont self, float scale, ReadOnlySpan<byte> text, ReadOnlySpan<byte> text_end, float wrap_width);
     ///<summary>
     /// [Internal] Don't use!<br/>
     ///</summary>
@@ -2789,12 +3571,22 @@ public unsafe partial interface IImGui
     /// Implied popup_max_height_in_items = -1<br/>
     ///</summary>
     bool ComboObsolete(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count);
+    ///<summary>
+    /// Implied popup_max_height_in_items = -1<br/>
+    ///</summary>
+    bool ComboObsolete(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count);
     bool ComboObsoleteEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int popup_max_height_in_items);
+    bool ComboObsoleteEx(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int popup_max_height_in_items);
     ///<summary>
     /// Implied height_in_items = -1<br/>
     ///</summary>
     bool ListBoxObsolete(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count);
+    ///<summary>
+    /// Implied height_in_items = -1<br/>
+    ///</summary>
+    bool ListBoxObsolete(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count);
     bool ListBoxObsoleteEx(string label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int height_in_items);
+    bool ListBoxObsoleteEx(ReadOnlySpan<byte> label, ref int current_item, delegate* unmanaged[Cdecl]<nint, int, nint, byte> old_callback, void* user_data, int items_count, int height_in_items);
     ///<summary>
     /// - prefer deep-copying this into your own ImFontLoader instance if you use hot-reloading that messes up static data.<br/>
     ///</summary>

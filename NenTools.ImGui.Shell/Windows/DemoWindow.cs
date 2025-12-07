@@ -25,7 +25,7 @@ public unsafe class DemoWindow : IImGuiComponent
 
     public void RenderMenu(IImGuiShell imGuiShell)
     {
-        if (_imGui.MenuItemEx("ImGui Demo Window", "", false, true))
+        if (_imGui.MenuItemEx("ImGui Demo Window"u8, ""u8, false, true))
         {
             IsOpen = true;
         }
