@@ -37,7 +37,7 @@ internal class CommandContext
         try
         {
             CommandAllocator = device.CreateCommandAllocator(CommandListType.Direct);
-            CommandAllocator.Name = "[FaithFramework] ImGui Command Allocator";
+            CommandAllocator.Name = $"[{nameof(ImguiHookDx12)}] ImGui Command Allocator";
         }
         catch (Exception)
         {
@@ -48,7 +48,7 @@ internal class CommandContext
         try
         {
             CommandList = device.CreateCommandList(0, CommandListType.Direct, CommandAllocator, null);
-            CommandList.Name = "[FaithFramework] ImGui CommandList";
+            CommandList.Name = $"[{nameof(ImguiHookDx12)}] ImGui CommandList";
         }
         catch (Exception)
         {
@@ -59,7 +59,7 @@ internal class CommandContext
         try
         {
             Fence = device.CreateFence(FenceValue, FenceFlags.None);
-            Fence.Name = "[FaithFramework] ImGui Command Context Fence";
+            Fence.Name = $"[{nameof(ImguiHookDx12)}] ImGui Command Context Fence";
 
             
         }
