@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NenTools.ImGui.Hooks.DirectX12;
+namespace NenTools.ImGui.Hooks;
 
 /// <summary>
 /// Represents a hook that changes a function pointer.
@@ -28,7 +28,7 @@ public class FunctionPointerHook<TFunction> : IHook<TFunction>
     /// This will be read to store the original function pointer</param>
     /// <param name="index">The index of the virtual function pointer in the virtual function table</param>
     /// <param name="function">The hook function</param>
-    internal unsafe FunctionPointerHook(nuint originalVtableFuncEntryAddress, TFunction function)
+    public unsafe FunctionPointerHook(nuint originalVtableFuncEntryAddress, TFunction function)
     {
         _pointerAddress = originalVtableFuncEntryAddress;
 

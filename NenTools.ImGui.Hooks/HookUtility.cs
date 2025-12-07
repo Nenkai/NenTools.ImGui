@@ -1,6 +1,4 @@
-﻿using Reloaded.Hooks.Definitions.Structs;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,9 +13,9 @@ using Windows.Win32.Foundation;
 
 #pragma warning disable CA1416 // This call site is reachable on all platforms. (method) is only supported on: 'windows' 5.1.2600 and later.
 
-namespace NenTools.ImGui.Hooks.DirectX12;
+namespace NenTools.ImGui.Hooks;
 
-internal class HookUtility
+public class HookUtility
 {
     /// <summary>
     /// Gets the module where the specified addresses resides.

@@ -1,6 +1,4 @@
-﻿using Reloaded.Hooks.Definitions.Structs;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -14,9 +12,9 @@ using System.Threading.Tasks;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 
-namespace NenTools.ImGui.Hooks.DirectX12;
+namespace NenTools.ImGui.Hooks;
 
-internal class RTTIUtility
+public class RTTIUtility
 {
     public unsafe static TypeDescriptor? GetTypeInfo(void* obj)
     {
