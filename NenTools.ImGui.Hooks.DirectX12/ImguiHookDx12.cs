@@ -1,7 +1,7 @@
-﻿using NenTools.ImGui.Native;
-using NenTools.ImGui.Hooks.Definitions;
+﻿using NenTools.ImGui.Hooks.Definitions;
 using NenTools.ImGui.Hooks.DirectX;
 using NenTools.ImGui.Hooks.DirectX12.Definitions;
+using NenTools.ImGui.Native;
 
 using Reloaded.Hooks.Definitions;
 using Reloaded.Memory.Interfaces;
@@ -21,6 +21,8 @@ using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 
 using static NenTools.ImGui.Hooks.DirectX12.Extensions.Factory2Extensions;
+using static NenTools.ImGui.Hooks.IImguiHook;
+
 using Device = SharpDX.Direct3D12.Device;
 
 #pragma warning disable CA1416 // This call site is reachable on all platforms. (method) is only supported on: 'windows' 5.1.2600 and later.
@@ -50,6 +52,10 @@ public unsafe class ImguiHookDx12 : IImguiHook
     delegate nint ResizeBuffersDelegate(nint swapchainPtr, uint bufferCount, uint width, uint height, Format newFormat, SwapChainFlags swapchainFlags);
     delegate nint ResizeTargetDelegate(nint swapchainPtr, nint pNewTargetParameters);
     delegate nint CreateSwapChainForHwnd(nint this_, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullScreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain);
+
+    public event OnBackendInitializedDelegate OnBackendInitialized;
+    public event OnBackendShutdownDelegate OnBackendShutdown;
+    public event OnBuffersResizedDelegate OnBuffersResized;
 
     private bool _convertPointerHooksToVtableHookPhase = false;
 
@@ -535,6 +541,8 @@ public unsafe class ImguiHookDx12 : IImguiHook
         DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] D3D12 initted.");
 
         _initializedD3D12 = true;
+        OnBackendInitialized?.Invoke();
+
         return true;
     }
 
@@ -579,6 +587,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
 
         _imGuiBackendRendererData = null;
         _initializedD3D12 = false;
+        OnBackendShutdown?.Invoke();
     }
 
 
@@ -782,7 +791,6 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// <returns></returns>
     public nint ResizeBuffersImpl(nint swapchainPtr, uint bufferCount, uint width, uint height, Format newFormat, SwapChainFlags swapchainFlags)
     {
-
         DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] --- ResizeBuffers called ---");
 
         if (_resizeBufferDepth > 0)
@@ -796,7 +804,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
         }
 
         // Dispose all frame context resources
-        OnBuffersResized();
+        OnBuffersResizedImpl(width, height);
 
         _resizeBufferDepth++;
         var result = _resizeBuffersHook.OriginalFunction(swapchainPtr, bufferCount, width, height, newFormat, swapchainFlags);
@@ -809,13 +817,15 @@ public unsafe class ImguiHookDx12 : IImguiHook
         return result;
     }
 
-    private void OnBuffersResized()
+    private void OnBuffersResizedImpl(uint width, uint height)
     {
         // Deinit everything.
         lock (_lock)
         {
             ShutdownD3D12();
         }
+
+        OnBuffersResized?.Invoke(width, height);
     }
     #endregion
 

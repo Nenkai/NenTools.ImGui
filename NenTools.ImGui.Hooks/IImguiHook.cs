@@ -50,4 +50,24 @@ public interface IImguiHook : IDisposable
     /// Frees an image.
     /// </summary>
     void FreeTexture(ulong texId);
+
+    public delegate void OnBackendInitializedDelegate();
+    public delegate void OnBackendShutdownDelegate();
+    public delegate void OnBuffersResizedDelegate(uint width, uint height);
+
+    /// <summary>
+    /// Fired when the backend renderer was initialized.
+    /// </summary>
+    public event OnBackendInitializedDelegate OnBackendInitialized;
+
+    /// <summary>
+    /// Fired when the backend renderer was shutdown.
+    /// </summary>
+    public event OnBackendShutdownDelegate OnBackendShutdown;
+
+    /// <summary>
+    /// Fired when the backend renderer caught a resize event.
+    /// </summary>
+    public event OnBuffersResizedDelegate OnBuffersResized;
+
 }

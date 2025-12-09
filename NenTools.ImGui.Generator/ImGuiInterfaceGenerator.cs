@@ -1515,7 +1515,7 @@ public class ImGuiInterfaceGenerator
         if (spl[1].Length <= 1)
             return false;
 
-        if (!int.TryParse(spl[1].Substring(0, spl[1].Length - 1), out length))
+        if (!int.TryParse(spl[1].AsSpan(0, spl[1].Length - 1), out length))
             return false;
 
         name = spl[0];
