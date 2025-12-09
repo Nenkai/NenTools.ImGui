@@ -113,15 +113,9 @@ public class ImGuiShell : IImGuiShell
     /// Creates and starts the ImGui context/rendering.
     /// </summary>
     /// <returns></returns>
-    public async Task Start()
+    public async Task Start(ImguiHookOptions hookOptions)
     {
-        await ImguiHook.Create(Render, new ImguiHookOptions()
-        {
-            // TODO: Implement viewports
-            // EnableViewports = false, Not yet functional with DX12 hooks, it creates a new swapchain that shouldn't be hooked.
-            IgnoreWindowUnactivate = true,
-            Implementations = [_imguiHook]
-        });
+        await ImguiHook.Create(Render, hookOptions);
         ContextCreated = true;
 
         _menuCategoryToComponentList.Add(FileMenuName, []);
@@ -133,7 +127,7 @@ public class ImGuiShell : IImGuiShell
 
         OnImGuiConfiguration?.Invoke();
     }
-
+    
     public void AddComponent(IImGuiComponent component, string? overrideCategory = null, int overridePriority = 0, string? overrideOwner = null)
     {
         ImGuiMenuAttribute? attr = component.GetType().GetCustomAttribute<ImGuiMenuAttribute>();
