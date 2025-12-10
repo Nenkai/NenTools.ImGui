@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Numerics;
 using System.Reflection;
@@ -9,17 +9,20 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using NenTools.ImGui.Hooks;
 using NenTools.ImGui.Implementation;
 using NenTools.ImGui.Interfaces;
 using NenTools.ImGui.Native;
-using NenTools.ImGui.Shell.Windows;
 using NenTools.ImGui.Shell.Interfaces;
+using NenTools.ImGui.Shell.Windows;
 
 using Reloaded.Hooks.Definitions;
 
+using TextCopy;
+
 using static NenTools.ImGui.Shell.Interfaces.IImGuiShell;
-using Microsoft.Extensions.Logging;
 
 namespace NenTools.ImGui.Shell;
 
@@ -70,7 +73,6 @@ public class ImGuiShell : IImGuiShell
 
         _overlayLogger = new OverlayLogger(_imGui, _imGuiConfig);
         TextureManager = new ImGuiTextureManager(imguiHook, loggerFactory);
-        HideMenu();
     }
 
     public void DisableOverlay() => IsOverlayEnabled = false;
@@ -115,7 +117,9 @@ public class ImGuiShell : IImGuiShell
     /// <returns></returns>
     public async Task Start(ImguiHookOptions hookOptions)
     {
-        await ImguiHook.Create(Render, hookOptions);
+        HideMenu();
+
+        await ImguiHook.Create(_imGui, Render, hookOptions);
         ContextCreated = true;
 
         _menuCategoryToComponentList.Add(FileMenuName, []);
@@ -126,8 +130,73 @@ public class ImGuiShell : IImGuiShell
         AddComponent(_overlayLogger);
 
         OnImGuiConfiguration?.Invoke();
+
+        _imguiHook.OnBackendInitialized += OnBackendInitialized;
     }
-    
+
+    /// <summary>
+    /// Shuts down the shell and ImGui overlay.
+    /// </summary>
+    public void Shutdown()
+    {
+        ImguiHook.Destroy();
+        ContextCreated = false;
+
+        _menuCategoryToComponentList.Clear();
+        OnImGuiConfiguration = null;
+
+        _imGui.DisposeCallbackHandles();
+    }
+
+    private void OnBackendInitialized()
+    {
+        _imGui.DisposeCallbackHandles();
+
+        // May be a ImGui bug/oversight (as of 1.92.5)?
+        // When we initialize imgui for the first time with ImGui::CreateContext, it sets DEFAULT implementations for these functions after calling ImGui::CreateContext
+        // - Platform_GetClipboardTextFn
+        // - Platform_SetClipboardTextFn
+        // - Platform_OpenInShellFn
+        // - Platform_SetImeDataFn
+        // PROBLEM: We deinit ImGui with ImGui_ImplWin32_Shutdown which calls ClearPlatformHandlers, and sets all platform callbacks to null.
+        // We genuinely do not have a way to set the default implementations again without calling CreateContext again..
+
+        // It is valid behavior to call CreateContext when there is already a context (it will create a context, and then restore the old one)
+        // But something about this doesn't seem right.
+
+        // What we do then, is register our own functions based on those default implementations
+        // (technically we could grab the default implementations before ImGui_ImplWin32_Shutdown is called, but we don't have easy access to that.)
+        var platformIo = _imGui.GetPlatformIO();
+        platformIo.AddOpenInShellCallback(OpenInShell);
+        platformIo.AddGetClipboardTextCallback(GetClipboardText);
+        platformIo.AddSetClipboardTextCallback(SetClipboardText);
+        // TODO Platform_SetImeDataFn
+    }
+
+    private static string GetClipboardText(IImGuiContext context)
+    {
+        return ClipboardService.GetText();
+    }
+
+    private static unsafe void SetClipboardText(IImGuiContext context, ReadOnlySpan<byte> path)
+    {
+        string str = Encoding.UTF8.GetString(path);
+        ClipboardService.SetText(str);
+    }
+
+    private static bool OpenInShell(IImGuiContext context, ReadOnlySpan<byte> path)
+    {
+        string str = Encoding.UTF8.GetString(path);
+        Process? process = Process.Start(new ProcessStartInfo
+        {
+            FileName = str,
+            UseShellExecute = true,
+            WindowStyle = ProcessWindowStyle.Normal,
+        });
+        
+        return process is not null;
+    }
+
     public void AddComponent(IImGuiComponent component, string? overrideCategory = null, int overridePriority = 0, string? overrideOwner = null)
     {
         ImGuiMenuAttribute? attr = component.GetType().GetCustomAttribute<ImGuiMenuAttribute>();
