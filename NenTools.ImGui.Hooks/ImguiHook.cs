@@ -34,7 +34,7 @@ namespace NenTools.ImGui.Hooks
         /// <summary>
         /// The current ImGui context.
         /// </summary>
-        public unsafe static IImGuiContext Context { get; private set; }
+        public unsafe static IImGuiContext? Context { get; private set; }
 
         /// <summary>
         /// Handle of the window being rendered.
@@ -49,9 +49,12 @@ namespace NenTools.ImGui.Hooks
         /// <summary>
         /// Allows access to ImGui IO Settings.
         /// </summary>
-        public unsafe static IImGuiIO IO { get; private set; }
+        public unsafe static IImGuiIO? IO { get; private set; }
 
-        public static IImGui imGui;
+        /// <summary>
+        /// Access to ImGui.
+        /// </summary>
+        public static IImGui? ImGui { get; private set; }
 
         public static bool BlockSetCursor { get; set; }
 
@@ -66,42 +69,47 @@ namespace NenTools.ImGui.Hooks
         /// Creates a new hook given the Reloaded.Hooks library.
         /// The library will hook to the main window.
         /// </summary>
+        /// <param name="imGui">ImGui instance</param>
         /// <param name="render">Renders your imgui UI</param>
         /// <param name="options">The options with which to initialise the hook.</param>
-        public static async Task Create(Action render, ImguiHookOptions options)
+        public static async Task Create(IImGui imGui, Action render, ImguiHookOptions? options)
         {
             if (_created)
                 return;
 
             var implementations = await Utility.GetSupportedImplementations(options.Implementations).ConfigureAwait(false);
-            Create(render, nint.Zero, implementations, options);
+            Create(imGui, render, nint.Zero, implementations, options);
         }
 
         /// <summary>
         /// Creates a new hook given the Reloaded.Hooks library.
         /// The library will hook to the main window.
         /// </summary>
+        /// <param name="imGui">ImGui instance</param>
         /// <param name="render">Renders your imgui UI</param>
         /// <param name="windowHandle">Handle of the window to draw on.</param>
         /// <param name="options">The options with which to initialise the hook.</param>
-        public static async Task Create(Action render, nint windowHandle, ImguiHookOptions options)
+        public static async Task Create(IImGui imGui, Action render, nint windowHandle, ImguiHookOptions options)
         {
             if (_created)
                 return;
 
             var implementations = await Utility.GetSupportedImplementations(options.Implementations).ConfigureAwait(false);
-            Create(render, windowHandle, implementations, options);
+            Create(imGui, render, windowHandle, implementations, options);
         }
 
         /// <summary>
         /// Creates a new ImGui hook.
         /// </summary>
+        /// <param name="imGui">ImGui instance</param>
         /// <param name="render">Renders your imgui UI</param>
         /// <param name="windowHandle">Handle to the window to render on. Pass IntPtr.Zero to select main window.</param>
         /// <param name="implementations">List of implementations to use (regardless of whether they are supported or not).</param>
         /// <param name="options">The options with which to initialise the hook. Implementations defined here are ignored in this overload.</param>
-        public unsafe static void Create(Action render, nint windowHandle, List<IImguiHook> implementations, ImguiHookOptions options)
+        public unsafe static void Create(IImGui imGui, Action render, nint windowHandle, List<IImguiHook> implementations, ImguiHookOptions? options)
         {
+            ArgumentNullException.ThrowIfNull(imGui, nameof(imGui));
+
             if (implementations.Count <= 0)
             {
                 Disable();
@@ -111,8 +119,9 @@ namespace NenTools.ImGui.Hooks
             _created = true;
             Render = render;
             WindowHandle = windowHandle;
-            Context = imGui.CreateContext(null);
-            IO = imGui.GetIO();
+            ImGui = imGui;
+            Context = ImGui.CreateContext(null);
+            IO = ImGui.GetIO();
             Options = options ?? new ImguiHookOptions();
 
             if (Options.EnableViewports)
@@ -131,23 +140,23 @@ namespace NenTools.ImGui.Hooks
         public unsafe static void Destroy()
         {
             Disable();
-            Shutdown();
 
             if (Implementations != null)
             {
                 foreach (var implementation in Implementations)
-                {
                     implementation?.Dispose();
-                }
             }
+
+            Shutdown();
 
             DebugLog.WriteLine($"[ImguiHook Destroy] Destroy Context");
 
-            imGui.DestroyContext(Context);
+            if (Context is not null)
+                ImGui?.DestroyContext(Context);
 
             Render = null;
             Implementations = null;
-            Context = null;
+            Context = null!;
             WndProcHook = null;
             WindowHandle = nint.Zero;
 
@@ -183,12 +192,15 @@ namespace NenTools.ImGui.Hooks
         /// <summary>
         /// [Internal] Shuts down the Dear ImGui implementations.
         /// </summary>
-        public static void Shutdown()
+        public static unsafe void Shutdown()
         {
             if (Initialized)
             {
                 DebugLog.WriteLine($"[ImguiHook Shutdown] Win32 Shutdown");
-                ImGuiMethods.cImGui_ImplWin32_Shutdown();
+
+                if (ImGuiMethods.GetIO()->BackendPlatformName is not null && Marshal.PtrToStringAnsi((nint)ImGuiMethods.GetIO()->BackendPlatformName)!.Contains("win32"))
+                    ImGuiMethods.cImGui_ImplWin32_Shutdown();
+
                 Initialized = false;
             }
         }
@@ -270,7 +282,7 @@ namespace NenTools.ImGui.Hooks
             ImGuiMethods.EndFrame();
             ImGuiMethods.Render();
 
-            if ((IO.ConfigFlags & ImGuiConfigFlags.ImGuiConfigFlags_ViewportsEnable) > 0)
+            if ((IO?.ConfigFlags & ImGuiConfigFlags.ImGuiConfigFlags_ViewportsEnable) > 0)
             {
                 ImGuiMethods.UpdatePlatformWindows();
                 ImGuiMethods.RenderPlatformWindowsDefault();
