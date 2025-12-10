@@ -55,6 +55,13 @@ public class ImGuiInterfaceGenerator
         "SaveIniSettingsToMemory",
     ];
 
+    /// <summary>
+    /// Types that we use a class for, instead of a struct, impl wise.
+    /// </summary>
+    private static readonly FrozenSet<string> ConvertToClassStructs =
+    [
+        
+    ];
 
     public ImGuiInterfaceGenerator(string implNamespace, string methodsNamespace, string interfaceNamespace)
     {
@@ -450,19 +457,20 @@ public class ImGuiInterfaceGenerator
                                 newStructMembers.Add(structMember);
                         }
 
-                        StructDeclarationSyntax newStruct = SF.StructDeclaration(structName)
-                        .WithBaseList(SF.BaseList(SF.SeparatedList<BaseTypeSyntax>(new List<BaseTypeSyntax>()
-                        {
-                            SF.SimpleBaseType(SF.ParseTypeName($"I{structName}")),
-                        })))
-                        .WithMembers(SF.List<MemberDeclarationSyntax>(newStructMembers))
-                        .WithModifiers(SF.TokenList([
-                            SF.Token(SyntaxKind.PublicKeyword),
-                            SF.Token(SyntaxKind.UnsafeKeyword),
-                            SF.Token(SyntaxKind.PartialKeyword),
-                        ]));
+                        TypeDeclarationSyntax newStructOrClass = ConvertToClassStructs.Contains(structName) ? SF.ClassDeclaration(structName) : SF.StructDeclaration(structName);
+                        newStructOrClass = newStructOrClass
+                            .WithBaseList(SF.BaseList(SF.SeparatedList<BaseTypeSyntax>(new List<BaseTypeSyntax>()
+                            {
+                                SF.SimpleBaseType(SF.ParseTypeName($"I{structName}")),
+                            })))
+                            .WithMembers(SF.List<MemberDeclarationSyntax>(newStructMembers))
+                            .WithModifiers(SF.TokenList([
+                                SF.Token(SyntaxKind.PublicKeyword),
+                                SF.Token(SyntaxKind.UnsafeKeyword),
+                                SF.Token(SyntaxKind.PartialKeyword),
+                            ]));
 
-                        _implMemberList.Add(newStruct);
+                        _implMemberList.Add(newStructOrClass);
                     }
                     else
                     {
