@@ -278,7 +278,11 @@ namespace NenTools.ImGui.Hooks
         {
             ImGuiMethods.cImGui_ImplWin32_NewFrame();
             ImGuiMethods.NewFrame();
+
             Render!();
+            if (!_created) // Someone could have decided to shutdown ImGui entirely from the UI.
+                return;
+
             ImGuiMethods.EndFrame();
             ImGuiMethods.Render();
 

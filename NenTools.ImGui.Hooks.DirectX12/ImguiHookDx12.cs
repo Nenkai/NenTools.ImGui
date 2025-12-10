@@ -510,7 +510,6 @@ public unsafe class ImguiHookDx12 : IImguiHook
         };
 
         // Create our texture heap allocator/pool, for ImGui textures
-        // TODO: Do NOT recreate this, because textures may be lost between resets
         if (_textureHeapAllocator is null)
         {
             _textureHeapAllocator = new DescriptorHeapAllocator();
@@ -529,7 +528,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
             Device = Device.NativePointer,
             CommandQueue = CommandQueue.NativePointer,
             NumFramesInFlight = swapChain.Description.BufferCount,
-            RTVFormat = 28, // DXGI_FORMAT_R8G8B8A8_UNORM
+            RTVFormat = (int)Format.R8G8B8A8_UNorm,
             SrvDescriptorHeap = _shaderResourceViewDescHeap.NativePointer,
             SrvDescriptorAllocFn = &ImguiHookDx12Wrapper.SrvDescriptorAllocCallback,
             SrvDescriptorFreeFn = &ImguiHookDx12Wrapper.SrvDescriptorFreeCallback,
@@ -749,8 +748,14 @@ public unsafe class ImguiHookDx12 : IImguiHook
         ImguiHook.NewFrame();
         _createSwapChainRecursionLock = false;
 
+        if (_commandContexts.Count == 0 || _commandContextIndex > _commandContexts.Count)
+            return;
+
         // Triple buffer
         CommandContext commandContext = _commandContexts[_commandContextIndex++ % _commandContexts.Count];
+
+        if (SwapChain.CurrentBackBufferIndex > _frameContexts.Count)
+            return;
         FrameContext currentFrameContext = _frameContexts[SwapChain.CurrentBackBufferIndex];
 
         commandContext.Wait(TimeSpan.FromSeconds(-1)); // INFINITE

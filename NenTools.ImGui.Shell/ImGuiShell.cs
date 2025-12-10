@@ -62,6 +62,8 @@ public class ImGuiShell : IImGuiShell
     public string ToolsMenuName => "Tools";
     public string OtherMenuName => "Other";
 
+    public bool _initialized = false;
+
     private OverlayLogger _overlayLogger;
 
     public ImGuiShell(IReloadedHooks hooks, IImguiHook imguiHook, IImGui imgui, ImGuiConfig imGuiConfig, ILoggerFactory? loggerFactory = null)
@@ -132,6 +134,7 @@ public class ImGuiShell : IImGuiShell
         OnImGuiConfiguration?.Invoke();
 
         _imguiHook.OnBackendInitialized += OnBackendInitialized;
+        _initialized = true;
     }
 
     /// <summary>
@@ -139,6 +142,8 @@ public class ImGuiShell : IImGuiShell
     /// </summary>
     public void Shutdown()
     {
+        DisableOverlay();
+
         ImguiHook.Destroy();
         ContextCreated = false;
 
@@ -146,6 +151,7 @@ public class ImGuiShell : IImGuiShell
         OnImGuiConfiguration = null;
 
         _imGui.DisposeCallbackHandles();
+        _initialized = false;
     }
 
     private void OnBackendInitialized()
@@ -260,10 +266,16 @@ public class ImGuiShell : IImGuiShell
             _firstRendered = true;
         }
 
+        if (!_initialized)
+            return;
+
         foreach (IImGuiComponent component in _components)
         {
             if (component.IsOverlay)
                 component.Render(this);
+
+            if (!_initialized) // Someone could have disabled overlay, return immediately.
+                return;
         }
 
         if (!_menuVisible)
@@ -282,6 +294,8 @@ public class ImGuiShell : IImGuiShell
                             foreach (IImGuiComponent component in componentBucket.Value)
                             {
                                 component.RenderMenu(this);
+                                if (!_initialized) // Someone could have disabled overlay, return immediately.
+                                    return;
                             }
                         }
                     }
@@ -291,13 +305,23 @@ public class ImGuiShell : IImGuiShell
             }
 
             OnEndMainMenuBarRender?.Invoke();
+            if (!_initialized)
+                return;
+
             _imGui.EndMainMenuBar();
         }
+
+        if (!_initialized)
+            return;
 
         foreach (var component in _components)
         {
             if (!component.IsOverlay)
+            {
                 component.Render(this);
+                if (!_initialized)
+                    return;
+            }
         }
     }
 
