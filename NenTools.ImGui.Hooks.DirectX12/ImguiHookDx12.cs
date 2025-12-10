@@ -748,14 +748,15 @@ public unsafe class ImguiHookDx12 : IImguiHook
         ImguiHook.NewFrame();
         _createSwapChainRecursionLock = false;
 
-        if (_commandContexts.Count == 0 || _commandContextIndex > _commandContexts.Count)
+        if (_commandContexts.Count == 0)
             return;
 
         // Triple buffer
         CommandContext commandContext = _commandContexts[_commandContextIndex++ % _commandContexts.Count];
 
-        if (SwapChain.CurrentBackBufferIndex > _frameContexts.Count)
+        if (SwapChain.CurrentBackBufferIndex >= _frameContexts.Count)
             return;
+
         FrameContext currentFrameContext = _frameContexts[SwapChain.CurrentBackBufferIndex];
 
         commandContext.Wait(TimeSpan.FromSeconds(-1)); // INFINITE
