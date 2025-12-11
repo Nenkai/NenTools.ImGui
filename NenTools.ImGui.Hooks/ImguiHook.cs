@@ -213,16 +213,19 @@ namespace NenTools.ImGui.Hooks
         {
             ImGuiMethods.cImGui_ImplWin32_WndProcHandler(hWnd, msg, (ulong)wParam, lParam);
 
+            var message = (WindowMessage)msg;
+            switch (message)
+            {
+                case WindowMessage.WM_SETCURSOR:
+                    if (BlockSetCursor)
+                        return IntPtr.Zero;
+                    break;
+            }
+
             if (Options!.IgnoreWindowUnactivate)
             {
-                var message = (WindowMessage)msg;
                 switch (message)
                 {
-                    case WindowMessage.WM_SETCURSOR:
-                        if (BlockSetCursor)
-                            return IntPtr.Zero;
-                        break;
-
                     case WindowMessage.WM_KILLFOCUS:
                         return IntPtr.Zero;
 
