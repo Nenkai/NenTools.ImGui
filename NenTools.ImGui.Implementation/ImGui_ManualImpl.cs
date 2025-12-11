@@ -183,9 +183,13 @@ public unsafe partial class ImGui : IImGui
         public static void DisposeHandles()
         {
             CallbackHandle.Handle?.Free();
+            CallbackHandle.Handle = null;
 
             if (CallbackHandle.ClipboardTextPtr != nint.Zero)
+            {
                 Marshal.FreeHGlobal(CallbackHandle.ClipboardTextPtr);
+                CallbackHandle.ClipboardTextPtr = nint.Zero;
+            }
         }
     }
 }
