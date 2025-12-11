@@ -1,12 +1,13 @@
-﻿using NenTools.ImGui.Hooks;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 using DebugLog = NenTools.ImGui.Hooks.DirectX.DebugLog;
+
+using NenTools.ImGui.Abstractions;
+using NenTools.ImGui.Hooks;
 
 namespace NenTools.ImGui.Hooks.Misc;
 
@@ -18,14 +19,14 @@ internal static class Utility
     /// <param name="candidates">Candidate implementations to check for support.</param>
     /// <param name="retryTime">Time between retries in milliseconds.</param>
     /// <param name="timeout">Timeout in milliseconds to determine DX version.</param>
-    public static async Task<List<IImguiHook>> GetSupportedImplementations(List<IImguiHook> candidates, int retryTime = 64, int timeout = 20000)
+    public static async Task<List<IBackendHook>> GetSupportedImplementations(List<IBackendHook> candidates, int retryTime = 64, int timeout = 20000)
     {
         // Store the amount of attempts taken at hooking DirectX for a process.
         var stopWatch = new Stopwatch();
         stopWatch.Start();
 
         // Loop until DirectX module found.
-        var result = new List<IImguiHook>();
+        var result = new List<IBackendHook>();
         while (true)
         {
             foreach (var candidate in candidates)

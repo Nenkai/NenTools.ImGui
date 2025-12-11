@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace NenTools.ImGui.Shell.Interfaces;
+namespace NenTools.ImGui.Abstractions;
 
 /// <summary>
 /// Provides ImGui specific shell.
@@ -53,7 +53,7 @@ public interface IImGuiShell
     /// <summary>
     /// For use with <see cref="OnFirstRender"/>
     /// </summary>
-    delegate void OnFirstRenderDelegate();
+    public delegate void OnFirstRenderDelegate();
 
     /// <summary>
     /// Fired when ImGui is rendering for the first time.
@@ -63,7 +63,7 @@ public interface IImGuiShell
     /// <summary>
     /// For use with <see cref="OnImGuiConfiguration"/>
     /// </summary>
-    delegate void OnImGuiConfigurationDelegate();
+    public delegate void OnImGuiConfigurationDelegate();
 
     /// <summary>
     /// Fired to configure ImGui (fonts, etc).
@@ -73,7 +73,7 @@ public interface IImGuiShell
     /// <summary>
     /// For use with <see cref="OnEndMainMenuBarRender"/>
     /// </summary>
-    delegate void OnEndMainMenuBarRenderDelegate();
+    public delegate void OnEndMainMenuBarRenderDelegate();
 
     /// <summary>
     /// Fired when the menu bar and all the elements have been rendered, <b>but just before EndMainMenuBar was called.</b>
@@ -85,12 +85,24 @@ public interface IImGuiShell
     /// </summary>
     /// <param name="message">Message.</param>
     /// <param name="color">Message color.</param>
-    delegate void OnLogMessageDelegate(string message, Color? color);
+    public delegate void OnLogMessageDelegate(string message, Color? color);
 
     /// <summary>
     /// Fired on log message.
     /// </summary>
     public event OnLogMessageDelegate OnLogMessage;
+
+    /// <summary>
+    /// Injects and starts the shell.
+    /// </summary>
+    /// <param name="hookOptions"></param>
+    /// <returns></returns>
+    Task Start(BackendHookOptions hookOptions);
+
+    /// <summary>
+    /// Shuts down the shell/overlay entirely.
+    /// </summary>
+    void Shutdown();
 
     /// <summary>
     /// Disables the overlay (aka ImGui rendering as a whole, not just the top menu).

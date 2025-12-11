@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NenTools.ImGui.Abstractions\NenTools.ImGui.Abstractions.csproj" />
     <ProjectReference Include="..\NenTools.ImGui.Interfaces\NenTools.ImGui.Interfaces.csproj" />
     <ProjectReference Include="..\NenTools.ImGui.Native\NenTools.ImGui.Native.csproj" />
   </ItemGroup>

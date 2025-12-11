@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 using NenTools.ImGui.Interfaces;
 using NenTools.ImGui.Shell;
-using NenTools.ImGui.Shell.Interfaces;
+using NenTools.ImGui.Abstractions;
 
 namespace NenTools.ImGui.Shell.Windows;
 

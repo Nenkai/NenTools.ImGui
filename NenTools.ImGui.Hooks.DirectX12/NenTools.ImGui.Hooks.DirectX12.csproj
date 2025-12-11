@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NenTools.ImGui.Abstractions\NenTools.ImGui.Abstractions.csproj" />
     <ProjectReference Include="..\NenTools.ImGui.Hooks\NenTools.ImGui.Hooks.csproj" />
   </ItemGroup>
 

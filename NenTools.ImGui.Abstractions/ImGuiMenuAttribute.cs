@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NenTools.ImGui.Shell.Interfaces;
+namespace NenTools.ImGui.Abstractions;
 
 /// <summary>
 /// Declares that a ImGui component is rendered on a menu.

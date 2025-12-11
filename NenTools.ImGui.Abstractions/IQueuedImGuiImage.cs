@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NenTools.ImGui.Shell.Interfaces;
+namespace NenTools.ImGui.Abstractions;
 
 /// <summary>
 /// Represents a ImGui image queued for load.<br/>

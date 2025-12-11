@@ -11,21 +11,21 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 using NenTools.ImGui.Hooks;
-using NenTools.ImGui.Shell.Interfaces;
+using NenTools.ImGui.Abstractions;
 
 namespace NenTools.ImGui.Shell;
 
 public class ImGuiTextureManager : IImGuiTextureManager
 {
-    private readonly IImguiHook _imguiHook;
+    private readonly IBackendHook _backendHook;
     private readonly ILogger? _logger;
 
     private readonly SemaphoreSlim _loadSemaphore = new SemaphoreSlim(8); // Limit to 8 concurrent loads
     private readonly SemaphoreSlim _updateSemaphore = new SemaphoreSlim(8);
 
-    public ImGuiTextureManager(IImguiHook hook, ILoggerFactory? loggerFactory = null)
+    public ImGuiTextureManager(IBackendHook backendHook, ILoggerFactory? loggerFactory = null)
     {
-        _imguiHook = hook;
+        _backendHook = backendHook;
         _logger = loggerFactory?.CreateLogger<ImGuiTextureManager>();
     }
 
@@ -104,7 +104,7 @@ public class ImGuiTextureManager : IImGuiTextureManager
         byte[] data = ArrayPool<byte>.Shared.Rent(size);
         image.CopyPixelDataTo(data);
 
-        ulong texId = _imguiHook.LoadTexture(data.AsSpan(0, size), (uint)image.Width, (uint)image.Height);
+        ulong texId = _backendHook.LoadTexture(data.AsSpan(0, size), (uint)image.Width, (uint)image.Height);
         if (data is not null)
             ArrayPool<byte>.Shared.Return(data);
 
@@ -116,7 +116,7 @@ public class ImGuiTextureManager : IImGuiTextureManager
         if (rgba32Bytes.Length != width * height * 4)
             throw new ArgumentException("The provided bytes does not match the specified dimensions.");
 
-        ulong texId = _imguiHook.LoadTexture(rgba32Bytes, width, height);
+        ulong texId = _backendHook.LoadTexture(rgba32Bytes, width, height);
         return new ImGuiImage(this, texId, width, height);
     }
 
@@ -125,8 +125,8 @@ public class ImGuiTextureManager : IImGuiTextureManager
         ArgumentNullException.ThrowIfNull(image, nameof(image));
 
         ImGuiImage imGuiImage = (ImGuiImage)image;
-        if (_imguiHook.IsTextureLoaded(image.TexId))
-            _imguiHook.FreeTexture(image.TexId);
+        if (_backendHook.IsTextureLoaded(image.TexId))
+            _backendHook.FreeTexture(image.TexId);
 
         imGuiImage.Disposed = true;
         imGuiImage.TexId = 0;
@@ -198,7 +198,7 @@ public class ImGuiTextureManager : IImGuiTextureManager
         if (imageData.Length != expectedSize)
             throw new ArgumentException($"Image buffer is expected to match image dimensions ({image.Width}x{image.Height} * 4 = {expectedSize} bytes), but provided buffer was {imageData.Length} bytes.");
 
-        _imguiHook.UpdateTexture(image.TexId, imageData, image.Width, image.Height);
+        _backendHook.UpdateTexture(image.TexId, imageData, image.Width, image.Height);
     }
 
     private void UpdateImage(IImGuiImage image, Image<Rgba32> newImagePixels)

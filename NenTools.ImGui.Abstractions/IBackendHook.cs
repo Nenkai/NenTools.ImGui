@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace NenTools.ImGui.Hooks;
+namespace NenTools.ImGui.Abstractions;
 
-public interface IImguiHook : IDisposable
+public interface IBackendHook : IDisposable
 {
     /// <summary>
     /// True if the API is supported for the current process.

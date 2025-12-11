@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-using NenTools.ImGui.Shell.Interfaces;
+using NenTools.ImGui.Abstractions;
 using NenTools.ImGui.Interfaces;
 
 namespace NenTools.ImGui.Shell;

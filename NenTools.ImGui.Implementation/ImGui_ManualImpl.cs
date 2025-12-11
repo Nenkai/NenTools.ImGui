@@ -166,8 +166,8 @@ public unsafe partial class ImGui : IImGui
                 var handle = GCHandle.FromIntPtr((nint)io->Platform_ClipboardUserData);
                 var callback = (Callbacks)handle.Target!;
 
-                string str = callback.GetClipboardText!(new ImGuiContext(context));
-                byte[] strBuffer = new byte[Encoding.UTF8.GetByteCount(str) + 1];
+                string? str = callback.GetClipboardText!(new ImGuiContext(context));
+                byte[] strBuffer = new byte[Encoding.UTF8.GetByteCount(str ?? string.Empty) + 1];
                 Encoding.UTF8.GetBytes(str, strBuffer);
 
                 if (callback.ClipboardTextPtr != nint.Zero)

@@ -51,7 +51,7 @@ public unsafe partial interface IImGuiPlatformIO
     /// <param name="path"></param>
     /// <returns></returns>
     public delegate bool OpenInShellDelegate(IImGuiContext context, ReadOnlySpan<byte> path);
-    public delegate string GetClipboardTextDelegate(IImGuiContext context);
+    public delegate string? GetClipboardTextDelegate(IImGuiContext context);
     public delegate void SetClipboardTextDelegate(IImGuiContext context, ReadOnlySpan<byte> text);
 
     /// <summary>

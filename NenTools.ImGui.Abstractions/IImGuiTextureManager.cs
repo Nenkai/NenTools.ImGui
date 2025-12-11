@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NenTools.ImGui.Shell.Interfaces;
+namespace NenTools.ImGui.Abstractions;
 
 /// <summary>
 /// Texture/Image manager for ImGui.

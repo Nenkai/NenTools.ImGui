@@ -26,7 +26,7 @@ internal class CommandContext
     public Lock Lock { get; private set; } = new();
     public bool HasCommands = false;
 
-    public bool Setup(ImguiHookDx12 hook)
+    public bool Setup(DX12BackendHook hook)
     {
         CommandAllocator?.Dispose();
         CommandList?.Dispose();
@@ -37,7 +37,7 @@ internal class CommandContext
         try
         {
             CommandAllocator = device.CreateCommandAllocator(CommandListType.Direct);
-            CommandAllocator.Name = $"[{nameof(ImguiHookDx12)}] ImGui Command Allocator";
+            CommandAllocator.Name = $"[{nameof(DX12BackendHook)}] ImGui Command Allocator";
         }
         catch (Exception)
         {
@@ -48,7 +48,7 @@ internal class CommandContext
         try
         {
             CommandList = device.CreateCommandList(0, CommandListType.Direct, CommandAllocator, null);
-            CommandList.Name = $"[{nameof(ImguiHookDx12)}] ImGui CommandList";
+            CommandList.Name = $"[{nameof(DX12BackendHook)}] ImGui CommandList";
         }
         catch (Exception)
         {
@@ -59,7 +59,7 @@ internal class CommandContext
         try
         {
             Fence = device.CreateFence(FenceValue, FenceFlags.None);
-            Fence.Name = $"[{nameof(ImguiHookDx12)}] ImGui Command Context Fence";
+            Fence.Name = $"[{nameof(DX12BackendHook)}] ImGui Command Context Fence";
 
             
         }

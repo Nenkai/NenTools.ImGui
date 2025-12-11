@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-using NenTools.ImGui.Hooks;
+using NenTools.ImGui.Abstractions;
 using NenTools.ImGui.Hooks.Misc;
 using NenTools.ImGui.Interfaces;
 using NenTools.ImGui.Native;
@@ -12,288 +12,287 @@ using NenTools.ImGui.Native;
 using DebugLog = NenTools.ImGui.Hooks.DirectX.DebugLog;
 using NenTools.ImGui.Native.Windows;
 
-namespace NenTools.ImGui.Hooks
+namespace NenTools.ImGui.Hooks;
+
+public static class ImguiHook
 {
-    public static class ImguiHook
+    /// <summary>
+    /// User supplied function to render the imgui UI.
+    /// </summary>
+    public static Action? Render { get; private set; }
+
+    /// <summary>
+    /// Current hook for the render window's WndProc.
+    /// </summary>
+    public static WndProcHook? WndProcHook { get; private set; }
+
+    /// <summary>
+    /// Abstracts the current dear imgui implementations (DX9, DX11)
+    /// </summary>
+    public static List<IBackendHook>? Implementations { get; private set; }
+    
+    /// <summary>
+    /// The current ImGui context.
+    /// </summary>
+    public unsafe static IImGuiContext? Context { get; private set; }
+
+    /// <summary>
+    /// Handle of the window being rendered.
+    /// </summary>
+    public static nint WindowHandle { get; private set; }
+
+    /// <summary>
+    /// True if the hook has been initialized, else false.
+    /// </summary>
+    public static bool Initialized { get; private set; }
+
+    /// <summary>
+    /// Allows access to ImGui IO Settings.
+    /// </summary>
+    public unsafe static IImGuiIO? IO { get; private set; }
+
+    /// <summary>
+    /// Access to ImGui.
+    /// </summary>
+    public static IImGui? ImGui { get; private set; }
+
+    public static bool BlockSetCursor { get; set; }
+
+    /// <summary>
+    /// The options with which this hook has been created with.
+    /// </summary>
+    public static BackendHookOptions? Options { get; private set; }
+
+    private static bool _created = false;
+
+    /// <summary>
+    /// Creates a new hook given the Reloaded.Hooks library.
+    /// The library will hook to the main window.
+    /// </summary>
+    /// <param name="imGui">ImGui instance</param>
+    /// <param name="render">Renders your imgui UI</param>
+    /// <param name="options">The options with which to initialise the hook.</param>
+    public static async Task Create(IImGui imGui, Action render, BackendHookOptions? options)
     {
-        /// <summary>
-        /// User supplied function to render the imgui UI.
-        /// </summary>
-        public static Action? Render { get; private set; }
+        if (_created)
+            return;
 
-        /// <summary>
-        /// Current hook for the render window's WndProc.
-        /// </summary>
-        public static WndProcHook? WndProcHook { get; private set; }
+        var implementations = await Utility.GetSupportedImplementations(options.Implementations).ConfigureAwait(false);
+        Create(imGui, render, nint.Zero, implementations, options);
+    }
 
-        /// <summary>
-        /// Abstracts the current dear imgui implementations (DX9, DX11)
-        /// </summary>
-        public static List<IImguiHook>? Implementations { get; private set; }
-        
-        /// <summary>
-        /// The current ImGui context.
-        /// </summary>
-        public unsafe static IImGuiContext? Context { get; private set; }
+    /// <summary>
+    /// Creates a new hook given the Reloaded.Hooks library.
+    /// The library will hook to the main window.
+    /// </summary>
+    /// <param name="imGui">ImGui instance</param>
+    /// <param name="render">Renders your imgui UI</param>
+    /// <param name="windowHandle">Handle of the window to draw on.</param>
+    /// <param name="options">The options with which to initialise the hook.</param>
+    public static async Task Create(IImGui imGui, Action render, nint windowHandle, BackendHookOptions options)
+    {
+        if (_created)
+            return;
 
-        /// <summary>
-        /// Handle of the window being rendered.
-        /// </summary>
-        public static nint WindowHandle { get; private set; }
+        var implementations = await Utility.GetSupportedImplementations(options.Implementations).ConfigureAwait(false);
+        Create(imGui, render, windowHandle, implementations, options);
+    }
 
-        /// <summary>
-        /// True if the hook has been initialized, else false.
-        /// </summary>
-        public static bool Initialized { get; private set; }
+    /// <summary>
+    /// Creates a new ImGui hook.
+    /// </summary>
+    /// <param name="imGui">ImGui instance</param>
+    /// <param name="render">Renders your imgui UI</param>
+    /// <param name="windowHandle">Handle to the window to render on. Pass IntPtr.Zero to select main window.</param>
+    /// <param name="implementations">List of implementations to use (regardless of whether they are supported or not).</param>
+    /// <param name="options">The options with which to initialise the hook. Implementations defined here are ignored in this overload.</param>
+    public unsafe static void Create(IImGui imGui, Action render, nint windowHandle, List<IBackendHook> implementations, BackendHookOptions? options)
+    {
+        ArgumentNullException.ThrowIfNull(imGui, nameof(imGui));
 
-        /// <summary>
-        /// Allows access to ImGui IO Settings.
-        /// </summary>
-        public unsafe static IImGuiIO? IO { get; private set; }
-
-        /// <summary>
-        /// Access to ImGui.
-        /// </summary>
-        public static IImGui? ImGui { get; private set; }
-
-        public static bool BlockSetCursor { get; set; }
-
-        /// <summary>
-        /// The options with which this hook has been created with.
-        /// </summary>
-        public static ImguiHookOptions? Options { get; private set; }
-
-        private static bool _created = false;
-
-        /// <summary>
-        /// Creates a new hook given the Reloaded.Hooks library.
-        /// The library will hook to the main window.
-        /// </summary>
-        /// <param name="imGui">ImGui instance</param>
-        /// <param name="render">Renders your imgui UI</param>
-        /// <param name="options">The options with which to initialise the hook.</param>
-        public static async Task Create(IImGui imGui, Action render, ImguiHookOptions? options)
-        {
-            if (_created)
-                return;
-
-            var implementations = await Utility.GetSupportedImplementations(options.Implementations).ConfigureAwait(false);
-            Create(imGui, render, nint.Zero, implementations, options);
-        }
-
-        /// <summary>
-        /// Creates a new hook given the Reloaded.Hooks library.
-        /// The library will hook to the main window.
-        /// </summary>
-        /// <param name="imGui">ImGui instance</param>
-        /// <param name="render">Renders your imgui UI</param>
-        /// <param name="windowHandle">Handle of the window to draw on.</param>
-        /// <param name="options">The options with which to initialise the hook.</param>
-        public static async Task Create(IImGui imGui, Action render, nint windowHandle, ImguiHookOptions options)
-        {
-            if (_created)
-                return;
-
-            var implementations = await Utility.GetSupportedImplementations(options.Implementations).ConfigureAwait(false);
-            Create(imGui, render, windowHandle, implementations, options);
-        }
-
-        /// <summary>
-        /// Creates a new ImGui hook.
-        /// </summary>
-        /// <param name="imGui">ImGui instance</param>
-        /// <param name="render">Renders your imgui UI</param>
-        /// <param name="windowHandle">Handle to the window to render on. Pass IntPtr.Zero to select main window.</param>
-        /// <param name="implementations">List of implementations to use (regardless of whether they are supported or not).</param>
-        /// <param name="options">The options with which to initialise the hook. Implementations defined here are ignored in this overload.</param>
-        public unsafe static void Create(IImGui imGui, Action render, nint windowHandle, List<IImguiHook> implementations, ImguiHookOptions? options)
-        {
-            ArgumentNullException.ThrowIfNull(imGui, nameof(imGui));
-
-            if (implementations.Count <= 0)
-            {
-                Disable();
-                throw new Exception("Unsupported or not found any compatible Implementation(s).");
-            }
-
-            _created = true;
-            Render = render;
-            WindowHandle = windowHandle;
-            ImGui = imGui;
-            Context = ImGui.CreateContext(null);
-            IO = ImGui.GetIO();
-            Options = options ?? new ImguiHookOptions();
-
-            if (Options.EnableViewports)
-                IO.ConfigFlags |= ImGuiConfigFlags.ImGuiConfigFlags_ViewportsEnable;
-
-            ImGuiMethods.StyleColorsDark(null);
-            Implementations = implementations;
-            foreach (var impl in Implementations)
-                impl.InitAndEnableHooks();
-        }
-
-        /// <summary>
-        /// Destroys the current instance of <see cref="ImguiHook"/>.
-        /// Use if you don't plan on using the hook again, such as when unloading a mod.
-        /// </summary>
-        public unsafe static void Destroy()
+        if (implementations.Count <= 0)
         {
             Disable();
-
-            if (Implementations != null)
-            {
-                foreach (var implementation in Implementations)
-                    implementation?.Dispose();
-            }
-
-            Shutdown();
-
-            DebugLog.WriteLine($"[ImguiHook Destroy] Destroy Context");
-
-            if (Context is not null)
-                ImGui?.DestroyContext(Context);
-
-            Render = null;
-            Implementations = null;
-            Context = null!;
-            WndProcHook = null;
-            WindowHandle = nint.Zero;
-
-            _created = false;
+            throw new Exception("Unsupported or not found any compatible Implementation(s).");
         }
 
-        /// <summary>
-        /// Enables the <see cref="ImguiHook"/> after it has been temporarily disabled.
-        /// </summary>
-        public static void Enable()
-        {
-            WndProcHook?.Enable(); 
-            if (Implementations == null)
-                return;
+        _created = true;
+        Render = render;
+        WindowHandle = windowHandle;
+        ImGui = imGui;
+        Context = ImGui.CreateContext(null);
+        IO = ImGui.GetIO();
+        Options = options ?? new BackendHookOptions();
 
+        if (Options.EnableViewports)
+            IO.ConfigFlags |= ImGuiConfigFlags.ImGuiConfigFlags_ViewportsEnable;
+
+        ImGuiMethods.StyleColorsDark(null);
+        Implementations = implementations;
+        foreach (var impl in Implementations)
+            impl.InitAndEnableHooks();
+    }
+
+    /// <summary>
+    /// Destroys the current instance of <see cref="ImguiHook"/>.
+    /// Use if you don't plan on using the hook again, such as when unloading a mod.
+    /// </summary>
+    public unsafe static void Destroy()
+    {
+        Disable();
+
+        if (Implementations != null)
+        {
             foreach (var implementation in Implementations)
-                implementation?.EnableHooks();
+                implementation?.Dispose();
         }
 
-        /// <summary>
-        /// Disables the <see cref="ImguiHook"/> temporarily.
-        /// </summary>
-        public static void Disable()
-        {
-            WndProcHook?.Disable();
-            if (Implementations == null) 
-                return;
+        Shutdown();
 
-            foreach (var implementation in Implementations)
-                implementation?.DisableHooks();
+        DebugLog.WriteLine($"[ImguiHook Destroy] Destroy Context");
+
+        if (Context is not null)
+            ImGui?.DestroyContext(Context);
+
+        Render = null;
+        Implementations = null;
+        Context = null!;
+        WndProcHook = null;
+        WindowHandle = nint.Zero;
+
+        _created = false;
+    }
+
+    /// <summary>
+    /// Enables the <see cref="ImguiHook"/> after it has been temporarily disabled.
+    /// </summary>
+    public static void Enable()
+    {
+        WndProcHook?.Enable(); 
+        if (Implementations == null)
+            return;
+
+        foreach (var implementation in Implementations)
+            implementation?.EnableHooks();
+    }
+
+    /// <summary>
+    /// Disables the <see cref="ImguiHook"/> temporarily.
+    /// </summary>
+    public static void Disable()
+    {
+        WndProcHook?.Disable();
+        if (Implementations == null) 
+            return;
+
+        foreach (var implementation in Implementations)
+            implementation?.DisableHooks();
+    }
+
+    /// <summary>
+    /// [Internal] Shuts down the Dear ImGui implementations.
+    /// </summary>
+    public static unsafe void Shutdown()
+    {
+        if (Initialized)
+        {
+            DebugLog.WriteLine($"[ImguiHook Shutdown] Win32 Shutdown");
+
+            if (ImGuiMethods.GetIO()->BackendPlatformName is not null && Marshal.PtrToStringAnsi((nint)ImGuiMethods.GetIO()->BackendPlatformName)!.Contains("win32"))
+                ImGuiMethods.cImGui_ImplWin32_Shutdown();
+
+            Initialized = false;
+        }
+    }
+
+    /// <summary>
+    /// Hooks WndProc to allow for input for ImGui
+    /// </summary>
+    [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
+    private static unsafe IntPtr WndProcHandler(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+    {
+        ImGuiMethods.cImGui_ImplWin32_WndProcHandler(hWnd, msg, (ulong)wParam, lParam);
+
+        var message = (WindowMessage)msg;
+        switch (message)
+        {
+            case WindowMessage.WM_SETCURSOR:
+                if (BlockSetCursor)
+                    return IntPtr.Zero;
+                break;
         }
 
-        /// <summary>
-        /// [Internal] Shuts down the Dear ImGui implementations.
-        /// </summary>
-        public static unsafe void Shutdown()
+        if (Options!.IgnoreWindowUnactivate)
         {
-            if (Initialized)
-            {
-                DebugLog.WriteLine($"[ImguiHook Shutdown] Win32 Shutdown");
-
-                if (ImGuiMethods.GetIO()->BackendPlatformName is not null && Marshal.PtrToStringAnsi((nint)ImGuiMethods.GetIO()->BackendPlatformName)!.Contains("win32"))
-                    ImGuiMethods.cImGui_ImplWin32_Shutdown();
-
-                Initialized = false;
-            }
-        }
-
-        /// <summary>
-        /// Hooks WndProc to allow for input for ImGui
-        /// </summary>
-        [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-        private static unsafe IntPtr WndProcHandler(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
-        {
-            ImGuiMethods.cImGui_ImplWin32_WndProcHandler(hWnd, msg, (ulong)wParam, lParam);
-
-            var message = (WindowMessage)msg;
             switch (message)
             {
-                case WindowMessage.WM_SETCURSOR:
-                    if (BlockSetCursor)
+                case WindowMessage.WM_KILLFOCUS:
+                    return IntPtr.Zero;
+
+                case WindowMessage.WM_ACTIVATE:
+                case WindowMessage.WM_ACTIVATEAPP:
+                    if (wParam == IntPtr.Zero)
                         return IntPtr.Zero;
+
                     break;
             }
-
-            if (Options!.IgnoreWindowUnactivate)
-            {
-                switch (message)
-                {
-                    case WindowMessage.WM_KILLFOCUS:
-                        return IntPtr.Zero;
-
-                    case WindowMessage.WM_ACTIVATE:
-                    case WindowMessage.WM_ACTIVATEAPP:
-                        if (wParam == IntPtr.Zero)
-                            return IntPtr.Zero;
-
-                        break;
-                }
-            }
-
-            return WndProcHook!.Hook.OriginalFunction.Value.Invoke(hWnd, msg, wParam, lParam);
         }
 
-        /// <summary>
-        /// [Internal] Checks if the provided window handle matches the window handle associated with this context.
-        /// If not initialised, accepts only IntPtr.Zero
-        /// </summary>
-        /// <param name="windowHandle">The window handle.</param>
-        public static bool CheckWindowHandle(nint windowHandle)
+        return WndProcHook!.Hook.OriginalFunction.Value.Invoke(hWnd, msg, wParam, lParam);
+    }
+
+    /// <summary>
+    /// [Internal] Checks if the provided window handle matches the window handle associated with this context.
+    /// If not initialised, accepts only IntPtr.Zero
+    /// </summary>
+    /// <param name="windowHandle">The window handle.</param>
+    public static bool CheckWindowHandle(nint windowHandle)
+    {
+        // Check for exact handle.
+        if (windowHandle != nint.Zero)
+            return windowHandle == WindowHandle || !Initialized;
+
+        return false;
+    }
+
+    /// <summary>
+    /// [Internal] Called from renderer implementation, renders a new frame.
+    /// </summary>
+    public static unsafe void InitializeWithHandle(IntPtr windowHandle)
+    {
+        if (!Initialized)
         {
-            // Check for exact handle.
-            if (windowHandle != nint.Zero)
-                return windowHandle == WindowHandle || !Initialized;
-
-            return false;
-        }
-
-        /// <summary>
-        /// [Internal] Called from renderer implementation, renders a new frame.
-        /// </summary>
-        public static unsafe void InitializeWithHandle(IntPtr windowHandle)
-        {
-            if (!Initialized)
-            {
-                WindowHandle = windowHandle;
-                if (WindowHandle == IntPtr.Zero)
-                    return;
-
-                DebugLog.WriteLine($"[ImguiHook] Init with Window Handle {(long)WindowHandle:X}");
-                ImGuiMethods.cImGui_ImplWin32_Init(WindowHandle);
-                var wndProcHandlerPtr = (IntPtr)SDK.Hooks.Utilities.GetFunctionPointer(typeof(ImguiHook), nameof(WndProcHandler));
-                WndProcHook = WndProcHook.Create(WindowHandle, Unsafe.As<IntPtr, WndProcHook.WndProc>(ref wndProcHandlerPtr));
-                Initialized = true;
-            }
-        }
-
-        /// <summary>
-        /// [Internal] Called from renderer implementation, renders a new frame.
-        /// </summary>
-        public static unsafe void NewFrame()
-        {
-            ImGuiMethods.cImGui_ImplWin32_NewFrame();
-            ImGuiMethods.NewFrame();
-
-            Render!();
-            if (!_created) // Someone could have decided to shutdown ImGui entirely from the UI.
+            WindowHandle = windowHandle;
+            if (WindowHandle == IntPtr.Zero)
                 return;
 
-            ImGuiMethods.EndFrame();
-            ImGuiMethods.Render();
+            DebugLog.WriteLine($"[ImguiHook] Init with Window Handle {(long)WindowHandle:X}");
+            ImGuiMethods.cImGui_ImplWin32_Init(WindowHandle);
+            var wndProcHandlerPtr = (IntPtr)SDK.Hooks.Utilities.GetFunctionPointer(typeof(ImguiHook), nameof(WndProcHandler));
+            WndProcHook = WndProcHook.Create(WindowHandle, Unsafe.As<IntPtr, WndProcHook.WndProc>(ref wndProcHandlerPtr));
+            Initialized = true;
+        }
+    }
 
-            if ((IO?.ConfigFlags & ImGuiConfigFlags.ImGuiConfigFlags_ViewportsEnable) > 0)
-            {
-                ImGuiMethods.UpdatePlatformWindows();
-                ImGuiMethods.RenderPlatformWindowsDefault();
-            }
+    /// <summary>
+    /// [Internal] Called from renderer implementation, renders a new frame.
+    /// </summary>
+    public static unsafe void NewFrame()
+    {
+        ImGuiMethods.cImGui_ImplWin32_NewFrame();
+        ImGuiMethods.NewFrame();
+
+        Render!();
+        if (!_created) // Someone could have decided to shutdown ImGui entirely from the UI.
+            return;
+
+        ImGuiMethods.EndFrame();
+        ImGuiMethods.Render();
+
+        if ((IO?.ConfigFlags & ImGuiConfigFlags.ImGuiConfigFlags_ViewportsEnable) > 0)
+        {
+            ImGuiMethods.UpdatePlatformWindows();
+            ImGuiMethods.RenderPlatformWindowsDefault();
         }
     }
 }

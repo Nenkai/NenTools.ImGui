@@ -21,7 +21,7 @@ using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 
 using static NenTools.ImGui.Hooks.DirectX12.Extensions.Factory2Extensions;
-using static NenTools.ImGui.Hooks.IImguiHook;
+using NenTools.ImGui.Abstractions;
 
 using Device = SharpDX.Direct3D12.Device;
 
@@ -29,7 +29,7 @@ using Device = SharpDX.Direct3D12.Device;
 
 namespace NenTools.ImGui.Hooks.DirectX12;
 
-public unsafe class ImguiHookDx12 : IImguiHook
+public unsafe class DX12BackendHook : IBackendHook
 {
     private bool _initializedD3D12 = false;
 
@@ -53,9 +53,9 @@ public unsafe class ImguiHookDx12 : IImguiHook
     delegate nint ResizeTargetDelegate(nint swapchainPtr, nint pNewTargetParameters);
     delegate nint CreateSwapChainForHwnd(nint this_, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullScreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain);
 
-    public event OnBackendInitializedDelegate OnBackendInitialized;
-    public event OnBackendShutdownDelegate OnBackendShutdown;
-    public event OnBuffersResizedDelegate OnBuffersResized;
+    public event IBackendHook.OnBackendInitializedDelegate OnBackendInitialized;
+    public event IBackendHook.OnBackendShutdownDelegate OnBackendShutdown;
+    public event IBackendHook.OnBuffersResizedDelegate OnBuffersResized;
 
     private bool _convertPointerHooksToVtableHookPhase = false;
 
@@ -112,7 +112,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
 
     public static nuint? CommandQueueOffset = null;
 
-    public ImguiHookDx12()
+    public DX12BackendHook()
     {
         ImguiHookDx12Wrapper.Instance = this;
     }
@@ -140,7 +140,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// <exception cref="Exception"></exception>
     private void CreateDummySwapchainAndFindVTables()
     {
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Creating dummy D3D12 device for hook purposes...");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Creating dummy D3D12 device for hook purposes...");
 
         SharpDX.Direct3D12.Device device;
         var createDevice = PInvoke.GetProcAddress(PInvoke.GetModuleHandle("d3d12.dll"), "D3D12CreateDevice");
@@ -150,21 +150,21 @@ public unsafe class ImguiHookDx12 : IImguiHook
         List<byte>? originalFunctionBytesDiff = HookUtility.GetOriginalBytesIfHooked((nuint)createDevice.Value);
         if (originalFunctionBytesDiff is not null)
         {
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] D3D12CreateDevice appears to be hooked by someone else before us, unhooking temporarily for dummy device creation...");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] D3D12CreateDevice appears to be hooked by someone else before us, unhooking temporarily for dummy device creation...");
 
             Span<byte> previouslyHookedBytes = new byte[originalFunctionBytesDiff.Count];
             Reloaded.Memory.Memory.Instance.SafeRead((nuint)createDevice.Value, previouslyHookedBytes); // Read hooked bytes
             Reloaded.Memory.Memory.Instance.SafeWrite((nuint)createDevice.Value, CollectionsMarshal.AsSpan(originalFunctionBytesDiff)); // Restore original
 
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] D3D12CreateDevice unhooked, creating device.");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] D3D12CreateDevice unhooked, creating device.");
             device = new SharpDX.Direct3D12.Device(null, FeatureLevel.Level_12_0); // Call original
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] D3D12CreateDevice dummy device created, restoring previous hook.");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] D3D12CreateDevice dummy device created, restoring previous hook.");
 
             Reloaded.Memory.Memory.Instance.SafeWrite((nuint)createDevice.Value, previouslyHookedBytes); // Restore hooked bytes
         }
         else
         {
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] D3D12CreateDevice is not hooked, creating device.");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] D3D12CreateDevice is not hooked, creating device.");
 
             try
             {
@@ -175,10 +175,10 @@ public unsafe class ImguiHookDx12 : IImguiHook
                 throw new Exception("Failed to create D3D12 Device for vtable detection.", ex);
             }
         }
-        device.Name = $"[{nameof(ImguiHookDx12)}] Dummy D3D12 device";
+        device.Name = $"[{nameof(DX12BackendHook)}] Dummy D3D12 device";
 
         CommandQueue commandQueue = device.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
-        commandQueue.Name = $"[{nameof(ImguiHookDx12)}] Dummy command queue";
+        commandQueue.Name = $"[{nameof(DX12BackendHook)}] Dummy command queue";
 
         var swapChainDesc = new SwapChainDescription1()
         {
@@ -192,7 +192,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
             Height = 1,
         };
 
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Creating dummy swapchain.");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Creating dummy swapchain.");
 
         SwapChain1? swapChain = null;
         using (var factory = new Factory6()) // Will call CreateDXGIFactory2
@@ -206,11 +206,11 @@ public unsafe class ImguiHookDx12 : IImguiHook
                     throw new Exception("Could not create dummy swapchain");
                 }
                 else
-                    DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Swapchain created with CreateHandleWithDummyWindow");
+                    DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Swapchain created with CreateHandleWithDummyWindow");
             }
             else
-                DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Swapchain created with CreateSwapChainForComposition");
-            swapChain.DebugName = $"[{nameof(ImguiHookDx12)}] Dummy swapchain";
+                DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Swapchain created with CreateSwapChainForComposition");
+            swapChain.DebugName = $"[{nameof(DX12BackendHook)}] Dummy swapchain";
 
             // TODO: use this to figure if it's a DLSS or FSR object? could never get that working
             var typeInfo = RTTIUtility.GetLocator((void*)swapChain.NativePointer);
@@ -272,8 +272,8 @@ public unsafe class ImguiHookDx12 : IImguiHook
                             _protonSwapchainOffset = @base;
                             shouldBreak = true;
 
-                            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Proton potentially detected");
-                            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Found command queue offset: 0x{i:X8}");
+                            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Proton potentially detected");
+                            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Found command queue offset: 0x{i:X8}");
                             break;
                         }
                     }
@@ -287,7 +287,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
             SwapchainVTable = SDK.Hooks.VirtualFunctionTableFromObject(swapChain.NativePointer, Enum.GetNames<IDXGISwapChainVTable>().Length);
             ComamndQueueVTable = SDK.Hooks.VirtualFunctionTableFromObject(commandQueue.NativePointer, Enum.GetNames<ID3D12CommandQueueVTable>().Length);
 
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Swapchain command queue offset: 0x{CommandQueueOffset:X}");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Swapchain command queue offset: 0x{CommandQueueOffset:X}");
 
             if (CommandQueueOffset is null)
                 throw new Exception("Could not determine command queue offset from DX12 Swapchain pointer.");
@@ -303,7 +303,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
     {
         var handle = PInvoke.GetModuleHandle(null);
 
-        const string className = $"{nameof(ImguiHookDx12)}_DummyClassName";
+        const string className = $"{nameof(DX12BackendHook)}_DummyClassName";
         fixed (char* pClassName = className)
         {
             var wc = new WNDCLASSEXW()
@@ -322,7 +322,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
 
             PInvoke.RegisterClassEx(wc);
 
-            var hwnd = PInvoke.CreateWindowEx(0, className, $"[{nameof(ImguiHookDx12)}] DX Dummy Window", WINDOW_STYLE.WS_OVERLAPPEDWINDOW, 0, 0, 100, 100, HWND.Null, null, handle, null);
+            var hwnd = PInvoke.CreateWindowEx(0, className, $"[{nameof(DX12BackendHook)}] DX Dummy Window", WINDOW_STYLE.WS_OVERLAPPEDWINDOW, 0, 0, 100, 100, HWND.Null, null, handle, null);
 
             swapChainDesc.BufferCount = 3;
             swapChainDesc.Width = 0;
@@ -360,7 +360,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// </summary>
     private void HookBaseD3D12Functions()
     {
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Hooking base D3D12 functions...");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Hooking base D3D12 functions...");
 
         // TODO: Hook streamline 
 
@@ -379,7 +379,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
         }
     }
 
-    ~ImguiHookDx12()
+    ~DX12BackendHook()
     {
         Dispose();
     }
@@ -414,7 +414,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// <returns></returns>
     public nint CreateSwapChainForHwndImpl(nint factory, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullScreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain)
     {
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] CreateSwapChainForHwndImpl called");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] CreateSwapChainForHwndImpl called");
 
         if (_isHookingD3D12)
             return _createSwapChainForHwndHook.OriginalFunction.Invoke(factory, pDevice, hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
@@ -432,7 +432,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
             InitAndEnableHooks();
         }
 
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] CreateSwapChainForHwndImpl end");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] CreateSwapChainForHwndImpl end");
         return res;
     }
 
@@ -442,7 +442,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// <returns></returns>
     private bool InitD3D12()
     {
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] InitD3D12 (buffer count: {SwapChain.Description.BufferCount})");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] InitD3D12 (buffer count: {SwapChain.Description.BufferCount})");
 
         ShutdownD3D12();
         ImGuiMethods.cImGui_ImplWin32_Init(SwapChain.Description.OutputHandle);
@@ -467,10 +467,10 @@ public unsafe class ImguiHookDx12 : IImguiHook
             _shaderResourceViewDescHeap = Device.CreateDescriptorHeap(descriptorImGuiRender);
             if (_shaderResourceViewDescHeap == null)
             {
-                DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Failed to create shader resource view descriptor heap.");
+                DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Failed to create shader resource view descriptor heap.");
                 return false;
             }
-            _shaderResourceViewDescHeap.Name = $"[{nameof(ImguiHookDx12)}] ShaderResourceViewDescHeap";
+            _shaderResourceViewDescHeap.Name = $"[{nameof(DX12BackendHook)}] ShaderResourceViewDescHeap";
         }
 
         // Create RTV Heap
@@ -487,7 +487,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
 
         var rtvDescriptorSize = Device.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
         var rtvHandle = _renderTargetViewDescHeap.CPUDescriptorHandleForHeapStart;
-        _renderTargetViewDescHeap.Name = $"[{nameof(ImguiHookDx12)}] RenderTargetViewHeap";
+        _renderTargetViewDescHeap.Name = $"[{nameof(DX12BackendHook)}] RenderTargetViewHeap";
 
         // Get RTVs
         SwapChain swapChain = SwapChain;
@@ -519,7 +519,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
                 Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView,
                 Flags = DescriptorHeapFlags.ShaderVisible,
             });
-            heap.Name = $"[{nameof(ImguiHookDx12)}] Texture Descriptor Heap";
+            heap.Name = $"[{nameof(DX12BackendHook)}] Texture Descriptor Heap";
             _textureHeapAllocator.Create(Device, heap);
         }
 
@@ -537,7 +537,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
         ImGuiMethods.cImGui_ImplDX12_Init((nint)(&initInfo));
         _imGuiBackendRendererData = ImGuiMethods.GetIO()->BackendRendererUserData;
 
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] D3D12 initted.");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] D3D12 initted.");
 
         _initializedD3D12 = true;
         OnBackendInitialized?.Invoke();
@@ -551,9 +551,9 @@ public unsafe class ImguiHookDx12 : IImguiHook
     private void ShutdownD3D12(bool isReinit = true)
     {
         if (isReinit)
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Cleaning up D3D12 for reinitialization");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Cleaning up D3D12 for reinitialization");
         else
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] ShutdownD3D12 called");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] ShutdownD3D12 called");
 
         if (_imGuiBackendRendererData is not null)
             ImGuiMethods.cImGui_ImplDX12_Shutdown();
@@ -595,7 +595,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// </summary>
     public void DisableHooks()
     {
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Disabling D3D12 hooks (if any)");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Disabling D3D12 hooks (if any)");
 
         _presentHook?.Disable();
         _resizeBuffersHook?.Disable();
@@ -606,7 +606,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
         if (_hookedSwapchainVtableAddr != 0 && _previousVTableAddr != 0)
         {
             // We gotta restore the vtable pointer. It may cause trouble if the game or anybody else tries to free a swapchain.
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Restoring swapchain vtable pointer which we previously hooked");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Restoring swapchain vtable pointer which we previously hooked");
 
             Interlocked.Exchange(ref *(nuint*)_hookedSwapchainVtableAddr, _previousVTableAddr);
             _convertPointerHooksToVtableHookPhase = true;
@@ -646,7 +646,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
         var windowHandle = swapChain.Description.OutputHandle;
         if (!ImguiHook.CheckWindowHandle(windowHandle))
         {
-            Debug.WriteLine($"[{nameof(ImguiHookDx12)}] Discarding Window Handle {windowHandle:X} due to Mismatch");
+            Debug.WriteLine($"[{nameof(DX12BackendHook)}] Discarding Window Handle {windowHandle:X} due to Mismatch");
             return originalFunc(swapChainPtr, syncInterval, flags);
         }
 
@@ -687,12 +687,12 @@ public unsafe class ImguiHookDx12 : IImguiHook
 
         if (_presentDepth > 0)
         {
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Present discarding via Recursion Lock");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Present discarding via Recursion Lock");
 
             _presentDepth++;
             var res_ = originalFunc.Invoke(swapChainPtr, syncInterval, flags);
             if (res_ != nint.Zero)
-                DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Present original failed 0x{res_:X8}");
+                DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Present original failed 0x{res_:X8}");
             _presentDepth--;
             return res_;
         }
@@ -702,7 +702,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
         _presentDepth++;
         var result = originalFunc(swapChainPtr, syncInterval, flags);
         if (result != nint.Zero)
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Present original failed 0x{result:X8}");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Present original failed 0x{result:X8}");
 
         _presentDepth--;
 
@@ -717,7 +717,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
     {
         if (!_initializedD3D12)
         {
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] Init D3D12 handle for ImGui, Window Handle: {SwapChain.Description.OutputHandle:X}");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Init D3D12 handle for ImGui, Window Handle: {SwapChain.Description.OutputHandle:X}");
             if (!_hasHookedWinProc)
             {
                 ImguiHook.InitializeWithHandle(SwapChain.Description.OutputHandle);
@@ -797,11 +797,11 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// <returns></returns>
     public nint ResizeBuffersImpl(nint swapchainPtr, uint bufferCount, uint width, uint height, Format newFormat, SwapChainFlags swapchainFlags)
     {
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] --- ResizeBuffers called ---");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] --- ResizeBuffers called ---");
 
         if (_resizeBufferDepth > 0)
         {
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] ResizeBuffers discarding wia Recursion Lock");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] ResizeBuffers discarding wia Recursion Lock");
 
             _resizeBufferDepth++;
             var res = _resizeBuffersHook.OriginalFunction(swapchainPtr, bufferCount, width, height, newFormat, swapchainFlags);
@@ -817,9 +817,9 @@ public unsafe class ImguiHookDx12 : IImguiHook
         _resizeBufferDepth--;
 
         if (result != nint.Zero)
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] ResizeBuffers original failed with {result:X}");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] ResizeBuffers original failed with {result:X}");
 
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] --- ResizeBuffers end (result: {result:X8}) ---");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] --- ResizeBuffers end (result: {result:X8}) ---");
         return result;
     }
 
@@ -844,10 +844,10 @@ public unsafe class ImguiHookDx12 : IImguiHook
     /// <returns></returns>
     public nint ResizeTargetImpl(nint swapchainPtr, nint pNewTargetParameters)
     {
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] --- ResizeTarget called ---");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] --- ResizeTarget called ---");
         if (_resizeTargetDepth > 0)
         {
-            Debug.WriteLine($"[{nameof(ImguiHookDx12)}] ResizeTarget discarding via Recursion Lock");
+            Debug.WriteLine($"[{nameof(DX12BackendHook)}] ResizeTarget discarding via Recursion Lock");
 
             _resizeTargetDepth++;
             var res = _resizeTargetHook.OriginalFunction(swapchainPtr, pNewTargetParameters);
@@ -863,9 +863,9 @@ public unsafe class ImguiHookDx12 : IImguiHook
         _resizeTargetDepth--;
 
         if (result != nint.Zero)
-            DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] ResizeTarget original failed with result: 0x{result:X}");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] ResizeTarget original failed with result: 0x{result:X}");
 
-        DebugLog.WriteLine($"[{nameof(ImguiHookDx12)}] --- ResizeTarget end (result: {result:X8}) ---");
+        DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] --- ResizeTarget end (result: {result:X8}) ---");
         return result;
     }
 
@@ -1074,7 +1074,7 @@ public unsafe class ImguiHookDx12 : IImguiHook
 
 public unsafe class ImguiHookDx12Wrapper
 {
-    public static ImguiHookDx12 Instance { get; set; }
+    public static DX12BackendHook Instance { get; set; }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvCdecl)])]
     public static void SrvDescriptorAllocCallback(ImGui_ImplDX12_InitInfo_t* initInfo, CpuDescriptorHandle* cpuHandle, GpuDescriptorHandle* gpuHandle) => Instance.SrvDescriptorAllocCallback(initInfo, cpuHandle, gpuHandle);

@@ -11,18 +11,15 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
+using NenTools.ImGui.Abstractions;
 using NenTools.ImGui.Hooks;
-using NenTools.ImGui.Implementation;
 using NenTools.ImGui.Interfaces;
 using NenTools.ImGui.Native;
-using NenTools.ImGui.Shell.Interfaces;
 using NenTools.ImGui.Shell.Windows;
 
 using Reloaded.Hooks.Definitions;
 
 using TextCopy;
-
-using static NenTools.ImGui.Shell.Interfaces.IImGuiShell;
 
 namespace NenTools.ImGui.Shell;
 
@@ -30,7 +27,7 @@ public class ImGuiShell : IImGuiShell
 {
     private readonly IReloadedHooks _hooks;
     private readonly IImGui _imGui;
-    private readonly IImguiHook _imguiHook;
+    private readonly IBackendHook _imguiHook;
     private readonly ImGuiConfig _imGuiConfig;
 
     public IImGuiTextureManager TextureManager { get; }
@@ -39,10 +36,10 @@ public class ImGuiShell : IImGuiShell
 
     private List<IImGuiComponent> _components = [];
 
-    public event OnImGuiConfigurationDelegate? OnImGuiConfiguration;
-    public event OnFirstRenderDelegate? OnFirstRender;
-    public event OnEndMainMenuBarRenderDelegate? OnEndMainMenuBarRender;
-    public event OnLogMessageDelegate? OnLogMessage;
+    public event IImGuiShell.OnImGuiConfigurationDelegate? OnImGuiConfiguration;
+    public event IImGuiShell.OnFirstRenderDelegate? OnFirstRender;
+    public event IImGuiShell.OnEndMainMenuBarRenderDelegate? OnEndMainMenuBarRender;
+    public event IImGuiShell.OnLogMessageDelegate? OnLogMessage;
 
     // Categories
     //  top menu categories (for sorting)
@@ -66,15 +63,15 @@ public class ImGuiShell : IImGuiShell
 
     private OverlayLogger _overlayLogger;
 
-    public ImGuiShell(IReloadedHooks hooks, IImguiHook imguiHook, IImGui imgui, ImGuiConfig imGuiConfig, ILoggerFactory? loggerFactory = null)
+    public ImGuiShell(IReloadedHooks hooks, IBackendHook backendHook, IImGui imgui, ImGuiConfig imGuiConfig, ILoggerFactory? loggerFactory = null)
     {
         _hooks = hooks;
-        _imguiHook = imguiHook; 
+        _imguiHook = backendHook; 
         _imGui = imgui;
         _imGuiConfig = imGuiConfig;
 
         _overlayLogger = new OverlayLogger(_imGui, _imGuiConfig);
-        TextureManager = new ImGuiTextureManager(imguiHook, loggerFactory);
+        TextureManager = new ImGuiTextureManager(backendHook, loggerFactory);
     }
 
     public void DisableOverlay() => IsOverlayEnabled = false;
@@ -106,19 +103,13 @@ public class ImGuiShell : IImGuiShell
     }
 
     /// <summary>
-    /// Sets up all ImGui hooks on startup.
-    /// </summary>
-    public void SetupHooks()
-    {
-        SDK.Init(_hooks, debug => OnLogMessage?.Invoke(debug, Color.White));
-    }
-
-    /// <summary>
     /// Creates and starts the ImGui context/rendering.
     /// </summary>
     /// <returns></returns>
-    public async Task Start(ImguiHookOptions hookOptions)
+    public async Task Start(BackendHookOptions hookOptions)
     {
+        SDK.Init(_hooks, debug => OnLogMessage?.Invoke(debug, Color.White));
+
         HideMenu();
 
         await ImguiHook.Create(_imGui, Render, hookOptions);
@@ -179,7 +170,7 @@ public class ImGuiShell : IImGuiShell
         // TODO Platform_SetImeDataFn
     }
 
-    private static string GetClipboardText(IImGuiContext context)
+    private static string? GetClipboardText(IImGuiContext context)
     {
         return ClipboardService.GetText();
     }
