@@ -115,9 +115,9 @@ public class ImGuiShell : IImGuiShell
         await ImguiHook.Create(_imGui, Render, hookOptions);
         ContextCreated = true;
 
-        _menuCategoryToComponentList.Add(FileMenuName, []);
-        _menuCategoryToComponentList.Add(ToolsMenuName, []);
-        _menuCategoryToComponentList.Add(OtherMenuName, []);
+        _menuCategoryToComponentList.TryAdd(FileMenuName, []);
+        _menuCategoryToComponentList.TryAdd(ToolsMenuName, []);
+        _menuCategoryToComponentList.TryAdd(OtherMenuName, []);
 
         AddComponent(new DemoWindow(_imGui));
         AddComponent(_overlayLogger);
