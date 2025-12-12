@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	<DocumentationFile>true</DocumentationFile>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Description>Abstractions for Interfaced ImGui bindings.</Description>
     <Copyright>2025 Nenkai</Copyright>
     <PackageProjectUrl>https://github.com/Nenkai/NenTools.ImGui</PackageProjectUrl>
