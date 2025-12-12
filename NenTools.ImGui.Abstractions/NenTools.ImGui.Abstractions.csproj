@@ -11,9 +11,9 @@
     <PackageProjectUrl>https://github.com/Nenkai/NenTools.ImGui</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Nenkai/NenTools.ImGui</RepositoryUrl>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <Version>1.0.0-imgui1.92.5</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <Version>1.0.1+imgui1.92.5</Version>
   </PropertyGroup>
 
   <ItemGroup>
