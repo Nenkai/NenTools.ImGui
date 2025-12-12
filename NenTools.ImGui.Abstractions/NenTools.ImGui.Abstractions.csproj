@@ -4,6 +4,23 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	<DocumentationFile>true</DocumentationFile>
+    <Description>Abstractions for Interfaced ImGui bindings.</Description>
+    <Copyright>2025 Nenkai</Copyright>
+    <PackageProjectUrl>https://github.com/Nenkai/NenTools.ImGui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Nenkai/NenTools.ImGui</RepositoryUrl>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0-imgui1.92.5</Version>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
