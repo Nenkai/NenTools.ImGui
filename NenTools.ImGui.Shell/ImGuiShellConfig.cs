@@ -9,18 +9,18 @@ using Tomlyn;
 
 namespace NenTools.ImGui.Shell;
 
-public class ImGuiConfig
+public class ImGuiShellConfig
 {
     private string _configPath;
 
     public OverlayLoggerConfig OverlayLogger { get; set; } = new();
 
-    public ImGuiConfig()
+    public ImGuiShellConfig()
     {
 
     }
 
-    public ImGuiConfig(string configPath)
+    public ImGuiShellConfig(string configPath)
     {
         _configPath = configPath;
     }

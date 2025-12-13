@@ -25,9 +25,9 @@ public unsafe class OverlayLogger : IImGuiComponent
 
     private bool _open = true;
 
-    private ImGuiConfig _config;
+    private ImGuiShellConfig _config;
     private readonly IImGui _imGui;
-    public OverlayLogger(IImGui imGui, ImGuiConfig config)
+    public OverlayLogger(IImGui imGui, ImGuiShellConfig config)
     {
         _imGui = imGui;
         _config = config;

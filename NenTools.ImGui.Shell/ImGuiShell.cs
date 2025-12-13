@@ -28,7 +28,7 @@ public class ImGuiShell : IImGuiShell
     private readonly IReloadedHooks _hooks;
     private readonly IImGui _imGui;
     private readonly IBackendHook _imguiHook;
-    private readonly ImGuiConfig _imGuiConfig;
+    private readonly ImGuiShellConfig _imGuiConfig;
 
     public IImGuiTextureManager TextureManager { get; }
 
@@ -63,7 +63,7 @@ public class ImGuiShell : IImGuiShell
 
     private OverlayLogger _overlayLogger;
 
-    public ImGuiShell(IReloadedHooks hooks, IBackendHook backendHook, IImGui imgui, ImGuiConfig imGuiConfig, ILoggerFactory? loggerFactory = null)
+    public ImGuiShell(IReloadedHooks hooks, IBackendHook backendHook, IImGui imgui, ImGuiShellConfig imGuiConfig, ILoggerFactory? loggerFactory = null)
     {
         _hooks = hooks;
         _imguiHook = backendHook; 
