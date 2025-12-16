@@ -38,9 +38,6 @@ public unsafe class DX12BackendHook : IBackendHook
         "d3d12.dll",
     ];
 
-    private static DescriptorHeapAllocator _textureHeapAllocator;
-    private ConcurrentDictionary<ulong, TextureResource> _textureIds = [];
-
     private IHook<PresentDelegate> _presentHook;
     private nuint _hookedSwapchainVtableAddr;
     private nuint _previousVTableAddr;
@@ -59,6 +56,7 @@ public unsafe class DX12BackendHook : IBackendHook
 
     private bool _convertPointerHooksToVtableHookPhase = false;
 
+    // Hook fields
     [ThreadStatic]
     private static int _presentDepth;
 
@@ -69,7 +67,7 @@ public unsafe class DX12BackendHook : IBackendHook
     private static int _resizeTargetDepth;
 
     [ThreadStatic]
-    private bool _createSwapChainRecursionLock;
+    private static bool _createSwapChainRecursionLock;
 
     private readonly Lock _lock = new();
     private bool _isHookingD3D12 = false; // Used to ensure CreateSwapChainForHwnd hook does not call recursively
@@ -77,6 +75,16 @@ public unsafe class DX12BackendHook : IBackendHook
     private bool _isUsingProtonSwapchain = false; // Used to determine whether we are using Proton's Swapchain
     private nuint _protonSwapchainOffset; // Used to determine where the real swapchain is in proton's wrapper swapchain
 
+    /*
+    * In some cases (E.g. under DX9 + Viewports enabled), Dear ImGui might call
+    * DirectX functions from within its internal logic.
+    *
+    * We put a lock on the current thread in order to prevent stack overflow.
+    */
+    public static nuint? CommandQueueOffset = null;
+
+
+    // Core D3D12 Resources
     public Device Device { get; private set; }
     public SwapChain3 SwapChain { get; private set; }
     public CommandQueue CommandQueue { get; private set; }
@@ -85,6 +93,16 @@ public unsafe class DX12BackendHook : IBackendHook
     private DescriptorHeap _renderTargetViewDescHeap;
     private List<FrameContext> _frameContexts = [];
     public int _commandContextIndex;
+
+    // D3D12 Texture resources
+    private CommandAllocator _textureUploadCommandAllocator;
+    private GraphicsCommandList _textureUploadCommandList;
+    private CommandQueue _textureUploadCommandQueue;
+    private Fence _textureUploadFence;
+    private nint _fenceValue;
+
+    private static DescriptorHeapAllocator _textureHeapAllocator;
+    private ConcurrentDictionary<ulong, TextureResource> _textureIds = [];
 
     public void* _imGuiBackendRendererData;
 
@@ -102,15 +120,6 @@ public unsafe class DX12BackendHook : IBackendHook
     /// Contains the DX12 DXGI Command Queue VTable.
     /// </summary>
     public static IVirtualFunctionTable ComamndQueueVTable { get; private set; }
-
-    /*
-    * In some cases (E.g. under DX9 + Viewports enabled), Dear ImGui might call
-    * DirectX functions from within its internal logic.
-    *
-    * We put a lock on the current thread in order to prevent stack overflow.
-    */
-
-    public static nuint? CommandQueueOffset = null;
 
     public DX12BackendHook()
     {
@@ -396,6 +405,11 @@ public unsafe class DX12BackendHook : IBackendHook
 
             // Dispose texture resources
             _textureHeapAllocator?.Destroy();
+
+            _textureUploadCommandAllocator?.Dispose();
+            _textureUploadCommandList?.Dispose();
+            _textureUploadCommandQueue?.Dispose();
+            _textureUploadFence?.Dispose();
         }
 
         GC.SuppressFinalize(this);
@@ -1031,29 +1045,27 @@ public unsafe class DX12BackendHook : IBackendHook
         var dstLoc = new TextureCopyLocation(textureResource.Resource, 0);
 
         // Build command list
-        var allocator = Device.CreateCommandAllocator(CommandListType.Direct);
-        var list = Device.CreateCommandList(0, CommandListType.Direct, allocator, null);
-        list.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.PixelShaderResource, ResourceStates.CopyDestination)));
-        list.CopyTextureRegion(dstLoc, 0, 0, 0, srcLoc, null);
-        list.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.CopyDestination, ResourceStates.PixelShaderResource)));
-        list.Close();
-
+        _textureUploadCommandAllocator ??= Device.CreateCommandAllocator(CommandListType.Direct);
+        _textureUploadCommandList ??= Device.CreateCommandList(0, CommandListType.Direct, _textureUploadCommandAllocator, null);
+        _textureUploadCommandList.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.PixelShaderResource, ResourceStates.CopyDestination)));
+        _textureUploadCommandList.CopyTextureRegion(dstLoc, 0, 0, 0, srcLoc, null);
+        _textureUploadCommandList.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.CopyDestination, ResourceStates.PixelShaderResource)));
+        _textureUploadCommandList.Close();
         // Execute
-        var queue = Device.CreateCommandQueue(CommandListType.Direct);
-        var fence = Device.CreateFence(0, FenceFlags.None);
-        long signal = 1;
+        _textureUploadCommandQueue ??= Device.CreateCommandQueue(CommandListType.Direct);
 
-        queue.ExecuteCommandList(list);
-        queue.Signal(fence, signal);
+        _textureUploadFence ??= Device.CreateFence(0, FenceFlags.None);
+        long signal = ++_fenceValue;
 
-        fence.SetEventOnCompletion(signal, IntPtr.Zero);
+        _textureUploadCommandQueue.ExecuteCommandList(_textureUploadCommandList);
+        _textureUploadCommandQueue.Signal(_textureUploadFence, signal);
+
+        _textureUploadFence.SetEventOnCompletion(signal, IntPtr.Zero);
         //fence.CompletedValue = signal;
 
         upload.Dispose();
-        list.Dispose();
-        allocator.Dispose();
-        queue.Dispose();
-        fence.Dispose();
+        _textureUploadCommandAllocator.Reset();
+        _textureUploadCommandList.Reset(_textureUploadCommandAllocator, null);
     }
 
     public bool IsTextureLoaded(ulong texId)
