@@ -31,9 +31,9 @@ public interface IImGuiShell
     string FileMenuName { get; }
 
     /// <summary>
-    /// Name of the 'Tools' menu within the main menu bar.
+    /// Name of the 'Shell' menu within the main menu bar.
     /// </summary>
-    string ToolsMenuName { get; }
+    string ModsMenuName { get; }
 
     /// <summary>
     /// Name of the 'Other' menu within the main menu bar.

@@ -56,7 +56,7 @@ public class ImGuiShell : IImGuiShell
     public bool IsMainMenuOpen => _menuVisible;
 
     public string FileMenuName => "File";
-    public string ToolsMenuName => "Tools";
+    public string ModsMenuName => "Mods";
     public string OtherMenuName => "Other";
 
     public bool _initialized = false;
@@ -116,7 +116,7 @@ public class ImGuiShell : IImGuiShell
         ContextCreated = true;
 
         _menuCategoryToComponentList.TryAdd(FileMenuName, []);
-        _menuCategoryToComponentList.TryAdd(ToolsMenuName, []);
+        _menuCategoryToComponentList.TryAdd(ModsMenuName, []);
         _menuCategoryToComponentList.TryAdd(OtherMenuName, []);
 
         AddComponent(new DemoWindow(_imGui));
