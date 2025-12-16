@@ -1,7 +1,7 @@
 # NenTools.ImGui
 
 > [!WARNING]
-> Work in progress and not ready for usage.
+> While this is used in [FaithFramework](https://github.com/Nenkai/FaithFramework), this is still a work in progress and not ready for general usage, see [TODOs](#todos)
 
 Interfaced Dear ImGui bindings and hooks for injection into games. Mainly intended for use with Reloaded-II and Windows based games.
 
@@ -55,14 +55,13 @@ public Mod(ModContext context)
 ## Server/Framework Usage
 
 ```csharp
-var config = new ImGuiConfig(); // Or parse from a file
- var imGuiHookDx12 = new ImguiHookDx12();
-_imGuiShell = new ImGuiShell(_hooks!, imGuiHookDx12, _imGui, config);
+var config = new ImGuiShellConfig(); // Or parse from a file with Toml.ToModel<ImGuiShellConfig>
+ var dx12BackendHook = new DX12BackendHook();
+_imGuiShell = new ImGuiShell(_hooks!, dx12BackendHook, _imGui, config);
 _imGuiShell.OnImGuiConfiguration += ConfigureImgui; // Callback that can be used to setup fonts and components for the shell
 _imGuiShell.OnEndMainMenuBarRender += RenderAnimatedTitle; // Can be used to decorate the top menu bar
 _imGuiShell.OnLogMessage += (message, color) => _logger.WriteLine(message, color ?? System.Drawing.Color.White);
 _imGuiShell.OnFirstRender += OnFirstImGuiRender; // Can be used to display a startup message
-_imGuiShell.SetupHooks();
 
 // Share ImGuiShell and IImGui. In Reloaded-II, you can do this using IExports and AddOrUpdateController.
 // You should hook the game's inputs to interact with the shell to be able to handle mouse movement without ImGui interfering with the game.
@@ -170,6 +169,11 @@ If you need to render textures, you should:
 * Pass it to your component. On `Render`, load the texture using `IImGuiTextureManager.LoadImage`. Make sure to only do this once and not every frame!
 * Pass the newly added image's `TexId` to `IImGui.Image`, etc.
 * Make sure to dispose of these textures when you don't need to use them anymore (closing window, etc).
+
+## TODOs
+
+* Methods that pass `string` should `stackalloc` whenever possible to avoid marshalling cost (or rent from `ArrayPool`)
+* Methods that take callbacks should be manually implemented
 
 ## Bindings Creation
 
