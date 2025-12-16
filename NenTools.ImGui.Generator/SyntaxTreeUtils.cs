@@ -290,9 +290,9 @@ public class SyntaxTreeUtils
                         SF.SingletonSeparatedList<ExpressionSyntax>(
                             SF.IdentifierName(
                                 SF.Identifier(
-                                    SF.TriviaList(),
+                                    leading: default,
                                     code,
                                     SF.TriviaList(
-                                        SF.Comment(comment)))))));
+                                        SF.Comment("// " + comment)))))));
     }
 }

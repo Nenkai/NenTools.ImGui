@@ -351,7 +351,10 @@ public class ImGuiInterfaceGenerator
                 SF.UsingDirective(SF.ParseName("System.Numerics"))
             ]))
             .WithMembers(new SyntaxList<MemberDeclarationSyntax>(namespaceDecl))
-            .WithLeadingTrivia(SF.Comment(GetFileComment()))
+            .WithLeadingTrivia(
+                SF.Comment(GetFileComment()),
+                SyntaxTreeUtils.CreateWarningDirectiveTrivia("CS1591", "Missing XML comment")
+             )
             .NormalizeWhitespace();
 
         SyntaxTree interfaceTree = CSharpSyntaxTree.Create(root);
@@ -855,7 +858,10 @@ public class ImGuiInterfaceGenerator
             {
                 namespaceDecl,
             }))
-            .WithLeadingTrivia(SF.Comment(GetFileComment()))
+            .WithLeadingTrivia(
+                SF.Comment(GetFileComment()),
+                SyntaxTreeUtils.CreateWarningDirectiveTrivia("CS1591", "Missing XML comment")
+            )
             .NormalizeWhitespace();
 
         SyntaxTree interfaceTree = CSharpSyntaxTree.Create(root);
@@ -1119,12 +1125,7 @@ public class ImGuiInterfaceGenerator
     {
         ClassDeclarationSyntax bindingsClass = SF.ClassDeclaration("ImGuiMethods")
             .WithModifiers(SF.TokenList(
-                SF.Token(
-                    SF.TriviaList([
-                        SyntaxTreeUtils.CreateWarningDirectiveTrivia("CA1401", "// P/Invokes should not be visible"),
-                        SyntaxTreeUtils.CreateWarningDirectiveTrivia("SYSLIB1054", "// Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time"),
-                        SyntaxTreeUtils.CreateWarningDirectiveTrivia("CA2101", "// Specify marshaling for P/Invoke string arguments"),
-                ]), SyntaxKind.PublicKeyword, SF.TriviaList()),
+                SF.Token(SyntaxKind.PublicKeyword),
                 SF.Token(SyntaxKind.UnsafeKeyword),
                 SF.Token(SyntaxKind.PartialKeyword)
             ))
@@ -1146,7 +1147,13 @@ public class ImGuiInterfaceGenerator
                 SF.UsingDirective(SF.ParseName("System.Numerics")),
             }))
             .WithMembers(new SyntaxList<MemberDeclarationSyntax>(namespaceDecl))
-            .WithLeadingTrivia(SF.Comment(GetFileComment()))
+            .WithLeadingTrivia(
+                SF.Comment(GetFileComment()),
+                SyntaxTreeUtils.CreateWarningDirectiveTrivia("CS1591", "Missing XML comment"),
+                SyntaxTreeUtils.CreateWarningDirectiveTrivia("CA1401", "P/Invokes should not be visible"),
+                SyntaxTreeUtils.CreateWarningDirectiveTrivia("SYSLIB1054", "Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time"),
+                SyntaxTreeUtils.CreateWarningDirectiveTrivia("CA2101", "Specify marshaling for P/Invoke string arguments")
+            )
             .NormalizeWhitespace();
 
         SyntaxTree interfaceTree = CSharpSyntaxTree.Create(root);

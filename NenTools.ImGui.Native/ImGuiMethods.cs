@@ -3,18 +3,20 @@
 //     This file was generated with NenTools.ImGui.Generator for ImGui Version "1.92.5"
 // </auto-generated>
 //------------------------------------------------------------------------------
-using System;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Numerics;
+#pragma warning disable CS1591 // Missing XML comment
 
-namespace NenTools.ImGui.Native;
 #pragma warning disable CA1401 // P/Invokes should not be visible
 
 #pragma warning disable SYSLIB1054 // Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
 
 #pragma warning disable CA2101 // Specify marshaling for P/Invoke string arguments
 
+using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Numerics;
+
+namespace NenTools.ImGui.Native;
 public unsafe partial class ImGuiMethods
 {
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true)]

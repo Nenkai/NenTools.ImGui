@@ -3,6 +3,8 @@
 //     This file was generated with NenTools.ImGui.Generator for ImGui Version "1.92.5"
 // </auto-generated>
 //------------------------------------------------------------------------------
+#pragma warning disable CS1591 // Missing XML comment
+
 using System;
 using System.Runtime.InteropServices;
 using System.Numerics;
