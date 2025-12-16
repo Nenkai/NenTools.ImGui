@@ -1,13 +1,18 @@
 using System;
-using System.Runtime.InteropServices;
 using System.Numerics;
 
 namespace NenTools.ImGui.Interfaces;
 
+#pragma warning disable CS1591 // Missing XML comment
+
 // Manually implemented imgui interface members
 public unsafe partial interface IImGui
 {
-    public ulong ImTextureRef_GetTexID(IImTextureRef self);
+    /// <summary>
+    /// Dispose handles allocated by managed callback methods.
+    /// </summary>
+    void DisposeCallbackHandles();
+
     public IImTextureRef CreateTextureRef(ulong texId);
 
     /// <summary>
@@ -16,6 +21,8 @@ public unsafe partial interface IImGui
     /// </summary>
     /// <returns></returns>
     public IDisposableHandle<IImFontConfig> CreateFontConfig();
+
+    public ulong ImTextureRef_GetTexID(IImTextureRef self);
 
     public void ImGuiTextFilter_ImGuiTextRange_split(IImGuiTextFilter_ImGuiTextRange self, sbyte separator, out IImVectorWrapper<IImGuiTextFilter_ImGuiTextRange> @out);
 
@@ -31,15 +38,44 @@ public unsafe partial interface IImGui
     ///</summary>
     void LoadIniSettingsFromMemory(ReadOnlySpan<byte> data, nuint ini_size);
 
-    ///<summary>
-    /// this is automatically called (if io.IniFilename is not empty) a few seconds after any modification that should be reflected in the .ini file (and also by DestroyContext).<br/>
-    ///</summary>
     string SaveIniSettingsToMemory(out nuint? out_ini_size);
 
-    /// <summary>
-    /// Dispose handles allocated by managed callback methods.
-    /// </summary>
-    void DisposeCallbackHandles();
+
+    /// <inheritdoc cref="InputText(string, sbyte*, nuint, ImGuiInputTextFlags)"/>
+    public bool InputText(string label, Span<byte> buf, ImGuiInputTextFlags flags);
+
+    /// <inheritdoc cref="InputText(string, sbyte*, nuint, ImGuiInputTextFlags)"/>
+    public bool InputText(ReadOnlySpan<byte> label, Span<byte> buf, ImGuiInputTextFlags flags);
+
+    /// <inheritdoc cref="InputTextEx(string, sbyte*, nuint, ImGuiInputTextFlags, delegate* unmanaged[Cdecl]{nint, int}, void*)"/>
+    public bool InputTextEx(string label, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+
+    /// <inheritdoc cref="InputTextEx(string, sbyte*, nuint, ImGuiInputTextFlags, delegate* unmanaged[Cdecl]{nint, int}, void*)"/>
+    public bool InputTextEx(ReadOnlySpan<byte> label, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+
+    /// <inheritdoc cref="InputTextMultiline(string, sbyte*, nuint)"/>
+    public bool InputTextMultiline(string label, Span<byte> buf);
+
+    /// <inheritdoc cref="InputTextMultiline(string, sbyte*, nuint)"/>
+    public bool InputTextMultiline(ReadOnlySpan<byte> label, Span<byte> buf);
+
+    /// <inheritdoc cref="InputTextMultilineEx(string, sbyte*, nuint, Vector2, ImGuiInputTextFlags, delegate* unmanaged[Cdecl]{nint, int}, void*)"/>
+    public bool InputTextMultilineEx(string label, Span<byte> buf, Vector2 size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+
+    /// <inheritdoc cref="InputTextMultilineEx(string, sbyte*, nuint, Vector2, ImGuiInputTextFlags, delegate* unmanaged[Cdecl]{nint, int}, void*)"/>
+    public bool InputTextMultilineEx(ReadOnlySpan<byte> label, Span<byte> buf, Vector2 size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+
+    /// <inheritdoc cref="InputTextWithHint(string, string, sbyte*, nuint, ImGuiInputTextFlags)"/>
+    public bool InputTextWithHint(string label, string hint, Span<byte> buf, ImGuiInputTextFlags flags);
+
+    /// <inheritdoc cref="InputTextWithHint(string, string, sbyte*, nuint, ImGuiInputTextFlags)"/>
+    public bool InputTextWithHint(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, Span<byte> buf, ImGuiInputTextFlags flags);
+
+    /// <inheritdoc cref="InputTextWithHintEx(string, string, sbyte*, nuint, ImGuiInputTextFlags, delegate* unmanaged[Cdecl]{nint, int}, void*)"/>
+    public bool InputTextWithHintEx(string label, string hint, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
+
+    /// <inheritdoc cref="InputTextWithHintEx(string, string, sbyte*, nuint, ImGuiInputTextFlags, delegate* unmanaged[Cdecl]{nint, int}, void*)"/>
+    public bool InputTextWithHintEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
 }
 
 public unsafe partial interface IImGuiPlatformIO

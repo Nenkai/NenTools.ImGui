@@ -4,6 +4,7 @@ using NenTools.ImGui.Native;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -69,12 +70,22 @@ public unsafe partial class ImGui : IImGui
         return handle;
     }
 
+
+    /// <summary>
+    /// Used to dispose of unmanaged resources (mainly unmanaged pointers from callbacks).
+    /// </summary>
+    public void DisposeCallbackHandles()
+    {
+        ImGuiPlatformIO.DisposeHandles();
+    }
+
+
     // Part of api, implemented manually.
     public void ImGuiTextFilter_ImGuiTextRange_split(IImGuiTextFilter_ImGuiTextRange self, sbyte separator, out IImVectorWrapper<IImGuiTextFilter_ImGuiTextRange> @out)
     {
         var vec = new ImVector<ImGuiTextFilter_ImGuiTextRangeStruct>();
         ImGuiMethods.ImGuiTextFilter_ImGuiTextRange_split(self is not null ? (ImGuiTextFilter_ImGuiTextRangeStruct*)self.NativePointer : null, separator, ref vec);
-        @out = new ImVectorWrapper<IImGuiTextFilter_ImGuiTextRange>(vec.Size, vec.Capacity, vec.Data, 
+        @out = new ImVectorWrapper<IImGuiTextFilter_ImGuiTextRange>(vec.Size, vec.Capacity, vec.Data,
             Unsafe.SizeOf<ImGuiTextFilter_ImGuiTextRangeStruct>(), (addr) => new ImGuiTextFilter_ImGuiTextRange((ImGuiTextFilter_ImGuiTextRangeStruct*)addr));
     }
 
@@ -85,12 +96,75 @@ public unsafe partial class ImGui : IImGui
         out_ranges = new ImVectorWrapper<uint>(vec.Size, vec.Capacity, vec.Data, sizeof(uint), (addr) => *(uint*)addr);
     }
 
-    /// <summary>
-    /// Used to dispose of unmanaged resources (mainly unmanaged pointers from callbacks).
-    /// </summary>
-    public void DisposeCallbackHandles()
+    // Overload input functions such that buf & buf_size => single ReadOnlySpan argument
+    public bool InputText(string label, Span<byte> buf, ImGuiInputTextFlags flags)
     {
-        ImGuiPlatformIO.DisposeHandles();
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputText(label, (sbyte*)pBuf, (nuint)buf.Length, (int)flags);
+    }
+
+    public bool InputText(ReadOnlySpan<byte> label, Span<byte> buf, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputText((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)pBuf, (nuint)buf.Length, (int)flags);
+    }
+
+    public bool InputTextEx(string label, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextEx(label, (sbyte*)pBuf, (nuint)buf.Length, (int)flags, callback, user_data);
+    }
+
+    public bool InputTextEx(ReadOnlySpan<byte> label, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)pBuf, (nuint)buf.Length, (int)flags, callback, user_data);
+    }
+
+    public bool InputTextMultiline(string label, Span<byte> buf)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextMultiline(label, (sbyte*)pBuf, (nuint)buf.Length);
+    }
+
+    public bool InputTextMultiline(ReadOnlySpan<byte> label, Span<byte> buf)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextMultiline((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)pBuf, (nuint)buf.Length);
+    }
+
+    public bool InputTextMultilineEx(string label, Span<byte> buf, Vector2 size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextMultilineEx(label, (sbyte*)pBuf, (nuint)buf.Length, size, (int)flags, callback, user_data);
+    }
+
+    public bool InputTextMultilineEx(ReadOnlySpan<byte> label, Span<byte> buf, Vector2 size, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextMultilineEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)pBuf, (nuint)buf.Length, size, (int)flags, callback, user_data);
+    }
+
+    public bool InputTextWithHint(string label, string hint, Span<byte> buf, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextWithHint(label, hint, (sbyte*)pBuf, (nuint)buf.Length, (int)flags);
+    }
+
+    public bool InputTextWithHint(ReadOnlySpan<byte> label, Span<byte> hint, Span<byte> buf, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextWithHint((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(hint)), (sbyte*)pBuf, (nuint)buf.Length, (int)flags);
+    }
+
+    public bool InputTextWithHintEx(string label, string hint, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextWithHintEx(label, hint, (sbyte*)pBuf, (nuint)buf.Length, (int)flags, callback, user_data);
+    }
+
+    public bool InputTextWithHintEx(ReadOnlySpan<byte> label, Span<byte> hint, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextWithHintEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(hint)), (sbyte*)pBuf, (nuint)buf.Length, (int)flags, callback, user_data);
+    }
+
+    public bool InputTextWithHint(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, Span<byte> buf, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextWithHint((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(hint)), (sbyte*)pBuf, (nuint)buf.Length, (int)flags);
+    }
+
+    public unsafe bool InputTextWithHintEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data)
+    {
+        fixed (byte* pBuf = buf) return ImGuiMethods.InputTextWithHintEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(hint)), (sbyte*)pBuf, (nuint)buf.Length, (int)flags, callback, user_data);
     }
 
     public unsafe partial struct ImGuiPlatformIO : IImGuiPlatformIO
