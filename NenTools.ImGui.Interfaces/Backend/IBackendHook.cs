@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NenTools.ImGui.Abstractions;
+namespace NenTools.ImGui.Interfaces.Backend;
 
 public interface IBackendHook : IDisposable
 {

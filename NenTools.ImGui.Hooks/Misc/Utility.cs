@@ -5,9 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using DebugLog = NenTools.ImGui.Hooks.DirectX.DebugLog;
-
-using NenTools.ImGui.Abstractions;
 using NenTools.ImGui.Hooks;
+using NenTools.ImGui.Interfaces.Backend;
 
 namespace NenTools.ImGui.Hooks.Misc;
 

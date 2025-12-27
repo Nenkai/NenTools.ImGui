@@ -11,7 +11,8 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 using NenTools.ImGui.Hooks;
-using NenTools.ImGui.Abstractions;
+using NenTools.ImGui.Interfaces.Shell;
+using NenTools.ImGui.Interfaces.Backend;
 
 namespace NenTools.ImGui.Shell;
 

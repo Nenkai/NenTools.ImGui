@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NenTools.ImGui.Abstractions;
+namespace NenTools.ImGui.Interfaces.Backend;
 
 public class BackendHookOptions
 {

@@ -2,6 +2,7 @@
 using NenTools.ImGui.Hooks.DirectX;
 using NenTools.ImGui.Hooks.DirectX12.Definitions;
 using NenTools.ImGui.Native;
+using NenTools.ImGui.Interfaces.Backend;
 
 using Reloaded.Hooks.Definitions;
 using Reloaded.Memory.Interfaces;
@@ -21,8 +22,6 @@ using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 
 using static NenTools.ImGui.Hooks.DirectX12.Extensions.Factory2Extensions;
-using NenTools.ImGui.Abstractions;
-
 using Device = SharpDX.Direct3D12.Device;
 
 #pragma warning disable CA1416 // This call site is reachable on all platforms. (method) is only supported on: 'windows' 5.1.2600 and later.

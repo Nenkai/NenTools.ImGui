@@ -11,9 +11,10 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
-using NenTools.ImGui.Abstractions;
 using NenTools.ImGui.Hooks;
 using NenTools.ImGui.Interfaces;
+using NenTools.ImGui.Interfaces.Backend;
+using NenTools.ImGui.Interfaces.Shell;
 using NenTools.ImGui.Native;
 using NenTools.ImGui.Shell.Windows;
 
@@ -31,6 +32,7 @@ public class ImGuiShell : IImGuiShell
     private readonly ImGuiShellConfig _imGuiConfig;
 
     public IImGuiTextureManager TextureManager { get; }
+    public IImGuiFontManager FontManager { get; }
 
     private bool _menuVisible;
 
@@ -72,6 +74,7 @@ public class ImGuiShell : IImGuiShell
 
         _overlayLogger = new OverlayLogger(_imGui, _imGuiConfig);
         TextureManager = new ImGuiTextureManager(backendHook, loggerFactory);
+        FontManager = new ImGuiFontManager(_imGui, loggerFactory);
     }
 
     public void DisableOverlay() => IsOverlayEnabled = false;

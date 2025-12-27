@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NenTools.ImGui.Abstractions;
+namespace NenTools.ImGui.Interfaces.Shell;
 
 /// <summary>
 /// Represents a renderable component for ImGui.<br/>

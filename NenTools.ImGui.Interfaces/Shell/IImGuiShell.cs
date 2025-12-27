@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.Threading.Tasks;
 
-namespace NenTools.ImGui.Abstractions;
+using NenTools.ImGui.Interfaces.Backend;
+
+namespace NenTools.ImGui.Interfaces.Shell;
 
 /// <summary>
 /// Provides ImGui specific shell.
@@ -49,6 +51,11 @@ public interface IImGuiShell
     /// Texture manager instance.
     /// </summary>
     IImGuiTextureManager TextureManager { get; }
+
+    /// <summary>
+    /// Font manager instance.
+    /// </summary>
+    IImGuiFontManager FontManager { get; }
 
     /// <summary>
     /// For use with <see cref="OnFirstRender"/>
