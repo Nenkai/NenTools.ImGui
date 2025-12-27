@@ -32,6 +32,11 @@ public interface IImGuiFontInstance
     public IImFont Font { get; }
 
     /// <summary>
+    /// Glyph ranges for this font (if manually specified).
+    /// </summary>
+    public uint[]? GlyphRanges { get; }
+
+    /// <summary>
     /// Whether this font is merged.
     /// </summary>
     public bool IsMerged { get; }

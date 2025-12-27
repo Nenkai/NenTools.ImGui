@@ -22,7 +22,7 @@ public interface IImGuiFontManager
     /// <param name="fontName">Font name/key.</param>
     /// <param name="path">Path to the font. TTF is expected.</param>
     /// <param name="sizePixels">Glyph size in pixels.</param>
-    /// <param name="glyphRanges">Glyph range affected by this font.</param>
+    /// <param name="glyphRanges">Glyph range affected by this font. <b>Ensure the pointer to the array persists and doesn't move!</b></param>
     /// <param name="options">Font options.</param>
     /// <returns>New font instance. If merge mode was enabled, it may refer to an already existing font.</returns>
     unsafe IImGuiFontInstance AddFontTTF(string owner, string fontName, string path, float sizePixels, uint* glyphRanges, ImFontOptions? options = default);
@@ -34,10 +34,14 @@ public interface IImGuiFontManager
     /// <param name="fontName">Font name/key.</param>
     /// <param name="path">Path to the font. TTF is expected.</param>
     /// <param name="sizePixels">Glyph size in pixels.</param>
-    /// <param name="glyphRanges">Glyph range affected by this font.</param>
+    /// <param name="glyphRanges">Glyph range affected by this font. <br/>
+    /// If null, GetGlyphRangesDefault is used. <br/>
+    /// <br/>
+    /// The array does not have to be null-terminated (will be handled internally).<br/>
+    /// </param>
     /// <param name="options">Font options.</param>
     /// <returns>New font instance. If merge mode was enabled, it may refer to an already existing font.</returns>
-    IImGuiFontInstance AddFontTTF(string owner, string fontName, string path, float sizePixels, ref uint glyphRanges, ImFontOptions? options = default);
+    IImGuiFontInstance AddFontTTF(string owner, string fontName, string path, float sizePixels, uint[] glyphRanges, ImFontOptions? options = default);
 
     /// <summary>
     /// Returns a font by name. Returns <see langword="null"/> if not found.

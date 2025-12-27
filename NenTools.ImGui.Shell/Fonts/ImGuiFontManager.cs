@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
-
-using NenTools.ImGui.Implementation;
-using NenTools.ImGui.Interfaces;
-using NenTools.ImGui.Interfaces.Shell.Fonts;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+
+using Microsoft.Extensions.Logging;
+
+using NenTools.ImGui.Implementation;
+using NenTools.ImGui.Interfaces;
+using NenTools.ImGui.Interfaces.Shell.Fonts;
 
 namespace NenTools.ImGui.Shell.Fonts;
 
@@ -29,13 +29,84 @@ public class ImGuiFontManager : IImGuiFontManager
     }
 
     public unsafe IImGuiFontInstance AddFontTTF(string owner, string fontName, string path, float sizePixels, uint* glyphRanges, ImFontOptions? options = default)
-        => AddFontTTF(owner, fontName, path, sizePixels, ref Unsafe.AsRef<uint>(glyphRanges), options);
-
-    public unsafe IImGuiFontInstance AddFontTTF(string owner, string fontName, string path, float sizePixels, ref uint glyphRanges, ImFontOptions? options = default)
     {
-        IImGuiIO io = _imGui.GetIO();
+        using IDisposableHandle<IImFontConfig> config = VerifyArgumentsAndCreateConfig(owner, fontName, path, sizePixels, options);
+        IImFont font = _imGui.ImFontAtlas_AddFontFromFileTTF(_imGui.GetIO().Fonts, path, sizePixels, config.Value, ref Unsafe.AsRef<uint>(glyphRanges));
 
-        using IDisposableHandle<IImFontConfig> configHandle = _imGui.CreateFontConfig();
+        ImGuiFontInstance fontInstance = new ImGuiFontInstance
+        {
+            Owner = owner,
+            Name = fontName,
+            Path = path,
+            Font = font,
+            IsMerged = config.Value.MergeMode,
+        };
+
+        Register(fontInstance);
+        return fontInstance;
+    }
+
+    public unsafe IImGuiFontInstance AddFontTTF(string owner, string fontName, string path, float sizePixels, uint[]? glyphRanges = null, ImFontOptions? options = default)
+    {
+        if (glyphRanges is null)
+            return AddFontTTF(owner, fontName, path, sizePixels, _imGui.ImFontAtlas_GetGlyphRangesDefault(_imGui.GetIO().Fonts), options);
+
+        ArgumentOutOfRangeException.ThrowIfZero(glyphRanges.Length, "glyphRanges.Length");
+
+        int newArrLength = glyphRanges.Length;
+        if (glyphRanges[^1] != 0)
+            newArrLength++;
+
+        uint[] newGlyphRangeArray = new uint[newArrLength];
+        glyphRanges.AsSpan().CopyTo(newGlyphRangeArray);
+
+        using IDisposableHandle<IImFontConfig> config = VerifyArgumentsAndCreateConfig(owner, fontName, path, sizePixels, options);
+
+        IImFont font;
+        fixed (uint* arr = &newGlyphRangeArray[0])
+            font = _imGui.ImFontAtlas_AddFontFromFileTTF(_imGui.GetIO().Fonts, path, sizePixels, config.Value, ref newGlyphRangeArray[0]);
+
+        ImGuiFontInstance fontInstance = new ImGuiFontInstance
+        {
+            Owner = owner,
+            Name = fontName,
+            Path = path,
+            Font = font,
+            IsMerged = config.Value.MergeMode,
+        };
+        fontInstance.SetGlyphRanges(glyphRanges);
+
+        Register(fontInstance);
+        return fontInstance;
+    }
+
+    public IImGuiFontInstance? GetFont(string name)
+    {
+        if (_fonts.TryGetValue(name, out IImGuiFontInstance? font))
+            return font;
+
+        return null;
+    }
+
+    public bool RemoveFont(string name)
+    {
+        if (!_fonts.TryGetValue(name, out IImGuiFontInstance? font))
+            return false;
+
+        _logger?.LogWarning("[{man}] Removing font {fontName} ({owner})", nameof(ImGuiFontManager), name, font.Owner);
+
+        IImGuiIO io = _imGui.GetIO();
+        _imGui.ImFontAtlas_RemoveFont(io.Fonts, font.Font);
+        return true;
+    }
+
+    private IDisposableHandle<IImFontConfig> VerifyArgumentsAndCreateConfig(string owner, string fontName, string path, float sizePixels, ImFontOptions? options = default)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(owner, nameof(owner));
+        ArgumentException.ThrowIfNullOrWhiteSpace(fontName, nameof(fontName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(path, nameof(path));
+
+        IDisposableHandle<IImFontConfig> configHandle = _imGui.CreateFontConfig();
         IImFontConfig config = configHandle.Value;
 
         if (options != null)
@@ -72,44 +143,15 @@ public class ImGuiFontManager : IImGuiFontManager
                 config.Flags = (ImFontFlags)options.Flags.Value;
         }
 
-        _logger?.LogWarning("[{man}] Adding font {fontName} ({owner}) from \"{path}\"", nameof(ImGuiFontManager), fontName, owner, path);
+        return configHandle;
+    }
 
-        IImFont font = _imGui.ImFontAtlas_AddFontFromFileTTF(io.Fonts, path, sizePixels, config, ref glyphRanges);
-        IImGuiFontInstance fontInstance = new ImGuiFontInstance
+    private void Register(ImGuiFontInstance fontInstance)
+    {
+        if (!_fonts.TryAdd(fontInstance.Name, fontInstance))
         {
-            Owner = owner,
-            Name = fontName,
-            Path = path,
-            Font = font,
-            IsMerged = config.MergeMode,
-        };
-
-        if (!_fonts.TryAdd(fontName, fontInstance))
-        {
-            _logger?.LogWarning("[{man}] Font '{fontName}' is already added to font manager by '{owner}', overwriting it!", nameof(ImGuiFontManager), fontName, owner);
-            _fonts[fontName] = fontInstance;
+            _logger?.LogWarning("[{man}] Font '{fontName}' is already added to font manager by '{owner}', overwriting it!", nameof(ImGuiFontManager), fontInstance.Name, fontInstance.Owner);
+            _fonts[fontInstance.Name] = fontInstance;
         }
-
-        return fontInstance;
-    }
-
-    public IImGuiFontInstance? GetFont(string name)
-    {
-        if (_fonts.TryGetValue(name, out IImGuiFontInstance? font))
-            return font;
-
-        return null;
-    }
-
-    public bool RemoveFont(string name)
-    {
-        if (!_fonts.TryGetValue(name, out IImGuiFontInstance? font))
-            return false;
-
-        _logger?.LogWarning("[{man}] Removing font {fontName} ({owner})", nameof(ImGuiFontManager), name, font.Owner);
-
-        IImGuiIO io = _imGui.GetIO();
-        _imGui.ImFontAtlas_RemoveFont(io.Fonts, font.Font);
-        return true;
     }
 }

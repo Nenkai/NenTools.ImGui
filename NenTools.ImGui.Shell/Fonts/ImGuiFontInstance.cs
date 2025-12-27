@@ -25,4 +25,12 @@ public class ImGuiFontInstance : IImGuiFontInstance
 
     /// <inheritdoc/>
     public bool IsMerged { get; init; }
+
+    private uint[] _glyphRange;
+    public uint[]? GlyphRanges => _glyphRange;
+
+    internal void SetGlyphRanges(uint[] ranges)
+    {
+        _glyphRange = ranges;
+    }
 }
