@@ -40,12 +40,6 @@ public class ImGuiFontManager : IImGuiFontManager
 
         if (options != null)
         {
-            if (options.FontData is not null)
-                config.FontData = (void*)options.FontData.Value;
-            if (options.FontDataSize is not null)
-                config.FontDataSize = options.FontDataSize.Value;
-            if (options.FontDataOwnedByAtlas is not null)
-                config.FontDataOwnedByAtlas = options.FontDataOwnedByAtlas.Value;
             if (options.MergeMode is not null)
                 config.MergeMode = options.MergeMode.Value;
             if (options.PixelSnapH is not null)
@@ -76,8 +70,6 @@ public class ImGuiFontManager : IImGuiFontManager
                 config.RasterizerDensity = options.RasterizerDensity.Value;
             if (options.Flags is not null)
                 config.Flags = (ImFontFlags)options.Flags.Value;
-            if (options.FontLoaderData is not null)
-                config.FontLoaderData = (void*)options.FontLoaderData.Value;
         }
 
         _logger?.LogWarning("[{man}] Adding font {fontName} ({owner}) from \"{path}\"", nameof(ImGuiFontManager), fontName, owner, path);
@@ -86,7 +78,10 @@ public class ImGuiFontManager : IImGuiFontManager
         IImGuiFontInstance fontInstance = new ImGuiFontInstance
         {
             Owner = owner,
-            Font = font
+            Name = fontName,
+            Path = path,
+            Font = font,
+            IsMerged = config.MergeMode,
         };
 
         if (!_fonts.TryAdd(fontName, fontInstance))

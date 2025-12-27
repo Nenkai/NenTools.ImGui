@@ -11,6 +11,18 @@ namespace NenTools.ImGui.Shell.Fonts;
 
 public class ImGuiFontInstance : IImGuiFontInstance
 {
+    /// <inheritdoc/>
     public required string Owner { get; init; }
+
+    /// <inheritdoc/>
+    public required string Name { get; init; }
+
+    /// <inheritdoc/>
+    public string? Path { get; init; } = null!;
+
+    /// <inheritdoc/>
     public required IImFont Font { get; init; }
+
+    /// <inheritdoc/>
+    public bool IsMerged { get; init; }
 }

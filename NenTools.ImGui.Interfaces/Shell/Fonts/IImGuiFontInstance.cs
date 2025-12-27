@@ -17,7 +17,22 @@ public interface IImGuiFontInstance
     public string Owner { get; }
 
     /// <summary>
+    /// Name of the font.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// File path for the font, if available.
+    /// </summary>
+    public string? Path { get; }
+
+    /// <summary>
     /// Font.
     /// </summary>
     public IImFont Font { get; }
+
+    /// <summary>
+    /// Whether this font is merged.
+    /// </summary>
+    public bool IsMerged { get; }
 }
