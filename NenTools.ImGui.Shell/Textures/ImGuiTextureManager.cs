@@ -11,10 +11,10 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
 using NenTools.ImGui.Hooks;
-using NenTools.ImGui.Interfaces.Shell;
 using NenTools.ImGui.Interfaces.Backend;
+using NenTools.ImGui.Interfaces.Shell.Textures;
 
-namespace NenTools.ImGui.Shell;
+namespace NenTools.ImGui.Shell.Textures;
 
 public class ImGuiTextureManager : IImGuiTextureManager
 {

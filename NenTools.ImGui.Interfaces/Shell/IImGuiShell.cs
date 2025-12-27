@@ -3,6 +3,8 @@ using System.Drawing;
 using System.Threading.Tasks;
 
 using NenTools.ImGui.Interfaces.Backend;
+using NenTools.ImGui.Interfaces.Shell.Fonts;
+using NenTools.ImGui.Interfaces.Shell.Textures;
 
 namespace NenTools.ImGui.Interfaces.Shell;
 

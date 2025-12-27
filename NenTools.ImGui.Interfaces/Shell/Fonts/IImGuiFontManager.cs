@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NenTools.ImGui.Interfaces.Shell;
+namespace NenTools.ImGui.Interfaces.Shell.Fonts;
 
 /// <summary>
 /// Font manager for ImGui.
@@ -13,36 +13,38 @@ public interface IImGuiFontManager
     /// <summary>
     /// Currently registered fonts.
     /// </summary>
-    IReadOnlyDictionary<string, IImFont> Fonts { get; }
+    IReadOnlyDictionary<string, IImGuiFontInstance> Fonts { get; }
 
     /// <summary>
     /// Adds a font to the manager.
     /// </summary>
+    /// <param name="owner">Owner of the font.</param>
     /// <param name="fontName">Font name/key.</param>
     /// <param name="path">Path to the font. TTF is expected.</param>
     /// <param name="sizePixels">Glyph size in pixels.</param>
     /// <param name="glyphRanges">Glyph range affected by this font.</param>
     /// <param name="options">Font options.</param>
     /// <returns></returns>
-    unsafe IImFont AddFontTTF(string fontName, string path, float sizePixels, uint* glyphRanges, ImFontOptions? options = default);
+    unsafe IImGuiFontInstance AddFontTTF(string owner, string fontName, string path, float sizePixels, uint* glyphRanges, ImFontOptions? options = default);
 
     /// <summary>
     /// Adds a font to the manager.
     /// </summary>
+    /// <param name="owner">Owner of the font.</param>
     /// <param name="fontName">Font name/key.</param>
     /// <param name="path">Path to the font. TTF is expected.</param>
     /// <param name="sizePixels">Glyph size in pixels.</param>
     /// <param name="glyphRanges">Glyph range affected by this font.</param>
     /// <param name="options">Font options.</param>
     /// <returns></returns>
-    IImFont AddFontTTF(string fontName, string path, float sizePixels, ref uint glyphRanges, ImFontOptions? options = default);
+    IImGuiFontInstance AddFontTTF(string owner, string fontName, string path, float sizePixels, ref uint glyphRanges, ImFontOptions? options = default);
 
     /// <summary>
     /// Returns a font by name. Returns <see langword="null"/> if not found.
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    IImFont? GetFont(string name);
+    IImGuiFontInstance? GetFont(string name);
 
     /// <summary>
     /// Removes a font from the manager.

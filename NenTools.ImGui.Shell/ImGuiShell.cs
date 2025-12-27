@@ -15,7 +15,11 @@ using NenTools.ImGui.Hooks;
 using NenTools.ImGui.Interfaces;
 using NenTools.ImGui.Interfaces.Backend;
 using NenTools.ImGui.Interfaces.Shell;
+using NenTools.ImGui.Interfaces.Shell.Fonts;
+using NenTools.ImGui.Interfaces.Shell.Textures;
 using NenTools.ImGui.Native;
+using NenTools.ImGui.Shell.Fonts;
+using NenTools.ImGui.Shell.Textures;
 using NenTools.ImGui.Shell.Windows;
 
 using Reloaded.Hooks.Definitions;

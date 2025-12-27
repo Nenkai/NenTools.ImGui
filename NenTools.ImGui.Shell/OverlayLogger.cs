@@ -116,8 +116,8 @@ public unsafe class OverlayLogger : IImGuiComponent
 
 public class LoggerMessage
 {
-    public string Source { get; set; }
-    public string Text { get; set; }
+    public required string Source { get; set; }
+    public required string Text { get; set; }
     public Color Color { get; set; } = Color.White;
     public DateTimeOffset Date { get; set; }
     public DateTimeOffset EndsAt { get; set; }

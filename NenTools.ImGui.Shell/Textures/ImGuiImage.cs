@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using NenTools.ImGui.Interfaces.Shell;
+using NenTools.ImGui.Interfaces.Shell.Textures;
 
-namespace NenTools.ImGui.Shell;
+namespace NenTools.ImGui.Shell.Textures;
 
 public class ImGuiImage : IImGuiImage
 {
