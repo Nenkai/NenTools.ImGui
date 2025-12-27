@@ -72,6 +72,9 @@ _imGuiShell.Start();
 
 ## Consumer Usage
 
+> [!NOTE]
+> A basic sample using Reloaded-II & FaithFramework is available [here](<https://github.com/Nenkai/FaithFramework/tree/master/FaithFramework.Sample.Doom>)
+
 1. Grab `IImGui` **and** `IImGuiShell`:
 ```csharp
 _imGui = _modLoader.GetController<IImGui>();
