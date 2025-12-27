@@ -79,8 +79,12 @@ public unsafe partial class ImGui : IImGui
         ImGuiPlatformIO.DisposeHandles();
     }
 
-
     // Part of api, implemented manually.
+
+    // These exists so that we can pass null to p_open.
+    public bool Begin(string name, ImGuiWindowFlags flags) => ImGuiMethods.Begin(name, null, (int)flags);
+    public bool Begin(ReadOnlySpan<byte> name, ImGuiWindowFlags flags) => ImGuiMethods.Begin((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), null, (int)flags);
+
     public void ImGuiTextFilter_ImGuiTextRange_split(IImGuiTextFilter_ImGuiTextRange self, sbyte separator, out IImVectorWrapper<IImGuiTextFilter_ImGuiTextRange> @out)
     {
         var vec = new ImVector<ImGuiTextFilter_ImGuiTextRangeStruct>();

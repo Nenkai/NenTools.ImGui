@@ -40,6 +40,12 @@ public unsafe partial interface IImGui
 
     string SaveIniSettingsToMemory(out nuint? out_ini_size);
 
+    // These exists so that we can pass null to p_open.
+    /// <inheritdoc cref="Begin(string, ref bool, ImGuiWindowFlags)"/>
+    bool Begin(string name, ImGuiWindowFlags flags);
+
+    /// <inheritdoc cref="Begin(string, ref bool, ImGuiWindowFlags)"/>
+    bool Begin(ReadOnlySpan<byte> name, ImGuiWindowFlags flags);
 
     /// <inheritdoc cref="InputText(string, sbyte*, nuint, ImGuiInputTextFlags)"/>
     public bool InputText(string label, Span<byte> buf, ImGuiInputTextFlags flags);

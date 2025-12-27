@@ -18,4 +18,10 @@ public unsafe partial class ImGuiMethods
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_SaveIniSettingsToMemory", ExactSpelling = true)]
     [return: MarshalAs(UnmanagedType.LPUTF8Str)]
     public static extern string SaveIniSettingsToMemory(nuint out_ini_size);
+
+    // We have these so that we can pass null to p_open.
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Begin", ExactSpelling = true)]
+    public static extern bool Begin([MarshalAs(UnmanagedType.LPUTF8Str)] string name, bool* p_open, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Begin", ExactSpelling = true)]
+    public static extern bool Begin(sbyte* name, bool* p_open, int flags);
 }
