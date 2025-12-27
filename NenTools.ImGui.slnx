@@ -2,7 +2,6 @@
   <Project Path="NenTools.ImGui.Generator/NenTools.ImGui.Generator.csproj" />
   <Project Path="NenTools.ImGui.Hooks.DirectX12/NenTools.ImGui.Hooks.DirectX12.csproj" />
   <Project Path="NenTools.ImGui.Hooks/NenTools.ImGui.Hooks.csproj" />
-  <Project Path="NenTools.ImGui.Abstractions/NenTools.ImGui.Abstractions.csproj" />
   <Project Path="NenTools.ImGui.Implementation/NenTools.ImGui.Implementation.csproj" />
   <Project Path="NenTools.ImGui.Interfaces/NenTools.ImGui.Interfaces.csproj" />
   <Project Path="NenTools.ImGui.Native/NenTools.ImGui.Native.csproj" />
