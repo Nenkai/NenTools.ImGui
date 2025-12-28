@@ -21,6 +21,7 @@ Currently supports DirectX12 exclusively.
 * DirectX 12 support (third-party overlays supported)
 * Shell support (main menu & API)
 * Texture Manager
+* Font Manager
 
 ## The Problem
 
