@@ -5,21 +5,21 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-using SharpDX.Direct3D12;
+using Vortice.Direct3D12;
 
 namespace NenTools.ImGui.Hooks.DirectX12;
 
 // Taken from imgui examples
 public class DescriptorHeapAllocator
 {
-    private DescriptorHeap Heap;
-    private DescriptorHeapType HeapType = DescriptorHeapType.NumTypes;
+    private ID3D12DescriptorHeap Heap;
+    private DescriptorHeapType HeapType = DescriptorHeapType.Count;
     private CpuDescriptorHandle HeapStartCpu;
     private GpuDescriptorHandle HeapStartGpu;
     private uint HeapHandleIncrement;
     private Stack<int> FreeIndices = [];
 
-    public void Create(Device device, DescriptorHeap heap)
+    public void Create(ID3D12Device device, ID3D12DescriptorHeap heap)
     {
         ArgumentNullException.ThrowIfNull(device, nameof(device));
         ArgumentNullException.ThrowIfNull(heap, nameof(heap));
@@ -27,11 +27,11 @@ public class DescriptorHeapAllocator
         Heap = heap;
         DescriptorHeapDescription desc = heap.Description;
         HeapType = desc.Type;
-        HeapStartCpu = Heap.CPUDescriptorHandleForHeapStart;
-        HeapStartGpu = Heap.GPUDescriptorHandleForHeapStart;
+        HeapStartCpu = Heap.GetCPUDescriptorHandleForHeapStart();
+        HeapStartGpu = Heap.GetGPUDescriptorHandleForHeapStart();
         HeapHandleIncrement = (uint)device.GetDescriptorHandleIncrementSize(HeapType);
-        FreeIndices = new Stack<int>(desc.DescriptorCount);
-        for (int n = desc.DescriptorCount; n > 0; n--)
+        FreeIndices = new Stack<int>((int)desc.DescriptorCount);
+        for (int n = (int)desc.DescriptorCount; n > 0; n--)
             FreeIndices.Push(n - 1);
     }
 
@@ -43,10 +43,10 @@ public class DescriptorHeapAllocator
 
     public void Alloc(ref CpuDescriptorHandle outCpuDescHandle, ref GpuDescriptorHandle outGpuDescHandle)
     {
-        int idx = FreeIndices.Peek();
+        long idx = FreeIndices.Peek();
         FreeIndices.Pop();
-        outCpuDescHandle.Ptr = HeapStartCpu.Ptr + idx * HeapHandleIncrement;
-        outGpuDescHandle.Ptr = HeapStartGpu.Ptr + idx * HeapHandleIncrement;
+        outCpuDescHandle.Ptr = (nuint)(HeapStartCpu.Ptr + (ulong)idx * HeapHandleIncrement);
+        outGpuDescHandle.Ptr = (nuint)(HeapStartGpu.Ptr + (ulong)idx * HeapHandleIncrement);
     }
 
     public void Free(CpuDescriptorHandle outCpuDescHandle, GpuDescriptorHandle outGpuDescHandle)

@@ -7,10 +7,6 @@ using NenTools.ImGui.Interfaces.Backend;
 using Reloaded.Hooks.Definitions;
 using Reloaded.Memory.Interfaces;
 
-using SharpDX.Direct3D;
-using SharpDX.Direct3D12;
-using SharpDX.DXGI;
-
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
@@ -21,8 +17,10 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 
-using static NenTools.ImGui.Hooks.DirectX12.Extensions.Factory2Extensions;
-using Device = SharpDX.Direct3D12.Device;
+using Vortice.Direct3D12;
+using Vortice.DXGI;
+using static Vortice.Direct3D12.D3D12;
+using static Vortice.DXGI.DXGI;
 
 #pragma warning disable CA1416 // This call site is reachable on all platforms. (method) is only supported on: 'windows' 5.1.2600 and later.
 
@@ -47,7 +45,7 @@ public unsafe class DX12BackendHook : IBackendHook
     delegate nint PresentDelegate(nuint swapChainPtr, int syncInterval, PresentFlags flags);
     delegate nint ResizeBuffersDelegate(nint swapchainPtr, uint bufferCount, uint width, uint height, Format newFormat, SwapChainFlags swapchainFlags);
     delegate nint ResizeTargetDelegate(nint swapchainPtr, nint pNewTargetParameters);
-    delegate nint CreateSwapChainForHwnd(nint this_, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullScreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain);
+    delegate nint CreateSwapChainForHwnd(nint this_, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullscreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain);
 
     public event IBackendHook.OnBackendInitializedDelegate OnBackendInitialized;
     public event IBackendHook.OnBackendShutdownDelegate OnBackendShutdown;
@@ -84,21 +82,21 @@ public unsafe class DX12BackendHook : IBackendHook
 
 
     // Core D3D12 Resources
-    public Device Device { get; private set; }
-    public SwapChain3 SwapChain { get; private set; }
-    public CommandQueue CommandQueue { get; private set; }
+    public ID3D12Device Device { get; private set; }
+    public IDXGISwapChain3 SwapChain { get; private set; }
+    public ID3D12CommandQueue CommandQueue { get; private set; }
     private List<CommandContext> _commandContexts = [];
-    private DescriptorHeap _shaderResourceViewDescHeap;
-    private DescriptorHeap _renderTargetViewDescHeap;
+    private ID3D12DescriptorHeap _shaderResourceViewDescHeap;
+    private ID3D12DescriptorHeap _renderTargetViewDescHeap;
     private List<FrameContext> _frameContexts = [];
     public int _commandContextIndex;
 
     // D3D12 Texture resources
-    private CommandAllocator _textureUploadCommandAllocator;
-    private GraphicsCommandList _textureUploadCommandList;
-    private CommandQueue _textureUploadCommandQueue;
-    private Fence _textureUploadFence;
-    private nint _fenceValue;
+    private ID3D12CommandAllocator _textureUploadCommandAllocator;
+    private ID3D12GraphicsCommandList _textureUploadCommandList;
+    private ID3D12CommandQueue _textureUploadCommandQueue;
+    private ID3D12Fence _textureUploadFence;
+    private ulong _fenceValue;
 
     private static DescriptorHeapAllocator _textureHeapAllocator;
     private ConcurrentDictionary<ulong, TextureResource> _textureIds = [];
@@ -150,7 +148,7 @@ public unsafe class DX12BackendHook : IBackendHook
     {
         DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Creating dummy D3D12 device for hook purposes...");
 
-        SharpDX.Direct3D12.Device device;
+        ID3D12Device? device;
         var createDevice = PInvoke.GetProcAddress(PInvoke.GetModuleHandle("d3d12.dll"), "D3D12CreateDevice");
 
         // D3D12CreateDevice may have been hooked beforehand (Reshade, etc), so unhook it temporarily
@@ -165,7 +163,10 @@ public unsafe class DX12BackendHook : IBackendHook
             Reloaded.Memory.Memory.Instance.SafeWrite((nuint)createDevice.Value, CollectionsMarshal.AsSpan(originalFunctionBytesDiff)); // Restore original
 
             DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] D3D12CreateDevice unhooked, creating device.");
-            device = new SharpDX.Direct3D12.Device(null, FeatureLevel.Level_12_0); // Call original
+            SharpGen.Runtime.Result res = D3D12CreateDevice(null, Vortice.Direct3D.FeatureLevel.Level_12_0, out device);
+            if (!res.Success) // Call original
+                throw new Exception($"Failed to create D3D12 Device for vtable detection. Error: {res}");
+
             DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] D3D12CreateDevice dummy device created, restoring previous hook.");
 
             Reloaded.Memory.Memory.Instance.SafeWrite((nuint)createDevice.Value, previouslyHookedBytes); // Restore hooked bytes
@@ -176,7 +177,9 @@ public unsafe class DX12BackendHook : IBackendHook
 
             try
             {
-                device = new SharpDX.Direct3D12.Device(null, FeatureLevel.Level_12_0);
+                SharpGen.Runtime.Result res = D3D12CreateDevice(null, Vortice.Direct3D.FeatureLevel.Level_12_0, out device);
+                if (!res.Success) // Call original
+                    throw new Exception($"Failed to create D3D12 Device for vtable detection. Error: {res}");
             }
             catch (Exception ex)
             {
@@ -185,13 +188,13 @@ public unsafe class DX12BackendHook : IBackendHook
         }
         device.Name = $"[{nameof(DX12BackendHook)}] Dummy D3D12 device";
 
-        CommandQueue commandQueue = device.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
+        ID3D12CommandQueue commandQueue = device.CreateCommandQueue(new CommandQueueDescription(CommandListType.Direct));
         commandQueue.Name = $"[{nameof(DX12BackendHook)}] Dummy command queue";
 
         var swapChainDesc = new SwapChainDescription1()
         {
             Format = Format.R8G8B8A8_UNorm,
-            Usage = Usage.RenderTargetOutput,
+            BufferUsage = Usage.RenderTargetOutput,
             SwapEffect = SwapEffect.FlipDiscard,
             BufferCount = 2,
             SampleDescription = new SampleDescription(1, 0),
@@ -202,16 +205,26 @@ public unsafe class DX12BackendHook : IBackendHook
 
         DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Creating dummy swapchain.");
 
-        SwapChain1? swapChain = null;
-        using (var factory = new Factory6()) // Will call CreateDXGIFactory2
+        IDXGISwapChain1? swapChain = null;
+        using (IDXGIFactory6 factory = CreateDXGIFactory2<IDXGIFactory6>(debug: false)) // Will call CreateDXGIFactory2
         {
             // We ideally don't want to create a swapchain through CreateSwapChainForHwnd, because it may have been hooked
             // Try multiple ways
-            if (!factory.CreateSwapChainForComposition(commandQueue, ref swapChainDesc, null!, out swapChain).Success)
+
+            try
+            {
+                swapChain = factory.CreateSwapChainForComposition(commandQueue, swapChainDesc, null!);
+            }
+            catch
+            {
+                DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Dummy swapchain creation failed with CreateSwapChainForComposition");
+            }
+
+            if (swapChain is null)
             {
                 if (!CreateHandleWithDummyWindow(factory, commandQueue, out swapChainDesc, out swapChain)) // TODO: Verify if this one even works
                 {
-                    throw new Exception("Could not create dummy swapchain");
+                    throw new Exception("Could not create dummy swapchain with dummy window");
                 }
                 else
                     DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Swapchain created with CreateHandleWithDummyWindow");
@@ -271,7 +284,7 @@ public unsafe class DX12BackendHook : IBackendHook
                             //   Side note: Even though we are scanning for Proton here,
                             //   this doubles as an offset scanner for the real swapchain inside Streamline (or FSR3)
                             if (_isUsingFrameGenerationSwapchain)
-                                swapChain = new SwapChain3((nint)scanBase);
+                                swapChain = new IDXGISwapChain3((nint)scanBase);
 
                             if (!_isUsingFrameGenerationSwapchain)
                                 _isUsingProtonSwapchain = true;
@@ -291,7 +304,7 @@ public unsafe class DX12BackendHook : IBackendHook
                 }
             }
 
-            FactoryVTable = SDK.Hooks.VirtualFunctionTableFromObject(factory.NativePointer, Enum.GetNames<IDXGIFactory>().Length);
+            FactoryVTable = SDK.Hooks.VirtualFunctionTableFromObject(factory.NativePointer, Enum.GetNames<IDXGIFactoryVTable>().Length);
             SwapchainVTable = SDK.Hooks.VirtualFunctionTableFromObject(swapChain.NativePointer, Enum.GetNames<IDXGISwapChainVTable>().Length);
             ComamndQueueVTable = SDK.Hooks.VirtualFunctionTableFromObject(commandQueue.NativePointer, Enum.GetNames<ID3D12CommandQueueVTable>().Length);
 
@@ -307,7 +320,7 @@ public unsafe class DX12BackendHook : IBackendHook
         device.Dispose();
     }
 
-    private static bool CreateHandleWithDummyWindow(Factory2 factory, CommandQueue commandQueue, out SwapChainDescription1 swapChainDesc, out SwapChain1 swapChain)
+    private static bool CreateHandleWithDummyWindow(IDXGIFactory2 factory, ID3D12CommandQueue commandQueue, out SwapChainDescription1 swapChainDesc, out IDXGISwapChain1 swapChain)
     {
         var handle = PInvoke.GetModuleHandle(null);
 
@@ -336,8 +349,8 @@ public unsafe class DX12BackendHook : IBackendHook
             swapChainDesc.Width = 0;
             swapChainDesc.Height = 0;
             swapChainDesc.Format = Format.R8G8B8A8_UNorm;
-            swapChainDesc.Flags = SwapChainFlags.FrameLatencyWaitAbleObject;
-            swapChainDesc.Usage = Usage.RenderTargetOutput;
+            swapChainDesc.Flags = SwapChainFlags.FrameLatencyWaitableObject;
+            swapChainDesc.BufferUsage = Usage.RenderTargetOutput;
             swapChainDesc.SampleDescription.Count = 1;
             swapChainDesc.SampleDescription.Quality = 0;
             swapChainDesc.SwapEffect = SwapEffect.FlipDiscard;
@@ -345,7 +358,16 @@ public unsafe class DX12BackendHook : IBackendHook
             swapChainDesc.Scaling = Scaling.Stretch;
             swapChainDesc.Stereo = false;
 
-            return factory.CreateSwapChainForHwnd(commandQueue, hwnd, ref swapChainDesc, null, null, out swapChain).Success;
+            try
+            {
+                swapChain = factory.CreateSwapChainForHwnd(commandQueue, hwnd, swapChainDesc, null, null);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                swapChain = null;
+                return false;
+            }
         }
     }
 
@@ -382,7 +404,7 @@ public unsafe class DX12BackendHook : IBackendHook
             nuint presentPointerAddr = (nuint)SwapchainVTable[(int)IDXGISwapChainVTable.Present].EntryAddress;
             _presentHook = new FunctionPointerHook<PresentDelegate>(presentPointerAddr, PresentImpl).Activate();
 
-            nuint createSwapChainForHwndPointerAddr = (nuint)FactoryVTable[(int)IDXGIFactory.CreateSwapChainForHwnd].EntryAddress;
+            nuint createSwapChainForHwndPointerAddr = (nuint)FactoryVTable[(int)IDXGIFactoryVTable.CreateSwapChainForHwnd].EntryAddress;
             _createSwapChainForHwndHook ??= new FunctionPointerHook<CreateSwapChainForHwnd>(createSwapChainForHwndPointerAddr, CreateSwapChainForHwndImpl).Activate();
         }
     }
@@ -425,7 +447,7 @@ public unsafe class DX12BackendHook : IBackendHook
     /// <param name="pRestrictToOutput"></param>
     /// <param name="ppSwapChain"></param>
     /// <returns></returns>
-    public nint CreateSwapChainForHwndImpl(nint factory, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullScreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain)
+    public nint CreateSwapChainForHwndImpl(nint factory, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullscreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain)
     {
         DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] CreateSwapChainForHwndImpl called");
 
@@ -458,7 +480,7 @@ public unsafe class DX12BackendHook : IBackendHook
         DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] InitD3D12 (buffer count: {SwapChain.Description.BufferCount})");
 
         ShutdownD3D12();
-        ImGuiMethods.cImGui_ImplWin32_Init(SwapChain.Description.OutputHandle);
+        ImGuiMethods.cImGui_ImplWin32_Init(SwapChain.Description.OutputWindow);
 
         for (int i = 0; i < 3; i++)
         {
@@ -499,19 +521,19 @@ public unsafe class DX12BackendHook : IBackendHook
             return false;
 
         var rtvDescriptorSize = Device.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
-        var rtvHandle = _renderTargetViewDescHeap.CPUDescriptorHandleForHeapStart;
+        var rtvHandle = _renderTargetViewDescHeap.GetCPUDescriptorHandleForHeapStart();
         _renderTargetViewDescHeap.Name = $"[{nameof(DX12BackendHook)}] RenderTargetViewHeap";
 
         // Get RTVs
-        SwapChain swapChain = SwapChain;
-        for (var i = 0; i < swapChain.Description.BufferCount; i++)
+        IDXGISwapChain swapChain = SwapChain;
+        for (uint i = 0; i < swapChain.Description.BufferCount; i++)
         {
             _frameContexts.Add(new FrameContext
             {
                 MainRenderTargetDescriptor = rtvHandle,
-                MainRenderTargetResource = swapChain.GetBackBuffer<SharpDX.Direct3D12.Resource>(i),
+                MainRenderTargetResource = swapChain.GetBuffer<ID3D12Resource>(i),
             });
-            Device.CreateRenderTargetView(_frameContexts[i].MainRenderTargetResource, null, rtvHandle);
+            Device.CreateRenderTargetView(_frameContexts[(int)i].MainRenderTargetResource, null, rtvHandle);
             rtvHandle.Ptr += rtvDescriptorSize;
         }
 
@@ -540,7 +562,7 @@ public unsafe class DX12BackendHook : IBackendHook
         {
             Device = Device.NativePointer,
             CommandQueue = CommandQueue.NativePointer,
-            NumFramesInFlight = swapChain.Description.BufferCount,
+            NumFramesInFlight = (int)swapChain.Description.BufferCount,
             RTVFormat = (int)Format.R8G8B8A8_UNorm,
             SrvDescriptorHeap = _shaderResourceViewDescHeap.NativePointer,
             SrvDescriptorAllocFn = &ImguiHookDx12Wrapper.SrvDescriptorAllocCallback,
@@ -653,10 +675,10 @@ public unsafe class DX12BackendHook : IBackendHook
     {
         PresentDelegate originalFunc = _presentHook.OriginalFunction;
 
-        SwapChain3 swapChain = new SwapChain3((nint)swapChainPtr);
+        IDXGISwapChain3 swapChain = new IDXGISwapChain3((nint)swapChainPtr);
 
         // Ignore windows which don't belong to us.
-        var windowHandle = swapChain.Description.OutputHandle;
+        var windowHandle = swapChain.Description.OutputWindow;
         if (!ImguiHook.CheckWindowHandle(windowHandle))
         {
             Debug.WriteLine($"[{nameof(DX12BackendHook)}] Discarding Window Handle {windowHandle:X} due to Mismatch");
@@ -687,16 +709,16 @@ public unsafe class DX12BackendHook : IBackendHook
         }
 
         SwapChain = swapChain;
-        Device = SwapChain.GetDevice<Device>();
+        Device = SwapChain.GetDevice<ID3D12Device>();
 
         // Proton's real swap chain may be located elsewhere, we've tracked it earlier
         if (_isUsingProtonSwapchain)
         {
             nuint realSwapchainPtr = *(nuint*)(swapChainPtr + _protonSwapchainOffset);
-            CommandQueue = new CommandQueue(*(nint*)(realSwapchainPtr + CommandQueueOffset!.Value));
+            CommandQueue = new ID3D12CommandQueue(*(nint*)(realSwapchainPtr + CommandQueueOffset!.Value));
         }
         else
-            CommandQueue = new CommandQueue(*(nint*)(swapChainPtr + CommandQueueOffset!.Value));
+            CommandQueue = new ID3D12CommandQueue(*(nint*)(swapChainPtr + CommandQueueOffset!.Value));
 
         if (_presentDepth > 0)
         {
@@ -730,10 +752,10 @@ public unsafe class DX12BackendHook : IBackendHook
     {
         if (!_initializedD3D12)
         {
-            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Init D3D12 handle for ImGui, Window Handle: {SwapChain.Description.OutputHandle:X}");
+            DebugLog.WriteLine($"[{nameof(DX12BackendHook)}] Init D3D12 handle for ImGui, Window Handle: {SwapChain.Description.OutputWindow:X}");
             if (!_hasHookedWinProc)
             {
-                ImguiHook.InitializeWithHandle(SwapChain.Description.OutputHandle);
+                ImguiHook.InitializeWithHandle(SwapChain.Description.OutputWindow);
                 _hasHookedWinProc = true;
             }
 
@@ -770,26 +792,21 @@ public unsafe class DX12BackendHook : IBackendHook
         if (SwapChain.CurrentBackBufferIndex >= _frameContexts.Count)
             return;
 
-        FrameContext currentFrameContext = _frameContexts[SwapChain.CurrentBackBufferIndex];
+        FrameContext currentFrameContext = _frameContexts[(int)SwapChain.CurrentBackBufferIndex];
 
         commandContext.Wait(TimeSpan.FromSeconds(-1)); // INFINITE
         lock (commandContext.Lock)
         {
             commandContext.HasCommands = true;
 
-            var barrier = new ResourceBarrier
-            {
-                Type = ResourceBarrierType.Transition,
-                Flags = ResourceBarrierFlags.None,
-                Transition = new ResourceTransitionBarrier(currentFrameContext.MainRenderTargetResource, -1, ResourceStates.Present, ResourceStates.RenderTarget)
-            };
+            var barrier = new ResourceBarrier(new ResourceTransitionBarrier(currentFrameContext.MainRenderTargetResource, ResourceStates.Present, ResourceStates.RenderTarget));
             commandContext.CommandList.ResourceBarrier(barrier);
-            commandContext.CommandList.SetRenderTargets(currentFrameContext.MainRenderTargetDescriptor, null);
+            commandContext.CommandList.OMSetRenderTargets(currentFrameContext.MainRenderTargetDescriptor, null);
             commandContext.CommandList.SetDescriptorHeaps(_shaderResourceViewDescHeap);
 
             ImGuiMethods.cImGui_ImplDX12_RenderDrawData((nint)ImGuiMethods.GetDrawData(), commandContext.CommandList.NativePointer);
 
-            barrier.Transition = new ResourceTransitionBarrier(currentFrameContext.MainRenderTargetResource, -1, ResourceStates.RenderTarget, ResourceStates.Present);
+            barrier = new ResourceBarrier(new ResourceTransitionBarrier(currentFrameContext.MainRenderTargetResource, ResourceStates.RenderTarget, ResourceStates.Present));
             commandContext.CommandList.ResourceBarrier(barrier);
 
             commandContext.Execute(CommandQueue);
@@ -916,22 +933,28 @@ public unsafe class DX12BackendHook : IBackendHook
     public ulong LoadTexture(Span<byte> bytes, uint imageWidth, uint imageHeight)
     {
         var heapProperties = new HeapProperties(HeapType.Default);
-        var imageDesc = new ResourceDescription(ResourceDimension.Texture2D, 0, imageWidth, (int)imageHeight, 1, 1, Format.R8G8B8A8_UNorm, 1, 0, TextureLayout.Unknown, ResourceFlags.None);
-        SharpDX.Direct3D12.Resource pTexture = Device.CreateCommittedResource(heapProperties, HeapFlags.None, imageDesc, ResourceStates.CopyDestination);
+        var imageDesc = new ResourceDescription(ResourceDimension.Texture2D, 0, imageWidth, imageHeight, 1, 1, Format.R8G8B8A8_UNorm, 1, 0, TextureLayout.Unknown, ResourceFlags.None);
+        ID3D12Resource pTexture = Device.CreateCommittedResource(heapProperties, HeapFlags.None, imageDesc, ResourceStates.CopyDest);
 
         var uploadBufferHeapDesc = new HeapProperties(HeapType.Upload);
         uint uploadPitch = (uint)(imageWidth * BytesPerPixel + D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1u & ~(D3D12_TEXTURE_DATA_PITCH_ALIGNMENT - 1u));
         uint uploadSize = imageHeight * uploadPitch;
 
         var tempDesc = new ResourceDescription(ResourceDimension.Buffer, 0, uploadSize, 1, 1, 1, Format.Unknown, 1, 0, TextureLayout.RowMajor, ResourceFlags.None);
-        SharpDX.Direct3D12.Resource uploadBuffer = Device.CreateCommittedResource(uploadBufferHeapDesc, HeapFlags.None, tempDesc, ResourceStates.GenericRead);
+        ID3D12Resource uploadBuffer = Device.CreateCommittedResource(uploadBufferHeapDesc, HeapFlags.None, tempDesc, ResourceStates.GenericRead);
 
-        var range = new SharpDX.Direct3D12.Range()
+        var range = new Vortice.Direct3D12.Range()
         {
             Begin = 0,
             End = uploadSize,
         };
-        nint mapped = uploadBuffer.Map(0, range);
+
+        nint mapped = 0;
+        if (!uploadBuffer.Map(0, range, &mapped).Success)
+        {
+            ;
+        }
+
         fixed (byte* imageData = bytes)
         {
             for (int y = 0; y < imageHeight; y++)
@@ -941,27 +964,27 @@ public unsafe class DX12BackendHook : IBackendHook
         }
         uploadBuffer.Unmap(0, range);
 
-        var srcLocation = new TextureCopyLocation(uploadBuffer, new PlacedSubResourceFootprint()
+        var srcLocation = new TextureCopyLocation(uploadBuffer, new PlacedSubresourceFootPrint()
         {
-            Footprint = new SubResourceFootprint()
+            Footprint = new SubresourceFootPrint()
             {
                 Format = Format.R8G8B8A8_UNorm,
-                Width = (int)imageWidth,
-                Height = (int)imageHeight,
+                Width = imageWidth,
+                Height = imageHeight,
                 Depth = 1,
-                RowPitch = (int)uploadPitch,
+                RowPitch = uploadPitch,
             },
         });
         var dstLocation = new TextureCopyLocation(pTexture, 0);
 
-        Fence fence = Device.CreateFence(0, FenceFlags.None);
+        ID3D12Fence fence = Device.CreateFence(0, FenceFlags.None);
         var @event = PInvoke.CreateEvent(null, false, false, (string)null);
-        var queue = Device.CreateCommandQueue(CommandListType.Direct, 1);
+        var queue = Device.CreateCommandQueue(CommandListType.Direct, nodeMask: 1);
         var cmdAllocator = Device.CreateCommandAllocator(CommandListType.Direct);
-        var cmdList = Device.CreateCommandList(0, CommandListType.Direct, cmdAllocator, null);
+        var cmdList = Device.CreateCommandList<ID3D12GraphicsCommandList>(0, CommandListType.Direct, cmdAllocator, null);
 
         cmdList.CopyTextureRegion(dstLocation, 0, 0, 0, srcLocation, null);
-        cmdList.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(pTexture, ResourceStates.CopyDestination, ResourceStates.PixelShaderResource)));
+        cmdList.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(pTexture, ResourceStates.CopyDest, ResourceStates.PixelShaderResource)));
         cmdList.Close();
 
         queue.ExecuteCommandList(cmdList);
@@ -986,8 +1009,8 @@ public unsafe class DX12BackendHook : IBackendHook
         Device.CreateShaderResourceView(pTexture, new ShaderResourceViewDescription()
         {
             Format = Format.R8G8B8A8_UNorm,
-            Dimension = SharpDX.Direct3D12.ShaderResourceViewDimension.Texture2D,
-            Texture2D = new ShaderResourceViewDescription.Texture2DResource()
+            ViewDimension = ShaderResourceViewDimension.Texture2D,
+            Texture2D = new Texture2DShaderResourceView()
             {
                 MipLevels = 1,
                 MostDetailedMip = 0,
@@ -1015,10 +1038,11 @@ public unsafe class DX12BackendHook : IBackendHook
 
         HeapProperties uploadProp = new HeapProperties(HeapType.Upload);
         ResourceDescription bufDesc = new ResourceDescription(ResourceDimension.Buffer, 0, uploadSize, 1, 1, 1, Format.Unknown, 1, 0, TextureLayout.RowMajor, ResourceFlags.None);
-        SharpDX.Direct3D12.Resource upload = Device.CreateCommittedResource(uploadProp, HeapFlags.None, bufDesc, ResourceStates.GenericRead);
+        ID3D12Resource upload = Device.CreateCommittedResource(uploadProp, HeapFlags.None, bufDesc, ResourceStates.GenericRead);
 
         // Copy
-        nint mapped = upload.Map(0);
+        nint mapped = 0;
+        upload.Map(0, &mapped);
         fixed (byte* src = newBytes)
         {
             for (int y = 0; y < height; y++)
@@ -1030,36 +1054,37 @@ public unsafe class DX12BackendHook : IBackendHook
         }
         upload.Unmap(0);
 
-        var srcLoc = new TextureCopyLocation(upload, new PlacedSubResourceFootprint()
+        var srcLoc = new TextureCopyLocation(upload, new PlacedSubresourceFootPrint()
         {
-            Footprint = new SubResourceFootprint()
+            Footprint = new SubresourceFootPrint()
             {
                 Format = Format.R8G8B8A8_UNorm,
-                Width = (int)width,
-                Height = (int)height,
+                Width = width,
+                Height = height,
                 Depth = 1,
-                RowPitch = (int)rowPitch
+                RowPitch = rowPitch
             }
         });
         var dstLoc = new TextureCopyLocation(textureResource.Resource, 0);
 
         // Build command list
         _textureUploadCommandAllocator ??= Device.CreateCommandAllocator(CommandListType.Direct);
-        _textureUploadCommandList ??= Device.CreateCommandList(0, CommandListType.Direct, _textureUploadCommandAllocator, null);
-        _textureUploadCommandList.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.PixelShaderResource, ResourceStates.CopyDestination)));
+        _textureUploadCommandList ??= Device.CreateCommandList<ID3D12GraphicsCommandList>(CommandListType.Direct, _textureUploadCommandAllocator);
+        _textureUploadCommandList.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.PixelShaderResource, ResourceStates.CopyDest)));
         _textureUploadCommandList.CopyTextureRegion(dstLoc, 0, 0, 0, srcLoc, null);
-        _textureUploadCommandList.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.CopyDestination, ResourceStates.PixelShaderResource)));
+        _textureUploadCommandList.ResourceBarrier(new ResourceBarrier(new ResourceTransitionBarrier(textureResource.Resource, ResourceStates.CopyDest, ResourceStates.PixelShaderResource)));
         _textureUploadCommandList.Close();
+
         // Execute
         _textureUploadCommandQueue ??= Device.CreateCommandQueue(CommandListType.Direct);
 
         _textureUploadFence ??= Device.CreateFence(0, FenceFlags.None);
-        long signal = ++_fenceValue;
+        ulong signal = ++_fenceValue;
 
         _textureUploadCommandQueue.ExecuteCommandList(_textureUploadCommandList);
         _textureUploadCommandQueue.Signal(_textureUploadFence, signal);
 
-        _textureUploadFence.SetEventOnCompletion(signal, IntPtr.Zero);
+        _textureUploadFence.SetEventOnCompletion(signal);
         //fence.CompletedValue = signal;
 
         upload.Dispose();
@@ -1098,7 +1123,7 @@ public unsafe class ImguiHookDx12Wrapper
     public static nint ResizeBuffersImplStatic(nint swapchainPtr, uint bufferCount, uint width, uint height, Format newFormat, SwapChainFlags swapchainFlags) => Instance.ResizeBuffersImpl(swapchainPtr, bufferCount, width, height, newFormat, swapchainFlags);
 
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
-    public static nint CreateSwapChainForHwndImplStatic(nint this_, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullScreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain) => Instance.CreateSwapChainForHwndImpl(this_, pDevice, hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
+    public static nint CreateSwapChainForHwndImplStatic(nint this_, nint pDevice, nint hWnd, SwapChainDescription* pDesc, SwapChainFullscreenDescription* pFullscreenDesc, nint pRestrictToOutput, nint ppSwapChain) => Instance.CreateSwapChainForHwndImpl(this_, pDevice, hWnd, pDesc, pFullscreenDesc, pRestrictToOutput, ppSwapChain);
 
     [UnmanagedCallersOnly(CallConvs = new[] { typeof(CallConvStdcall) })]
     public static nint PresentImplStatic(nuint swapChainPtr, int syncInterval, PresentFlags flags) => Instance.PresentImpl(swapChainPtr, syncInterval, flags);
@@ -1107,7 +1132,7 @@ public unsafe class ImguiHookDx12Wrapper
 
 class FrameContext
 {
-    public SharpDX.Direct3D12.Resource MainRenderTargetResource;
+    public ID3D12Resource? MainRenderTargetResource;
     public CpuDescriptorHandle MainRenderTargetDescriptor;
 
     public void Reset()

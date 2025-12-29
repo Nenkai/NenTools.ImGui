@@ -1,14 +1,13 @@
-﻿using Microsoft.Win32.SafeHandles;
-
-using SharpDX.Direct3D12;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.Win32.SafeHandles;
+
+using Vortice.Direct3D12;
 using Windows.Win32;
 
 #pragma warning disable CA1416 // This call site is reachable on all platforms. (method) is only supported on: 'windows' 5.1.2600 and later.
@@ -17,11 +16,11 @@ namespace NenTools.ImGui.Hooks.DirectX12;
 
 internal class CommandContext
 {
-    public CommandAllocator CommandAllocator { get; set; }
-    public GraphicsCommandList CommandList { get; set; }
-    public Fence Fence { get; set; }
+    public ID3D12CommandAllocator CommandAllocator { get; set; }
+    public ID3D12GraphicsCommandList CommandList { get; set; }
+    public ID3D12Fence Fence { get; set; }
     private SafeFileHandle? FenceEvent { get; set; }
-    public int FenceValue { get; set; }
+    public ulong FenceValue { get; set; }
     public bool WaitingForFence { get; set; }
     public Lock Lock { get; private set; } = new();
     public bool HasCommands = false;
@@ -47,7 +46,7 @@ internal class CommandContext
 
         try
         {
-            CommandList = device.CreateCommandList(0, CommandListType.Direct, CommandAllocator, null);
+            CommandList = device.CreateCommandList<ID3D12GraphicsCommandList>(CommandListType.Direct, CommandAllocator);
             CommandList.Name = $"[{nameof(DX12BackendHook)}] ImGui CommandList";
         }
         catch (Exception)
@@ -98,7 +97,7 @@ internal class CommandContext
         }
     }
 
-    public void Execute(CommandQueue queue)
+    public void Execute(ID3D12CommandQueue queue)
     {
         lock (Lock)
         {

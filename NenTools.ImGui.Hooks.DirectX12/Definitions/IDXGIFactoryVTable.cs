@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NenTools.ImGui.Hooks.DirectX12.Definitions;
 
-public enum IDXGIFactory
+public enum IDXGIFactoryVTable
 {
     // IUnknown
     QueryInterface,
