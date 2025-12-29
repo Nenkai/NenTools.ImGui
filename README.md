@@ -2,6 +2,8 @@
 
 > [!WARNING]
 > While this is used in [FaithFramework](https://github.com/Nenkai/FaithFramework), this is still a work in progress and not ready for general usage, see [TODOs](#todos)
+> 
+> This may still undergo breaking changes while the API is stabilized.
 
 Interfaced Dear ImGui bindings and hooks for injection into games. Mainly intended for use with Reloaded-II and Windows based games.
 
@@ -19,6 +21,7 @@ Currently supports DirectX12 exclusively.
 * DirectX 12 support (third-party overlays supported)
 * Shell support (main menu & API)
 * Texture Manager
+* Font Manager
 
 ## The Problem
 
