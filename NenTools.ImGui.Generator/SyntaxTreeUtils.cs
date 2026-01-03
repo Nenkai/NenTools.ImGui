@@ -21,17 +21,21 @@ public class SyntaxTreeUtils
     /// </summary>
     /// <param name="type"></param>
     /// <returns></returns>
-    public static SyntaxList<AttributeListSyntax> GetMarshalAsAttribute(UnmanagedType type)
+    public static SyntaxList<AttributeListSyntax> GetMarshalAsAttribute(UnmanagedType type, bool withReturnTarget = false)
     {
         // Oh god. All that just to write [MarshalAs(UnmanagedType.LPUTF8Str)]
         // Thank you https://roslynquoter.azurewebsites.net/
         var attributeArguments = SF.ParseAttributeArgumentList($"({nameof(UnmanagedType)}.{type})");
-        return SF.SingletonList<AttributeListSyntax>(
-                       SF.AttributeList(
+
+        AttributeListSyntax attrList = SF.AttributeList(
                            SF.SingletonSeparatedList<AttributeSyntax>(
                                SF.Attribute(
                                    SF.IdentifierName("MarshalAs"))
-                                   .WithArgumentList(attributeArguments))));
+                                   .WithArgumentList(attributeArguments)));
+        if (withReturnTarget)
+            attrList = attrList.WithTarget(SF.AttributeTargetSpecifier(SF.Token(SyntaxKind.ReturnKeyword)));
+
+        return SF.SingletonList<AttributeListSyntax>(attrList);
     }
 
     public static AttributeListSyntax GetReturnMarshalAsAttribute(UnmanagedType type)

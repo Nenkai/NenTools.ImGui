@@ -1066,6 +1066,12 @@ public class ImGuiInterfaceGenerator
         {
             returnType = FixupParameterType(method.ReturnType, method.AttributeLists, ImGuiStructTypeKind.ForNativeStruct, modifiers: out SyntaxTokenList modifiers,
                 RemapStringPointerKind.Pointer); // <- Important. We need the runtime not to try marshal/free certain returned strings as that causes a crash
+
+            if (returnType is PredefinedTypeSyntax predefinedType && predefinedType.Keyword.ValueText == "bool")
+            {
+                var test = SyntaxTreeUtils.GetMarshalAsAttribute(UnmanagedType.I1, withReturnTarget: true);
+                methodAttributes.Add(test[0]);
+            }
         }
 
         _bindingsMethodList.Add(
