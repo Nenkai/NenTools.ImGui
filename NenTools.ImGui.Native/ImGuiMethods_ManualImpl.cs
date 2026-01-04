@@ -24,4 +24,42 @@ public unsafe partial class ImGuiMethods
     public static extern bool Begin([MarshalAs(UnmanagedType.LPUTF8Str)] string name, bool* p_open, int flags);
     [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_Begin", ExactSpelling = true)]
     public static extern bool Begin(sbyte* name, bool* p_open, int flags);
+
+
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat2", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat2([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref Vector2 v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat2", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat2(sbyte* label, ref Vector2 v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat2Ex", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat2Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref Vector2 v, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat2Ex", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat2Ex(sbyte* label, ref Vector2 v, sbyte* format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat3", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat3([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref Vector3 v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat3", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat3(sbyte* label, ref Vector3 v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat3Ex", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat3Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref Vector3 v, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat3Ex", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat3Ex(sbyte* label, ref Vector3 v, sbyte* format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat4", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat4([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref Vector4 v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat4", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat4(sbyte* label, ref Vector4 v);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat4Ex", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat4Ex([MarshalAs(UnmanagedType.LPUTF8Str)] string label, ref Vector4 v, [MarshalAs(UnmanagedType.LPUTF8Str)] string format, int flags);
+    [DllImport("ImGui/Binaries/ImGuiLib", CallingConvention = CallingConvention.Cdecl, EntryPoint = "ImGui_InputFloat4Ex", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.I1)]
+    public static extern bool InputFloat4Ex(sbyte* label, ref Vector4 v, sbyte* format, int flags);
 }
