@@ -323,7 +323,7 @@ public class ImGuiShell : IImGuiShell
         }
     }
 
-    public void LogWriteLine(string source, string message, Color? color = null, LoggerOutputTargetFlags loggerTargetFlags = LoggerOutputTargetFlags.AllButOverlayLogger)
+    public void LogWriteLine(string source, string message, Color? color = null, LoggerOutputTargetFlags loggerTargetFlags = LoggerOutputTargetFlags.All)
     {
         if (loggerTargetFlags.HasFlag(LoggerOutputTargetFlags.GeneralLoggers))
             OnLogMessage?.Invoke($"[{source}] {message}", color ?? null);

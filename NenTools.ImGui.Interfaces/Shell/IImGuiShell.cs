@@ -183,7 +183,7 @@ public interface IImGuiShell
     /// <param name="message">Message to display.</param>
     /// <param name="color">Color of the message.</param>
     /// <param name="outputTargetFlags">Where to output this message. By default, the message is output everywhere but the overlay logger.</param>
-    void LogWriteLine(string source, string message, Color? color = null, LoggerOutputTargetFlags outputTargetFlags = LoggerOutputTargetFlags.AllButOverlayLogger);
+    void LogWriteLine(string source, string message, Color? color = null, LoggerOutputTargetFlags outputTargetFlags = LoggerOutputTargetFlags.All);
 }
 
 /// <summary>
