@@ -101,6 +101,7 @@ public unsafe partial class ImGui : IImGui
     }
 
     // Overload input functions such that buf & buf_size => single ReadOnlySpan argument
+    #region InputText overloads
     public bool InputText(string label, Span<byte> buf, ImGuiInputTextFlags flags)
     {
         fixed (byte* pBuf = buf) return ImGuiMethods.InputText(label, (sbyte*)pBuf, (nuint)buf.Length, (int)flags);
@@ -170,7 +171,9 @@ public unsafe partial class ImGui : IImGui
     {
         fixed (byte* pBuf = buf) return ImGuiMethods.InputTextWithHintEx((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(label)), (sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(hint)), (sbyte*)pBuf, (nuint)buf.Length, (int)flags, callback, user_data);
     }
+    #endregion
 
+    #region InputFloat overloads
     public bool InputFloat2(string label, ref Vector2 v) => ImGuiMethods.InputFloat2(label, ref v);
     public bool InputFloat2(ReadOnlySpan<byte> label, ref Vector2 v)
     {
@@ -215,6 +218,10 @@ public unsafe partial class ImGui : IImGui
         fixed (byte* pFormat = format)
             return ImGuiMethods.InputFloat4Ex((sbyte*)pBuf, ref v, (sbyte*)pFormat, (int)flags);
     }
+    #endregion
+
+    public bool BeginPopupModal(string name, ImGuiWindowFlags flags) => ImGuiMethods.BeginPopupModal(name, null, (int)flags);
+    public bool BeginPopupModal(ReadOnlySpan<byte> name, ImGuiWindowFlags flags) => ImGuiMethods.BeginPopupModal((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), null, (int)flags);
 
     public unsafe partial struct ImGuiPlatformIO : IImGuiPlatformIO
     {

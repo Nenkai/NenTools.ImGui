@@ -119,6 +119,12 @@ public unsafe partial interface IImGui
 
     /// <inheritdoc cref="InputFloat4Ex(string, ref float, string, ImGuiInputTextFlags)"/>
     bool InputFloat4Ex(ReadOnlySpan<byte> label, ref Vector4 v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+
+    /// <inheritdoc cref="BeginPopupModal(string, ref bool, ImGuiWindowFlags)"/>
+    bool BeginPopupModal(string name, ImGuiWindowFlags flags);
+
+    /// <inheritdoc cref="BeginPopupModal(string, ref bool, ImGuiWindowFlags)"/>
+    bool BeginPopupModal(ReadOnlySpan<byte> name, ImGuiWindowFlags flags);
     #endregion
 }
 
