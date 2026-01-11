@@ -735,7 +735,8 @@ public class ImGuiInterfaceGenerator
                 if (!TryGetNativeTypeArrayLength(nativeTypeName, out _, out int length))
                     throw new InvalidDataException("Failed to parse native type name array");
 
-                bodyExpression = SyntaxTreeUtils.CreateRangeAccessorExpression(genericTypeName, nativeStructName, "NativePointer", fieldName, length);
+                bool fixedArray = fieldDeclaration.Modifiers.Any(e => e.IsKind(SyntaxKind.FixedKeyword));
+                bodyExpression = SyntaxTreeUtils.CreateRangeAccessorExpression(genericTypeName, nativeStructName, "NativePointer", fieldName, length, fixedArray);
             }
             else if (newTypeName.Contains("RangeStructAccessor"))
             {
@@ -745,7 +746,8 @@ public class ImGuiInterfaceGenerator
                 if (!TryGetNativeTypeArrayLength(nativeTypeName, out _, out int length))
                     throw new InvalidDataException("Failed to parse native type name array");
 
-                bodyExpression = SyntaxTreeUtils.CreateRangeStructAccessorExpression(genericTypeName, genericTypeName.Substring(1), nativeStructName, "NativePointer", fieldName, length);
+                bool fixedArray = fieldDeclaration.Modifiers.Any(e => e.IsKind(SyntaxKind.FixedKeyword));
+                bodyExpression = SyntaxTreeUtils.CreateRangeStructAccessorExpression(genericTypeName, genericTypeName.Substring(1), nativeStructName, "NativePointer", fieldName, length, fixedArray);
             }
             else if (newTypeName.Contains("ImStructPtrVectorPtrWrapper"))
             {

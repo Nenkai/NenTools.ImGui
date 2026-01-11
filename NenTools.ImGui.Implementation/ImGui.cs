@@ -1606,7 +1606,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref Vector2 MouseDelta => ref Unsafe.AsRef<Vector2>(&((ImGuiIOStruct*)NativePointer)->MouseDelta);
         public readonly IImGuiContext Ctx => new ImGuiContext(((ImGuiIOStruct*)NativePointer)->Ctx);
         public readonly ref Vector2 MousePos => ref Unsafe.AsRef<Vector2>(&((ImGuiIOStruct*)NativePointer)->MousePos);
-        public readonly IRangeAccessor<bool> MouseDown => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDown, 5);
+        public readonly IRangeAccessor<bool> MouseDown => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDown[0], 5);
         public readonly ref float MouseWheel => ref Unsafe.AsRef<float>(&((ImGuiIOStruct*)NativePointer)->MouseWheel);
         public readonly ref float MouseWheelH => ref Unsafe.AsRef<float>(&((ImGuiIOStruct*)NativePointer)->MouseWheelH);
         public readonly ref ImGuiMouseSource MouseSource => ref Unsafe.AsRef<ImGuiMouseSource>(&((ImGuiIOStruct*)NativePointer)->MouseSource);
@@ -1620,21 +1620,21 @@ public unsafe partial class ImGui : IImGui
         public readonly ref bool WantCaptureMouseUnlessPopupClose => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->WantCaptureMouseUnlessPopupClose);
         public readonly ref Vector2 MousePosPrev => ref Unsafe.AsRef<Vector2>(&((ImGuiIOStruct*)NativePointer)->MousePosPrev);
         public readonly IRangeAccessor<Vector2> MouseClickedPos => new RangeAccessor<Vector2>(&((ImGuiIOStruct*)NativePointer)->MouseClickedPos, 5);
-        public readonly IRangeAccessor<double> MouseClickedTime => new RangeAccessor<double>(&((ImGuiIOStruct*)NativePointer)->MouseClickedTime, 5);
-        public readonly IRangeAccessor<bool> MouseClicked => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseClicked, 5);
-        public readonly IRangeAccessor<bool> MouseDoubleClicked => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDoubleClicked, 5);
-        public readonly IRangeAccessor<ushort> MouseClickedCount => new RangeAccessor<ushort>(&((ImGuiIOStruct*)NativePointer)->MouseClickedCount, 5);
-        public readonly IRangeAccessor<ushort> MouseClickedLastCount => new RangeAccessor<ushort>(&((ImGuiIOStruct*)NativePointer)->MouseClickedLastCount, 5);
-        public readonly IRangeAccessor<bool> MouseReleased => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseReleased, 5);
-        public readonly IRangeAccessor<double> MouseReleasedTime => new RangeAccessor<double>(&((ImGuiIOStruct*)NativePointer)->MouseReleasedTime, 5);
-        public readonly IRangeAccessor<bool> MouseDownOwned => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDownOwned, 5);
-        public readonly IRangeAccessor<bool> MouseDownOwnedUnlessPopupClose => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDownOwnedUnlessPopupClose, 5);
+        public readonly IRangeAccessor<double> MouseClickedTime => new RangeAccessor<double>(&((ImGuiIOStruct*)NativePointer)->MouseClickedTime[0], 5);
+        public readonly IRangeAccessor<bool> MouseClicked => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseClicked[0], 5);
+        public readonly IRangeAccessor<bool> MouseDoubleClicked => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDoubleClicked[0], 5);
+        public readonly IRangeAccessor<ushort> MouseClickedCount => new RangeAccessor<ushort>(&((ImGuiIOStruct*)NativePointer)->MouseClickedCount[0], 5);
+        public readonly IRangeAccessor<ushort> MouseClickedLastCount => new RangeAccessor<ushort>(&((ImGuiIOStruct*)NativePointer)->MouseClickedLastCount[0], 5);
+        public readonly IRangeAccessor<bool> MouseReleased => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseReleased[0], 5);
+        public readonly IRangeAccessor<double> MouseReleasedTime => new RangeAccessor<double>(&((ImGuiIOStruct*)NativePointer)->MouseReleasedTime[0], 5);
+        public readonly IRangeAccessor<bool> MouseDownOwned => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDownOwned[0], 5);
+        public readonly IRangeAccessor<bool> MouseDownOwnedUnlessPopupClose => new RangeAccessor<bool>(&((ImGuiIOStruct*)NativePointer)->MouseDownOwnedUnlessPopupClose[0], 5);
         public readonly ref bool MouseWheelRequestAxisSwap => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->MouseWheelRequestAxisSwap);
         public readonly ref bool MouseCtrlLeftAsRightClick => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->MouseCtrlLeftAsRightClick);
-        public readonly IRangeAccessor<float> MouseDownDuration => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDownDuration, 5);
-        public readonly IRangeAccessor<float> MouseDownDurationPrev => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDownDurationPrev, 5);
+        public readonly IRangeAccessor<float> MouseDownDuration => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDownDuration[0], 5);
+        public readonly IRangeAccessor<float> MouseDownDurationPrev => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDownDurationPrev[0], 5);
         public readonly IRangeAccessor<Vector2> MouseDragMaxDistanceAbs => new RangeAccessor<Vector2>(&((ImGuiIOStruct*)NativePointer)->MouseDragMaxDistanceAbs, 5);
-        public readonly IRangeAccessor<float> MouseDragMaxDistanceSqr => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDragMaxDistanceSqr, 5);
+        public readonly IRangeAccessor<float> MouseDragMaxDistanceSqr => new RangeAccessor<float>(&((ImGuiIOStruct*)NativePointer)->MouseDragMaxDistanceSqr[0], 5);
         public readonly ref float PenPressure => ref Unsafe.AsRef<float>(&((ImGuiIOStruct*)NativePointer)->PenPressure);
         public readonly ref bool AppFocusLost => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->AppFocusLost);
         public readonly ref bool AppAcceptingEvents => ref Unsafe.AsRef<bool>(&((ImGuiIOStruct*)NativePointer)->AppAcceptingEvents);
@@ -1703,7 +1703,7 @@ public unsafe partial class ImGui : IImGui
         public readonly ref uint SourceId => ref Unsafe.AsRef<uint>(&((ImGuiPayloadStruct*)NativePointer)->SourceId);
         public readonly ref uint SourceParentId => ref Unsafe.AsRef<uint>(&((ImGuiPayloadStruct*)NativePointer)->SourceParentId);
         public readonly ref int DataFrameCount => ref Unsafe.AsRef<int>(&((ImGuiPayloadStruct*)NativePointer)->DataFrameCount);
-        public readonly IRangeAccessor<byte> DataType => new RangeAccessor<byte>(&((ImGuiPayloadStruct*)NativePointer)->DataType, 33);
+        public readonly IRangeAccessor<byte> DataType => new RangeAccessor<byte>(&((ImGuiPayloadStruct*)NativePointer)->DataType[0], 33);
         public readonly ref bool Preview => ref Unsafe.AsRef<bool>(&((ImGuiPayloadStruct*)NativePointer)->Preview);
         public readonly ref bool Delivery => ref Unsafe.AsRef<bool>(&((ImGuiPayloadStruct*)NativePointer)->Delivery);
     }
@@ -1722,7 +1722,7 @@ public unsafe partial class ImGui : IImGui
         public nint NativePointer { get; set; }
 
         public ImGuiTextFilter(ImGuiTextFilterStruct* nativePtr) => NativePointer = (nint)nativePtr;
-        public readonly IRangeAccessor<byte> InputBuf => new RangeAccessor<byte>(&((ImGuiTextFilterStruct*)NativePointer)->InputBuf, 256);
+        public readonly IRangeAccessor<byte> InputBuf => new RangeAccessor<byte>(&((ImGuiTextFilterStruct*)NativePointer)->InputBuf[0], 256);
         public readonly IImVectorWrapper<IImGuiTextFilter_ImGuiTextRange> Filters => new ImVectorWrapper<IImGuiTextFilter_ImGuiTextRange>(Unsafe.Read<ImVector>(&((ImGuiTextFilterStruct*)NativePointer)->Filters), Unsafe.SizeOf<ImGuiTextFilter_ImGuiTextRangeStruct>(), (addr) => new ImGuiTextFilter_ImGuiTextRange((ImGuiTextFilter_ImGuiTextRangeStruct*)addr));
         public readonly ref int CountGrep => ref Unsafe.AsRef<int>(&((ImGuiTextFilterStruct*)NativePointer)->CountGrep);
     }
@@ -1940,7 +1940,7 @@ public unsafe partial class ImGui : IImGui
         public nint NativePointer { get; set; }
 
         public ImFontConfig(ImFontConfigStruct* nativePtr) => NativePointer = (nint)nativePtr;
-        public readonly IRangeAccessor<byte> Name => new RangeAccessor<byte>(&((ImFontConfigStruct*)NativePointer)->Name, 40);
+        public readonly IRangeAccessor<byte> Name => new RangeAccessor<byte>(&((ImFontConfigStruct*)NativePointer)->Name[0], 40);
         public readonly void* FontData { get => ((ImFontConfigStruct*)NativePointer)->FontData; set => ((ImFontConfigStruct*)NativePointer)->FontData = value; }
         public readonly ref int FontDataSize => ref Unsafe.AsRef<int>(&((ImFontConfigStruct*)NativePointer)->FontDataSize);
         public readonly ref bool FontDataOwnedByAtlas => ref Unsafe.AsRef<bool>(&((ImFontConfigStruct*)NativePointer)->FontDataOwnedByAtlas);
@@ -2088,7 +2088,7 @@ public unsafe partial class ImGui : IImGui
         public readonly IImStructPtrVectorWrapper<IImFontConfig> Sources => new ImStructPtrVectorWrapper<IImFontConfig>(Unsafe.Read<ImVector>(&((ImFontStruct*)NativePointer)->Sources), (addr) => new ImFontConfig((ImFontConfigStruct*)addr));
         public readonly ref uint EllipsisChar => ref Unsafe.AsRef<uint>(&((ImFontStruct*)NativePointer)->EllipsisChar);
         public readonly ref uint FallbackChar => ref Unsafe.AsRef<uint>(&((ImFontStruct*)NativePointer)->FallbackChar);
-        public readonly IRangeAccessor<byte> Used8kPagesMap => new RangeAccessor<byte>(&((ImFontStruct*)NativePointer)->Used8kPagesMap, 17);
+        public readonly IRangeAccessor<byte> Used8kPagesMap => new RangeAccessor<byte>(&((ImFontStruct*)NativePointer)->Used8kPagesMap[0], 17);
         public readonly ref bool EllipsisAutoBake => ref Unsafe.AsRef<bool>(&((ImFontStruct*)NativePointer)->EllipsisAutoBake);
         public readonly IImGuiStorage RemapPairs => new ImGuiStorage(&((ImFontStruct*)NativePointer)->RemapPairs);
         public readonly ref float Scale => ref Unsafe.AsRef<float>(&((ImFontStruct*)NativePointer)->Scale);

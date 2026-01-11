@@ -22,6 +22,27 @@ public unsafe partial class ImGui : IImGui
         return new ImTextureRef(texId);
     }
 
+    public IDisposableHandle<IImGuiTextFilter> CreateTextFilter(string defaultFilter = "")
+    {
+        var handle = new DisposableHandle<IImGuiTextFilter>(new ImGuiTextFilter(), Unsafe.SizeOf<ImGuiTextFilterStruct>());
+        var filter = handle.Value;
+        filter.InputBuf[0] = 0;
+        filter.CountGrep = 0;
+
+        if (!string.IsNullOrEmpty(defaultFilter))
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(defaultFilter);
+            if (bytes.Length >= filter.InputBuf.Count)
+                throw new ArgumentOutOfRangeException($"Default filter cannot be longer than {filter.InputBuf.Count}");
+
+            fixed (byte* strPtr = bytes)
+                NativeMemory.Copy(strPtr, filter.InputBuf.Data, (nuint)bytes.Length);
+            ImGuiTextFilter_Build(filter);
+        }
+
+        return handle;
+    }
+
     public ulong ImTextureRef_GetTexID(IImTextureRef self)
     {
         var @struct = ((ImTextureRef)self).ToStruct();

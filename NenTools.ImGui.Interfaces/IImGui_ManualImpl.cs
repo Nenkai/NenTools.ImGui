@@ -16,6 +16,13 @@ public unsafe partial interface IImGui
     public IImTextureRef CreateTextureRef(ulong texId);
 
     /// <summary>
+    /// NenTools: ImGuiTextFilter::ImGuiTextFilter
+    /// </summary>
+    /// <param name="defaultFilter"></param>
+    /// <returns></returns>
+    public IDisposableHandle<IImGuiTextFilter> CreateTextFilter(string defaultFilter = "");
+
+    /// <summary>
     /// This is needed as AddFontFromFileTTF has sanity checks (and will assert/error if some properties are off for a default structure) <br/>
     /// Refer to ImFontConfig constructor - https://github.com/ocornut/imgui/blob/842837e35b421a4c85ca30f6840321f0a3c5a029/imgui_draw.cpp#L2404
     /// </summary>

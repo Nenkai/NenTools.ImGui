@@ -31,6 +31,8 @@ public readonly unsafe struct RangeAccessor<T>(void* data, int count) : IRangeAc
         }
     }
 
+    public Span<T> AsSpan() => new(Data, Count);
+
     /// <inheritdoc/>
     public IEnumerator<T> GetEnumerator() => new RangeAccessorEnumerator(this);
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

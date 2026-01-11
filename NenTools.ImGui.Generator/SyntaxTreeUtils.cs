@@ -256,19 +256,30 @@ public class SyntaxTreeUtils
         ")");
     }
 
-    public static ExpressionSyntax CreateRangeAccessorExpression(string typeName, string nativeStructTypeName, string sourcePropertyName, string targetPropertyName, int length)
+    public static ExpressionSyntax CreateRangeAccessorExpression(string typeName, string nativeStructTypeName, string sourcePropertyName, 
+        string targetPropertyName, int length, bool forFixedArray = false)
     {
-        return SF.ParseExpression($"new RangeAccessor<{typeName}>(&(({nativeStructTypeName}*){sourcePropertyName})->{targetPropertyName}, {length})");
+        string source = $"&(({nativeStructTypeName}*){sourcePropertyName})->{targetPropertyName}";
+        if (forFixedArray)
+            source += "[0]";
+
+        return SF.ParseExpression($"new RangeAccessor<{typeName}>({source}, {length})");
     }
 
 
-    public static ExpressionSyntax CreateRangeStructAccessorExpression(string interfaceTypeName, string implTypeName, string nativeStructTypeName, string sourcePropertyName, string targetPropertyName, int length)
+    public static ExpressionSyntax CreateRangeStructAccessorExpression(string interfaceTypeName, string implTypeName, string nativeStructTypeName, string sourcePropertyName, 
+        string targetPropertyName, int length, bool forFixedArray = false)
     {
-        return SF.ParseExpression($"new RangeStructAccessor<{interfaceTypeName}>(&(({nativeStructTypeName}*){sourcePropertyName})->{targetPropertyName}, " +
-            $"{length}, " +
+        string source = $"&(({nativeStructTypeName}*){sourcePropertyName})->{targetPropertyName}";
+        if (forFixedArray)
+            source += "[0]";
+
+        return SF.ParseExpression($"new RangeStructAccessor<{interfaceTypeName}>({source}, {length}, " +
             $"Unsafe.SizeOf<{implTypeName}Struct>(), " +
             $"(addr) => new {implTypeName}(({implTypeName}Struct*)addr))");
     }
+
+
 
     public static ExpressionSyntax CreateImStructPtrVectorPtrAccess(string interfaceTypeName, string implTypeName, string nativeStructTypeName, string sourcePropertyName, string targetPropertyName)
     {

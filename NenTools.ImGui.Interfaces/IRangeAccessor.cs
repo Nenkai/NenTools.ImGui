@@ -17,4 +17,6 @@ public unsafe interface IRangeAccessor<T> : IEnumerable<T> where T : struct
     int Count { get; }
 
     ref T this[int index] { get; }
+
+    public Span<T> AsSpan();
 }
