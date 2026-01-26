@@ -90,6 +90,13 @@ public unsafe partial interface IImGui
     /// <inheritdoc cref="InputTextWithHintEx(string, string, sbyte*, nuint, ImGuiInputTextFlags, delegate* unmanaged[Cdecl]{nint, int}, void*)"/>
     public bool InputTextWithHintEx(ReadOnlySpan<byte> label, ReadOnlySpan<byte> hint, Span<byte> buf, ImGuiInputTextFlags flags, delegate* unmanaged[Cdecl]<nint, int> callback, void* user_data);
 
+    #region Combo overloads
+    public bool Combo(string label, ref byte value, string items_separated_by_zeros);
+    public bool Combo(ReadOnlySpan<byte> label, ref byte value, ReadOnlySpan<byte> items_separated_by_zeros);
+    public bool Combo(string label, ref ushort value, string items_separated_by_zeros);
+    public bool Combo(ReadOnlySpan<byte> label, ref ushort value, ReadOnlySpan<byte> items_separated_by_zeros);
+    #endregion
+
     #region InputFloat overloads
     /// <inheritdoc cref="InputFloat2(string, ref float)"/>
     bool InputFloat2(string label, ref Vector2 v);
@@ -126,13 +133,32 @@ public unsafe partial interface IImGui
 
     /// <inheritdoc cref="InputFloat4Ex(string, ref float, string, ImGuiInputTextFlags)"/>
     bool InputFloat4Ex(ReadOnlySpan<byte> label, ref Vector4 v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    #endregion
+
+    #region Scalar overloads
+    public bool InputScalarEx(string label, ref byte p_data, ref byte p_step, ref byte p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref byte p_data, ref byte p_step, ref byte p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref sbyte p_data, ref sbyte p_step, ref sbyte p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref sbyte p_data, ref sbyte p_step, ref sbyte p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref ushort p_data, ref ushort p_step, ref ushort p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref ushort p_data, ref ushort p_step, ref ushort p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref short p_data, ref short p_step, ref short p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref short p_data, ref short p_step, ref short p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref uint p_data, ref uint p_step, ref uint p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref uint p_data, ref uint p_step, ref uint p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref int p_data, ref int p_step, ref int p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref int p_data, ref int p_step, ref int p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref ulong p_data, ref ulong p_step, ref ulong p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref ulong p_data, ref ulong p_step, ref ulong p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref long p_data, ref long p_step, ref long p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref long p_data, ref long p_step, ref long p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    #endregion
 
     /// <inheritdoc cref="BeginPopupModal(string, ref bool, ImGuiWindowFlags)"/>
     bool BeginPopupModal(string name, ImGuiWindowFlags flags);
 
     /// <inheritdoc cref="BeginPopupModal(string, ref bool, ImGuiWindowFlags)"/>
     bool BeginPopupModal(ReadOnlySpan<byte> name, ImGuiWindowFlags flags);
-    #endregion
 }
 
 public unsafe partial interface IImGuiPlatformIO
