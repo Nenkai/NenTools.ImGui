@@ -142,7 +142,7 @@ public unsafe partial class ImGui : IImGui
             var changed = ImGuiMethods.Combo((sbyte*)pLabel, ref valueAsInt, (sbyte*)pItems);
             if (changed)
             {
-                value = (byte)(valueAsInt & 0xffff); 
+                value = (byte)(valueAsInt & 0xff); 
             }
             return changed;
         }
@@ -154,7 +154,7 @@ public unsafe partial class ImGui : IImGui
         var changed = ImGuiMethods.Combo(label, ref valueAsInt, items_separated_by_zeros);
         if (changed)
         {
-            value = (ushort)(valueAsInt & 0xff);
+            value = (ushort)(valueAsInt & 0xffff);
         }
         return changed;
     }
