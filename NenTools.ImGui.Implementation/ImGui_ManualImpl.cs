@@ -121,6 +121,60 @@ public unsafe partial class ImGui : IImGui
         out_ranges = new ImVectorWrapper<uint>(vec.Size, vec.Capacity, vec.Data, sizeof(uint), (addr) => *(uint*)addr);
     }
 
+    #region Combo overloads
+    public bool Combo(string label, ref byte value, string items_separated_by_zeros)
+    {
+        var valueAsInt = (int)value;
+        var changed = ImGuiMethods.Combo(label, ref valueAsInt, items_separated_by_zeros);
+        if (changed)
+        {
+            value = (byte)(valueAsInt & 0xff);
+        }
+        return changed;
+    }
+
+    public bool Combo(ReadOnlySpan<byte> label, ref byte value, ReadOnlySpan<byte> items_separated_by_zeros)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pItems = label)
+        {
+            var valueAsInt = (int)value;
+            var changed = ImGuiMethods.Combo((sbyte*)pLabel, ref valueAsInt, (sbyte*)pItems);
+            if (changed)
+            {
+                value = (byte)(valueAsInt & 0xff); 
+            }
+            return changed;
+        }
+    }
+
+    public bool Combo(string label, ref ushort value, string items_separated_by_zeros)
+    {
+        var valueAsInt = (int)value;
+        var changed = ImGuiMethods.Combo(label, ref valueAsInt, items_separated_by_zeros);
+        if (changed)
+        {
+            value = (ushort)(valueAsInt & 0xffff);
+        }
+        return changed;
+    }
+
+    public bool Combo(ReadOnlySpan<byte> label, ref ushort value, ReadOnlySpan<byte> items_separated_by_zeros)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pItems = label)
+        {
+            var valueAsInt = (int)value;
+            var changed = ImGuiMethods.Combo((sbyte*)pLabel, ref valueAsInt, (sbyte*)pItems);
+            if (changed)
+            {
+                value = (ushort)(valueAsInt & 0xffff);
+            }
+            return changed;
+        }
+    }
+    #endregion
+
     // Overload input functions such that buf & buf_size => single ReadOnlySpan argument
     #region InputText overloads
     public bool InputText(string label, Span<byte> buf, ImGuiInputTextFlags flags)
@@ -237,7 +291,81 @@ public unsafe partial class ImGui : IImGui
     {
         fixed (byte* pBuf = label)
         fixed (byte* pFormat = format)
-            return ImGuiMethods.InputFloat4Ex((sbyte*)pBuf, ref v, (sbyte*)pFormat, (int)flags);
+            return ImGuiMethods.InputFloat4Ex((sbyte*)pBuf, ref v, (sbyte*)pFormat, (int)flags); 
+    }
+    #endregion
+
+    #region Scalar overloads
+    public bool InputScalarEx(string label, ref byte p_data, ref byte p_step, ref byte p_step_fast, string format, ImGuiInputTextFlags flags) => 
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_U8, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref byte p_data, ref byte p_step, ref byte p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_U8, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
+
+    public bool InputScalarEx(string label, ref sbyte p_data, ref sbyte p_step, ref sbyte p_step_fast, string format, ImGuiInputTextFlags flags) => 
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_S8, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref sbyte p_data, ref sbyte p_step, ref sbyte p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_U8, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
+
+    public bool InputScalarEx(string label, ref ushort p_data, ref ushort p_step, ref ushort p_step_fast, string format, ImGuiInputTextFlags flags) => 
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_U16, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref ushort p_data, ref ushort p_step, ref ushort p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_U16, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
+
+    public bool InputScalarEx(string label, ref short p_data, ref short p_step, ref short p_step_fast, string format, ImGuiInputTextFlags flags) => 
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_S16, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref short p_data, ref short p_step, ref short p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_S16, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
+
+    public bool InputScalarEx(string label, ref uint p_data, ref uint p_step, ref uint p_step_fast, string format, ImGuiInputTextFlags flags) => 
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_U32, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref uint p_data, ref uint p_step, ref uint p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_U32, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
+
+    public bool InputScalarEx(string label, ref int p_data, ref int p_step, ref int p_step_fast, string format, ImGuiInputTextFlags flags) => 
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_S32, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref int p_data, ref int p_step, ref int p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_S32, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
+
+    public bool InputScalarEx(string label, ref ulong p_data, ref ulong p_step, ref ulong p_step_fast, string format, ImGuiInputTextFlags flags) => 
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_U64, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref ulong p_data, ref ulong p_step, ref ulong p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_U64, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
+
+    public bool InputScalarEx(string label, ref long p_data, ref long p_step, ref long p_step_fast, string format, ImGuiInputTextFlags flags) => 
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_S64, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref long p_data, ref long p_step, ref long p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_S64, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
     }
     #endregion
 
