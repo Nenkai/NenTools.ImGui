@@ -367,6 +367,24 @@ public unsafe partial class ImGui : IImGui
         fixed (byte* pFormat = format)
             return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_S64, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
     }
+
+    public bool InputScalarEx(string label, ref float p_data, ref float p_step, ref float p_step_fast, string format, ImGuiInputTextFlags flags) =>
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_Float, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref float p_data, ref float p_step, ref float p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_Float, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
+
+    public bool InputScalarEx(string label, ref double p_data, ref double p_step, ref double p_step_fast, string format, ImGuiInputTextFlags flags) =>
+        ImGuiMethods.InputScalarEx(label, (int)ImGuiDataType.ImGuiDataType_Double, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), format, (int)flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref double p_data, ref double p_step, ref double p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    {
+        fixed (byte* pLabel = label)
+        fixed (byte* pFormat = format)
+            return ImGuiMethods.InputScalarEx((sbyte*)pLabel, (int)ImGuiDataType.ImGuiDataType_Double, Unsafe.AsPointer(ref p_data), Unsafe.AsPointer(ref p_step), Unsafe.AsPointer(ref p_step), (sbyte*)pFormat, (int)flags);
+    }
     #endregion
 
     public bool BeginPopupModal(string name, ImGuiWindowFlags flags) => ImGuiMethods.BeginPopupModal(name, null, (int)flags);
