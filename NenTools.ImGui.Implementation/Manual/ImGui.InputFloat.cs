@@ -21,8 +21,8 @@ public unsafe partial class ImGui : IImGui
             return ImGuiMethods.InputFloat2((sbyte*)pBuf, ref v);
     }
 
-    public bool InputFloat2Ex(string label, ref Vector2 v, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat2Ex(label, ref v, format, (int)flags);
-    public bool InputFloat2Ex(ReadOnlySpan<byte> label, ref Vector2 v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    public bool InputFloat2Ex(string label, ref Vector2 v, string format, ImGuiInputTextFlags flags = 0) => ImGuiMethods.InputFloat2Ex(label, ref v, format, (int)flags);
+    public bool InputFloat2Ex(ReadOnlySpan<byte> label, ref Vector2 v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags = 0)
     {
         fixed (byte* pBuf = label)
         fixed (byte* pFormat = format)
@@ -37,7 +37,7 @@ public unsafe partial class ImGui : IImGui
     }
 
     public bool InputFloat3Ex(string label, ref Vector3 v, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat3Ex(label, ref v, format, (int)flags);
-    public bool InputFloat3Ex(ReadOnlySpan<byte> label, ref Vector3 v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    public bool InputFloat3Ex(ReadOnlySpan<byte> label, ref Vector3 v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags = 0)
     {
         fixed (byte* pBuf = label)
         fixed (byte* pFormat = format)
@@ -51,8 +51,8 @@ public unsafe partial class ImGui : IImGui
             return ImGuiMethods.InputFloat4((sbyte*)pBuf, ref v);
     }
 
-    public bool InputFloat4Ex(string label, ref Vector4 v, string format, ImGuiInputTextFlags flags) => ImGuiMethods.InputFloat4Ex(label, ref v, format, (int)flags);
-    public bool InputFloat4Ex(ReadOnlySpan<byte> label, ref Vector4 v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags)
+    public bool InputFloat4Ex(string label, ref Vector4 v, string format, ImGuiInputTextFlags flags = 0) => ImGuiMethods.InputFloat4Ex(label, ref v, format, (int)flags);
+    public bool InputFloat4Ex(ReadOnlySpan<byte> label, ref Vector4 v, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags = 0)
     {
         fixed (byte* pBuf = label)
         fixed (byte* pFormat = format)

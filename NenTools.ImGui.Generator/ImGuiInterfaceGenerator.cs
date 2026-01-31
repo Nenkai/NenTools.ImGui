@@ -247,10 +247,20 @@ public class ImGuiInterfaceGenerator
 
     private void AddInterfaceMethod(MethodDeclarationSyntax method, RemapStringPointerKind remapStringPointerKind = RemapStringPointerKind.String)
     {
+        string? originalName = GetOriginalEntryPointForFunction(method);
+
+        if (!_metadata.FunctionsByName!.TryGetValue(originalName, out FunctionMetadata? funcMetadata))
+            throw new KeyNotFoundException($"Function {originalName} was not found in imgui metadata");
+
+        // find the earliest optional argument
+        int earliestOptionalArgument = GetFirstOptionalEnumArgumentIndex(method, funcMetadata);
+
         // Strip attributes.
         var newParamList = new List<ParameterSyntax>();
-        foreach (var param in method.ParameterList.Parameters)
+        for (int i = 0; i < method.ParameterList.Parameters.Count; i++)
         {
+            ParameterSyntax? param = method.ParameterList.Parameters[i];
+
             // Skip arglist (it's fine to skip, according to CppSharp. Not like we need it anyway.)
             if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
                 continue;
@@ -261,6 +271,13 @@ public class ImGuiInterfaceGenerator
             ParameterSyntax newParam = param.WithType(newType)
                 .WithModifiers(modifiers)
                 .WithAttributeLists([]);
+
+            // If the last argument is an enum, ImGui is likely defaulting it to zero. Make it an optional argument.
+            if (earliestOptionalArgument != -1 && i >= earliestOptionalArgument)
+            {
+                FunctionArgumentMetadata lastArgumentMetadata = funcMetadata.Arguments[i];
+                newParam = newParam.WithDefault(SF.EqualsValueClause(SF.LiteralExpression(SyntaxKind.NumericLiteralExpression, SF.Literal(0))));
+            }
 
             // For each pointer type, we're gonna need to wrap them.
             if (newType is PointerTypeSyntax pointerType && pointerType.ElementType is IdentifierNameSyntax identifierName)
@@ -289,18 +306,41 @@ public class ImGuiInterfaceGenerator
                 body: null!,
                 method.SemicolonToken);
 
-        string? methodName = GetEntryPoint(method);
-        if (methodName is not null)
+        if (originalName is not null)
         {
-            FunctionMetadata funcMetadata = _metadata.FunctionsByName![methodName];
             newMethod = DecorateWithComments(newMethod, funcMetadata.Comments?.Attached, funcMetadata.Comments?.Preceding, numTabs: 1);
         }
         else
         {
-            Console.WriteLine($"Warning: Method name {methodName} not found in dear bindings metadata");
+            Console.WriteLine($"Warning: Method name {originalName} not found in dear bindings metadata");
         }
 
         _interfaceMethodList.Add(newMethod);
+    }
+
+    /// <summary>
+    /// Finds the potential first optional argument index for enum arguments. <br/>
+    /// ImGui may have multiple optional enum arguments such as BeginChild.
+    /// </summary>
+    /// <param name="method"></param>
+    /// <param name="funcMetadata"></param>
+    /// <returns>-1 if no optional arguments.</returns>
+    private static int GetFirstOptionalEnumArgumentIndex(MethodDeclarationSyntax method, FunctionMetadata funcMetadata)
+    {
+        int earliestOptionalArgument = -1;
+        for (int i = 0; i < method.ParameterList.Parameters.Count; i++)
+        {
+            FunctionArgumentMetadata argMetadata = funcMetadata.Arguments[i];
+            if (argMetadata.Type is not null && TypeInfo.KnownEnums.Contains(argMetadata.Type.Declaration))
+            {
+                if (earliestOptionalArgument == -1)
+                    earliestOptionalArgument = i;
+            }
+            else
+                earliestOptionalArgument = -1;
+        }
+
+        return earliestOptionalArgument;
     }
 
     private static T DecorateWithComments<T>(T member, string? attached, List<string>? preceding, int numTabs = 0) where T : MemberDeclarationSyntax
@@ -486,10 +526,18 @@ public class ImGuiInterfaceGenerator
 
     private void AddImplementationMethod(MethodDeclarationSyntax method, RemapStringPointerKind remapStringPointerKind = RemapStringPointerKind.String)
     {
+        string? functionName = GetOriginalEntryPointForFunction(method);
+        if (!_metadata.FunctionsByName!.TryGetValue(functionName, out FunctionMetadata? funcMetadata))
+            throw new KeyNotFoundException($"Function {functionName} was not found in imgui metadata");
+
+        int earliestOptionalArgumentIndex = GetFirstOptionalEnumArgumentIndex(method, funcMetadata);
+
         // Strip attributes.
         var newParamList = new List<ParameterSyntax>();
-        foreach (var param in method.ParameterList.Parameters)
+
+        for (int i = 0; i<method.ParameterList.Parameters.Count; i++)
         {
+            ParameterSyntax? param = method.ParameterList.Parameters[i];
             // Skip arglist (it's fine to skip, according to CppSharp. Not like we need it anyway.)
             if (param.Identifier.IsKind(SyntaxKind.ArgListKeyword))
                 continue;
@@ -501,6 +549,14 @@ public class ImGuiInterfaceGenerator
             ParameterSyntax newParam = param.WithType(newType)
                 .WithModifiers(modifiers)
                 .WithAttributeLists([]);
+
+            // If the last argument is an enum, ImGui is likely defaulting it to zero. Make it an optional argument.
+            if (earliestOptionalArgumentIndex != -1 && i >= earliestOptionalArgumentIndex)
+            {
+                FunctionArgumentMetadata lastArgumentMetadata = funcMetadata.Arguments[^1];
+                newParam = newParam.WithDefault(SF.EqualsValueClause(SF.LiteralExpression(SyntaxKind.NumericLiteralExpression, SF.Literal(0))));
+            }
+
             newParamList.Add(newParam);
         }
 
@@ -1594,6 +1650,35 @@ public class ImGuiInterfaceGenerator
         return TypeInfo.TryGetWellknownType(name, out string? correctedType) ? correctedType : name;
     }
 
+    private static string? GetOriginalEntryPointForFunction(MethodDeclarationSyntax method)
+    {
+        foreach (AttributeListSyntax attrList in method.AttributeLists)
+        {
+            foreach (AttributeSyntax attr in attrList.Attributes)
+            {
+                var identifier = ((IdentifierNameSyntax)attr.Name).Identifier;
+                if (identifier.ValueText == "DllImport")
+                {
+                    if (attr.ArgumentList is null)
+                        continue;
+
+                    foreach (var arg in attr.ArgumentList.Arguments)
+                    {
+                        if (arg.NameEquals is null || arg.NameEquals.Name.Identifier.Text != "EntryPoint")
+                            continue;
+
+                        if (arg.Expression is not LiteralExpressionSyntax argAttr)
+                            continue;
+
+                        return argAttr.Token.ValueText;
+                    }
+                }
+            }
+        }
+
+        return method.Identifier.ValueText;
+    }
+
     private static string? GetNativeTypeName(SyntaxList<AttributeListSyntax> attributeLists)
     {
         foreach (AttributeListSyntax attrList in attributeLists)
@@ -1615,30 +1700,6 @@ public class ImGuiInterfaceGenerator
         }
 
         return null;
-    }
-
-    private static string? GetEntryPoint(MethodDeclarationSyntax method)
-    {
-        foreach (AttributeListSyntax attrList in method.AttributeLists)
-        {
-            foreach (AttributeSyntax attr in attrList.Attributes)
-            {
-                var identifier = ((IdentifierNameSyntax)attr.Name).Identifier;
-                if (identifier.ValueText == "DllImport")
-                {
-                    foreach (AttributeArgumentSyntax argument in attr.ArgumentList.Arguments)
-                    {
-                        if (argument.NameEquals?.Name?.Identifier.Text == "EntryPoint")
-                        {
-                            LiteralExpressionSyntax literalExpr = (LiteralExpressionSyntax)argument.Expression;
-                            return literalExpr.Token.ValueText;
-                        }
-                    }
-                }
-            }
-        }
-
-        return method.Identifier.ValueText;
     }
 
     private enum ImGuiStructTypeKind

@@ -14,6 +14,6 @@ namespace NenTools.ImGui.Implementation;
 public unsafe partial class ImGui : IImGui
 {
     // These exists so that we can pass null to p_open.
-    public bool Begin(string name, ImGuiWindowFlags flags) => ImGuiMethods.Begin(name, null, (int)flags);
-    public bool Begin(ReadOnlySpan<byte> name, ImGuiWindowFlags flags) => ImGuiMethods.Begin((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), null, (int)flags);
+    public bool Begin(string name, ImGuiWindowFlags flags = 0) => ImGuiMethods.Begin(name, null, (int)flags);
+    public bool Begin(ReadOnlySpan<byte> name, ImGuiWindowFlags flags = 0) => ImGuiMethods.Begin((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), null, (int)flags);
 }
