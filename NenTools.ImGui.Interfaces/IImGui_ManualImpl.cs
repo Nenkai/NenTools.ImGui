@@ -152,6 +152,10 @@ public unsafe partial interface IImGui
     public bool InputScalarEx(ReadOnlySpan<byte> label, ref ulong p_data, ref ulong p_step, ref ulong p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     public bool InputScalarEx(string label, ref long p_data, ref long p_step, ref long p_step_fast, string format, ImGuiInputTextFlags flags);
     public bool InputScalarEx(ReadOnlySpan<byte> label, ref long p_data, ref long p_step, ref long p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref float p_data, ref float p_step, ref float p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref float p_data, ref float p_step, ref float p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(string label, ref double p_data, ref double p_step, ref double p_step_fast, string format, ImGuiInputTextFlags flags);
+    public bool InputScalarEx(ReadOnlySpan<byte> label, ref double p_data, ref double p_step, ref double p_step_fast, ReadOnlySpan<byte> format, ImGuiInputTextFlags flags);
     #endregion
 
     /// <inheritdoc cref="BeginPopupModal(string, ref bool, ImGuiWindowFlags)"/>
