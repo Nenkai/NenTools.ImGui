@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -12,14 +11,9 @@ using NenTools.ImGui.Native;
 
 namespace NenTools.ImGui.Implementation;
 
-// Manually implemented imgui implementations, for the interface.
 public unsafe partial class ImGui : IImGui
 {
-    /// <summary>
-    /// Used to dispose of unmanaged resources (mainly unmanaged pointers from callbacks).
-    /// </summary>
-    public void DisposeCallbackHandles()
-    {
-        ImGuiPlatformIO.DisposeHandles();
-    }
+    // These exists so that we can pass null to p_open.
+    public bool Begin(string name, ImGuiWindowFlags flags) => ImGuiMethods.Begin(name, null, (int)flags);
+    public bool Begin(ReadOnlySpan<byte> name, ImGuiWindowFlags flags) => ImGuiMethods.Begin((sbyte*)Unsafe.AsPointer(ref MemoryMarshal.GetReference<byte>(name)), null, (int)flags);
 }
