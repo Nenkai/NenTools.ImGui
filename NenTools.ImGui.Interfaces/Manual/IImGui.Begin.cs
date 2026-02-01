@@ -10,12 +10,10 @@ namespace NenTools.ImGui.Interfaces;
 
 public unsafe partial interface IImGui
 {
-    // Generator may convert this from sbyte to char*, which is wrong.
-    // We use a span here.
-    ///<summary>
-    /// call after CreateContext() and before the first call to NewFrame() to provide .ini data from your own data source.<br/>
-    ///</summary>
-    void LoadIniSettingsFromMemory(ReadOnlySpan<byte> data, nuint ini_size);
+    // These exists so that we can pass null to p_open.
+    /// <inheritdoc cref="Begin(string, ref bool, ImGuiWindowFlags)"/>
+    bool Begin(string name, ImGuiWindowFlags flags = 0);
 
-    string SaveIniSettingsToMemory(out nuint? out_ini_size);
+    /// <inheritdoc cref="Begin(string, ref bool, ImGuiWindowFlags)"/>
+    bool Begin(ReadOnlySpan<byte> name, ImGuiWindowFlags flags = 0);
 }

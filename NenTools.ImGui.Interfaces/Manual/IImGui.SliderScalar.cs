@@ -137,126 +137,126 @@ public unsafe partial interface IImGui
 
 
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref sbyte p_data, ref sbyte p_min, ref sbyte p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref sbyte p_data, ref sbyte p_min, ref sbyte p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref sbyte p_data, ref sbyte p_min, ref sbyte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref sbyte p_data, ref sbyte p_min, ref sbyte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref byte p_data, ref byte p_min, ref byte p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref byte p_data, ref byte p_min, ref byte p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref byte p_data, ref byte p_min, ref byte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref byte p_data, ref byte p_min, ref byte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref short p_data, ref short p_min, ref short p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref short p_data, ref short p_min, ref short p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref short p_data, ref short p_min, ref short p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref short p_data, ref short p_min, ref short p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref ushort p_data, ref ushort p_min, ref ushort p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref ushort p_data, ref ushort p_min, ref ushort p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref ushort p_data, ref ushort p_min, ref ushort p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref ushort p_data, ref ushort p_min, ref ushort p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref int p_data, ref int p_min, ref int p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref int p_data, ref int p_min, ref int p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref int p_data, ref int p_min, ref int p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref int p_data, ref int p_min, ref int p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref uint p_data, ref uint p_min, ref uint p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref uint p_data, ref uint p_min, ref uint p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref uint p_data, ref uint p_min, ref uint p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref uint p_data, ref uint p_min, ref uint p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref long p_data, ref long p_min, ref long p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref long p_data, ref long p_min, ref long p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref long p_data, ref long p_min, ref long p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref long p_data, ref long p_min, ref long p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref ulong p_data, ref ulong p_min, ref ulong p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref ulong p_data, ref ulong p_min, ref ulong p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref ulong p_data, ref ulong p_min, ref ulong p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref ulong p_data, ref ulong p_min, ref ulong p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref float p_data, ref float p_min, ref float p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref float p_data, ref float p_min, ref float p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref float p_data, ref float p_min, ref float p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref float p_data, ref float p_min, ref float p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(string label, ref double p_data, ref double p_min, ref double p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(string label, ref double p_data, ref double p_min, ref double p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarEx(string, ImGuiDataType, void*, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref double p_data, ref double p_min, ref double p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarEx(ReadOnlySpan<byte> label, ref double p_data, ref double p_min, ref double p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
 
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref sbyte p_data, int components, ref sbyte p_min, ref sbyte p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref sbyte p_data, int components, ref sbyte p_min, ref sbyte p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref sbyte p_data, int components, ref sbyte p_min, ref sbyte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref sbyte p_data, int components, ref sbyte p_min, ref sbyte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref byte p_data, int components, ref byte p_min, ref byte p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref byte p_data, int components, ref byte p_min, ref byte p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref byte p_data, int components, ref byte p_min, ref byte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref byte p_data, int components, ref byte p_min, ref byte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref short p_data, int components, ref short p_min, ref short p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref short p_data, int components, ref short p_min, ref short p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref short p_data, int components, ref short p_min, ref short p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref short p_data, int components, ref short p_min, ref short p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref ushort p_data, int components, ref ushort p_min, ref ushort p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref ushort p_data, int components, ref ushort p_min, ref ushort p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref ushort p_data, int components, ref ushort p_min, ref ushort p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref ushort p_data, int components, ref ushort p_min, ref ushort p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref int p_data, int components, ref int p_min, ref int p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref int p_data, int components, ref int p_min, ref int p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref int p_data, int components, ref int p_min, ref int p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref int p_data, int components, ref int p_min, ref int p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref uint p_data, int components, ref uint p_min, ref uint p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref uint p_data, int components, ref uint p_min, ref uint p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref uint p_data, int components, ref uint p_min, ref uint p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref uint p_data, int components, ref uint p_min, ref uint p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref long p_data, int components, ref long p_min, ref long p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref long p_data, int components, ref long p_min, ref long p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref long p_data, int components, ref long p_min, ref long p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref long p_data, int components, ref long p_min, ref long p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref ulong p_data, int components, ref ulong p_min, ref ulong p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref ulong p_data, int components, ref ulong p_min, ref ulong p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref ulong p_data, int components, ref ulong p_min, ref ulong p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref ulong p_data, int components, ref ulong p_min, ref ulong p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref float p_data, int components, ref float p_min, ref float p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref float p_data, int components, ref float p_min, ref float p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref float p_data, int components, ref float p_min, ref float p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref float p_data, int components, ref float p_min, ref float p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, ref double p_data, int components, ref double p_min, ref double p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, ref double p_data, int components, ref double p_min, ref double p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref double p_data, int components, ref double p_min, ref double p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, ref double p_data, int components, ref double p_min, ref double p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
 
 
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<sbyte> p_data, ref sbyte p_min, ref sbyte p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<sbyte> p_data, ref sbyte p_min, ref sbyte p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<sbyte> p_data, ref sbyte p_min, ref sbyte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<sbyte> p_data, ref sbyte p_min, ref sbyte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<byte> p_data, ref byte p_min, ref byte p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<byte> p_data, ref byte p_min, ref byte p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<byte> p_data, ref byte p_min, ref byte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<byte> p_data, ref byte p_min, ref byte p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<short> p_data, ref short p_min, ref short p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<short> p_data, ref short p_min, ref short p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<short> p_data, ref short p_min, ref short p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<short> p_data, ref short p_min, ref short p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<ushort> p_data, ref ushort p_min, ref ushort p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<ushort> p_data, ref ushort p_min, ref ushort p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<ushort> p_data, ref ushort p_min, ref ushort p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<ushort> p_data, ref ushort p_min, ref ushort p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<int> p_data, ref int p_min, ref int p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<int> p_data, ref int p_min, ref int p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<int> p_data, ref int p_min, ref int p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<int> p_data, ref int p_min, ref int p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<uint> p_data, ref uint p_min, ref uint p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<uint> p_data, ref uint p_min, ref uint p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<uint> p_data, ref uint p_min, ref uint p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<uint> p_data, ref uint p_min, ref uint p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<long> p_data, ref long p_min, ref long p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<long> p_data, ref long p_min, ref long p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<long> p_data, ref long p_min, ref long p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<long> p_data, ref long p_min, ref long p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<ulong> p_data, ref ulong p_min, ref ulong p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<ulong> p_data, ref ulong p_min, ref ulong p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<ulong> p_data, ref ulong p_min, ref ulong p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<ulong> p_data, ref ulong p_min, ref ulong p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<float> p_data, ref float p_min, ref float p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<float> p_data, ref float p_min, ref float p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<float> p_data, ref float p_min, ref float p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<float> p_data, ref float p_min, ref float p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(string label, Span<double> p_data, ref double p_min, ref double p_max, string format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(string label, Span<double> p_data, ref double p_min, ref double p_max, string format, ImGuiSliderFlags flags = 0);
     /// <inheritdoc cref="SliderScalarNEx(string, ImGuiDataType, void*, int, void*, void*, string, ImGuiSliderFlags)"/>
-    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<double> p_data, ref double p_min, ref double p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags);
+    public bool SliderScalarNEx(ReadOnlySpan<byte> label, Span<double> p_data, ref double p_min, ref double p_max, ReadOnlySpan<byte> format, ImGuiSliderFlags flags = 0);
 }

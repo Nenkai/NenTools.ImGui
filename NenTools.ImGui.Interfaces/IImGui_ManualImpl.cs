@@ -13,11 +13,3 @@ public unsafe partial interface IImGui
     /// </summary>
     void DisposeCallbackHandles();
 }
-
-#region Forward-declared enums not caught by ClangSharpPInvokeGenerator
-
-
-
-
-
-#endregion

@@ -10,10 +10,12 @@ namespace NenTools.ImGui.Interfaces;
 
 public unsafe partial interface IImGui
 {
-    // These exists so that we can pass null to p_open.
-    /// <inheritdoc cref="Begin(string, ref bool, ImGuiWindowFlags)"/>
-    bool Begin(string name, ImGuiWindowFlags flags);
+    /// <summary>
+    /// NenTools: ImGuiTextFilter::ImGuiTextFilter
+    /// </summary>
+    /// <param name="defaultFilter"></param>
+    /// <returns></returns>
+    public IDisposableHandle<IImGuiTextFilter> CreateTextFilter(string defaultFilter = "");
 
-    /// <inheritdoc cref="Begin(string, ref bool, ImGuiWindowFlags)"/>
-    bool Begin(ReadOnlySpan<byte> name, ImGuiWindowFlags flags);
+    public void ImGuiTextFilter_ImGuiTextRange_split(IImGuiTextFilter_ImGuiTextRange self, sbyte separator, out IImVectorWrapper<IImGuiTextFilter_ImGuiTextRange> @out);
 }

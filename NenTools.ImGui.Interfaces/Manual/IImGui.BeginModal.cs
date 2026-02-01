@@ -10,7 +10,9 @@ namespace NenTools.ImGui.Interfaces;
 
 public unsafe partial interface IImGui
 {
-    public IImTextureRef CreateTextureRef(ulong texId);
+    /// <inheritdoc cref="BeginPopupModal(string, ref bool, ImGuiWindowFlags)"/>
+    bool BeginPopupModal(string name, ImGuiWindowFlags flags = 0);
 
-    public ulong ImTextureRef_GetTexID(IImTextureRef self);
+    /// <inheritdoc cref="BeginPopupModal(string, ref bool, ImGuiWindowFlags)"/>
+    bool BeginPopupModal(ReadOnlySpan<byte> name, ImGuiWindowFlags flags = 0);
 }
